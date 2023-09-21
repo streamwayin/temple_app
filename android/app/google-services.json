@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "234235346375",
+    "project_id": "temple-app-b30a8",
+    "storage_bucket": "temple-app-b30a8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234235346375:android:20897805245b41f7592de2",
+        "android_client_info": {
+          "package_name": "in.streamway.temple_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiNU2GTMbwaV8MeZePyElyikVR7P-4muI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
