@@ -43,6 +43,13 @@ dependencies:
   cloud_firestore: ^4.9.2
   fl_country_code_picker: ^0.1.5
   pinput: ^3.0.1
+  wallpaper: ^1.1.1
+  just_audio: ^0.9.35
+  rxdart: ^0.27.7
+  audio_session: ^0.1.16
+  youtube_player_flutter: ^8.1.2
+  youtube_player_iframe: ^4.0.4
+  # just_audio: ^0.9.35
 
 dev_dependencies:
   flutter_test:

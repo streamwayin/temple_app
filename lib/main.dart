@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,9 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
 import 'package:temple_app/features/auth/screens/auth_screen.dart';
-import 'package:temple_app/features/auth/screens/home/screens/home_screen.dart';
+import 'package:temple_app/features/home/screens/home_screen.dart';
 import 'package:temple_app/firebase_options.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
+import 'package:temple_app/router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -41,12 +43,13 @@ class MyApp extends StatelessWidget {
                         ColorScheme.fromSeed(seedColor: Colors.deepPurple),
                     useMaterial3: true,
                   ),
+                  onGenerateRoute: (settings) => generateRoute(settings),
                   home: StreamBuilder<User?>(
                       stream: FirebaseAuth.instance.authStateChanges(),
                       builder: (context, snapshot) {
                         // if user logged in we show bottom bar
                         if (snapshot.hasData) {
-                          return const HomePage();
+                          return const HomeScreen();
                         }
                         // if user  is not logged in we show onboarding screen
                         return const AuthScreen();
