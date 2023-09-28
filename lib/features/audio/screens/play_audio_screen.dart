@@ -1,58 +1,20 @@
 import 'package:audio_session/audio_session.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:flutter/services.dart';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
+import 'package:temple_app/modals/album_model.dart';
 
 import '../widgets/common.dart';
-// class PlayAudioScreen extends StatelessWidget {
-//   const PlayAudioScreen({super.key});
-//   static const String routeName = '/play-audio-screen';
-//   @override
-//   Widget build(BuildContext context) {
-//     Size size = MediaQuery.of(context).size;
-//     AudioPlayer player = AudioPlayer();
 
-//     return Scaffold(
-//         body: SafeArea(
-//       child: Padding(
-//         padding: const EdgeInsets.all(16),
-//         child: Column(
-//           children: [
-//             Center(
-//               child: Container(
-//                 height: size.height * .4,
-//                 width: size.width * .8,
-//                 decoration: const BoxDecoration(color: Colors.redAccent),
-//               ),
-//             ),
-//             ElevatedButton(
-//                 onPressed: () async {
-//                   setUrl(player);
-//                   await player.play();
-//                 },
-//                 child: const Text('play')),
-//             ElevatedButton(
-//                 onPressed: () async {
-//                   setUrl(player);
-//                   await player.pause();
-//                 },
-//                 child: const Text('pause'))
-//           ],
-//         ),
-//       ),
-//     ));
-//   }
-
-//   setUrl(AudioPlayer player) async {
-//     Duration? duration = await player.setUrl(
-//         'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7');
-//   }
-// }
 class PlayAudioScreen extends StatefulWidget {
-  const PlayAudioScreen({Key? key}) : super(key: key);
+  const PlayAudioScreen({Key? key, required this.song}) : super(key: key);
+  final Song song;
   static const String routeName = '/play-audio-screen';
   @override
   MyAppState createState() => MyAppState();
@@ -84,8 +46,8 @@ class MyAppState extends State<PlayAudioScreen> with WidgetsBindingObserver {
     // Try to load audio from a source and catch any errors.
     try {
       // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
-      await _player.setUrl(
-          'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7');
+      await _player.setAudioSource(
+          context.read<PlayAudioBloc>().state.concatenatingAudioSource!);
     } catch (e) {
       print("Error loading audio source: $e");
     }
@@ -127,42 +89,64 @@ class MyAppState extends State<PlayAudioScreen> with WidgetsBindingObserver {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                child: Container(
-                  height: size.height * .4,
-                  width: size.width * .8,
-                  decoration: const BoxDecoration(color: Colors.redAccent),
+          child: BlocListener<PlayAudioBloc, PlayAudioState>(
+            listener: (context, state) {
+              if (state is PlayAudioErrorState) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                  state.errorMesssage,
+                )));
+              }
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Align(
+                    alignment: const Alignment(-0.9, 0),
+                    child: IconButton(
+                        onPressed: () {
+                          // context.read<PlayAudioBloc>().add(DownloadSongEvent(song: ))
+                        },
+                        icon: const Icon(Icons.download))),
+                Center(
+                  child: Container(
+                    height: size.height * .4,
+                    width: size.width * .8,
+                    decoration: const BoxDecoration(
+                        // color: Colors.redAccent,
+                        ),
+                    child:
+                        CachedNetworkImage(imageUrl: widget.song.songThumbnail),
+                  ),
                 ),
-              ),
-              const Text(
-                'Keejo Kesari Ke Laal | Hanuman Janmotsav Special Remix l',
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-              ),
-              const Text('@DJAnkurofficial x @DJAshuIndoreDJ Ankur'),
-              // Display seek bar. Using StreamBuilder, this widget rebuilds
-              // each time the position, buffered position or duration changes.
-              StreamBuilder<PositionData>(
-                stream: _positionDataStream,
-                builder: (context, snapshot) {
-                  final positionData = snapshot.data;
-                  return SeekBar(
-                    duration: positionData?.duration ?? Duration.zero,
-                    position: positionData?.position ?? Duration.zero,
-                    bufferedPosition:
-                        positionData?.bufferedPosition ?? Duration.zero,
-                    onChangeEnd: _player.seek,
-                  );
-                },
-              ),
-              // Display play/pause button and volume/speed sliders.
-              ControlButtons(_player),
-            ],
+                Text(
+                  widget.song.songName,
+                  style: const TextStyle(
+                      fontSize: 22, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                ),
+                const Text('@DJAnkurofficial x @DJAshuIndoreDJ Ankur'),
+                // Display seek bar. Using StreamBuilder, this widget rebuilds
+                // each time the position, buffered position or duration changes.
+                StreamBuilder<PositionData>(
+                  stream: _positionDataStream,
+                  builder: (context, snapshot) {
+                    final positionData = snapshot.data;
+                    return SeekBar(
+                      duration: positionData?.duration ?? Duration.zero,
+                      position: positionData?.position ?? Duration.zero,
+                      bufferedPosition:
+                          positionData?.bufferedPosition ?? Duration.zero,
+                      onChangeEnd: _player.seek,
+                    );
+                  },
+                ),
+                // Display play/pause button and volume/speed sliders.
+                ControlButtons(_player),
+              ],
+            ),
           ),
         ),
       ),
@@ -180,6 +164,7 @@ class ControlButtons extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         // Opens volume slider dialog
         IconButton(
@@ -196,6 +181,15 @@ class ControlButtons extends StatelessWidget {
               onChanged: player.setVolume,
             );
           },
+        ),
+        IconButton(
+          iconSize: 50,
+          onPressed: () {
+            player.seekToPrevious();
+          },
+          icon: const Icon(
+            Icons.skip_previous_rounded,
+          ),
         ),
 
         /// This StreamBuilder rebuilds whenever the player state changes, which
@@ -237,6 +231,16 @@ class ControlButtons extends StatelessWidget {
             }
           },
         ),
+        IconButton(
+          iconSize: 50,
+          onPressed: () {
+            player.seekToNext();
+          },
+          icon: const Icon(
+            Icons.skip_next_rounded,
+          ),
+        ),
+
         // Opens speed slider dialog
         StreamBuilder<double>(
           stream: player.speedStream,

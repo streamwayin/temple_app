@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
+import 'package:temple_app/modals/album_model.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -23,14 +25,21 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const AudioScreen(),
       );
     case PlayAudioScreen.routeName:
+      Song song = routeSettings.arguments as Song;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const PlayAudioScreen(),
+        builder: (_) => PlayAudioScreen(song: song),
       );
     case VideoScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const VideoScreen(),
+      );
+    case AlbumScreen.routeName:
+      var index = routeSettings.arguments as int;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => AlbumScreen(albumIndex: index),
       );
 
     default:

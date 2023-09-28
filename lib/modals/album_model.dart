@@ -1,0 +1,61 @@
+import 'dart:convert';
+
+class AlbumModel {
+  String name;
+  String thumbnail;
+  List<Song> songList;
+  AlbumModel({
+    required this.name,
+    required this.thumbnail,
+    required this.songList,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'thumbnail': thumbnail,
+      'songList': songList.map((x) => x.toMap()).toList(),
+    };
+  }
+
+  factory AlbumModel.fromMap(Map<String, dynamic> map) {
+    return AlbumModel(
+      name: map['name'] ?? '',
+      thumbnail: map['thumbnail'] ?? '',
+      songList: List<Song>.from(map['songList']?.map((x) => Song.fromMap(x))),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory AlbumModel.fromJson(String source) =>
+      AlbumModel.fromMap(json.decode(source));
+}
+
+class Song {
+  String songUrl;
+  String songThumbnail;
+  String songName;
+  Song(
+      {required this.songUrl,
+      required this.songThumbnail,
+      required this.songName});
+
+  Map<String, dynamic> toMap() {
+    return {
+      'songUrl': songUrl,
+      'songThumbnail': songThumbnail,
+    };
+  }
+
+  factory Song.fromMap(Map<String, dynamic> map) {
+    return Song(
+        songUrl: map['songUrl'] ?? '',
+        songThumbnail: map['songThumbnail'] ?? '',
+        songName: map['songName'] ?? '');
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Song.fromJson(String source) => Song.fromMap(json.decode(source));
+}
