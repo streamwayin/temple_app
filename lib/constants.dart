@@ -1,5 +1,8 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:temple_app/modals/album_model.dart';
 
+String OFFLINE_DOWNLOADED_SONG_KEY = 'offline_downloaded_songs';
 List<String> wallpaperImagesList = [
   'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/hanuman-with-lord-ram-and-sita-hanuman-lord-ram-sita-bhakti-thumbnail.jpg?alt=media&token=9154a6f0-d6bc-4ece-9e89-37d4c6ee4982',
   'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/hanuman-bhakti-bajrangi-god-gods-hanuman-jee-jay-shree-ram-lord-pray-ram-thumbnail.jpg?alt=media&token=848120e1-cc50-4bee-b041-afb7398c0faf',

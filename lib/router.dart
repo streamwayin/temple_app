@@ -25,10 +25,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const AudioScreen(),
       );
     case PlayAudioScreen.routeName:
-      Song song = routeSettings.arguments as Song;
+      int index = routeSettings.arguments as int;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => PlayAudioScreen(song: song),
+        builder: (_) => PlayAudioScreen(index: index),
       );
     case VideoScreen.routeName:
       return MaterialPageRoute(

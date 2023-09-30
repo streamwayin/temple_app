@@ -39,7 +39,9 @@ class LoadCurrentPlaylistEvent extends PlayAudioEvent {
 }
 
 class DownloadSongEvent extends PlayAudioEvent {
-  final Song song;
+  final int currentSongIndex;
+  final BuildContext context;
 
-  const DownloadSongEvent({required this.song});
+  const DownloadSongEvent(
+      {required this.currentSongIndex, required this.context});
 }

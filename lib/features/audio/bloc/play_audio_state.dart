@@ -3,17 +3,26 @@ part of 'play_audio_bloc.dart';
 class PlayAudioState extends Equatable {
   final List<AlbumModel> albums;
   final ConcatenatingAudioSource? concatenatingAudioSource;
-  const PlayAudioState({this.albums = const [], this.concatenatingAudioSource});
+  final int? currentAlbumIndex;
+  const PlayAudioState(
+      {this.albums = const [],
+      this.concatenatingAudioSource,
+      this.currentAlbumIndex});
   @override
-  List<Object?> get props => [albums, concatenatingAudioSource];
+  List<Object?> get props =>
+      [albums, concatenatingAudioSource, currentAlbumIndex];
 
-  PlayAudioState copyWith(
-      {List<AlbumModel>? albums,
-      ConcatenatingAudioSource? concatenatingAudioSource}) {
+  PlayAudioState copyWith({
+    List<AlbumModel>? albums,
+    ConcatenatingAudioSource? concatenatingAudioSource,
+    int? currentAlbumIndex,
+  }) {
     return PlayAudioState(
-        albums: albums ?? this.albums,
-        concatenatingAudioSource:
-            concatenatingAudioSource ?? this.concatenatingAudioSource);
+      albums: albums ?? this.albums,
+      concatenatingAudioSource:
+          concatenatingAudioSource ?? this.concatenatingAudioSource,
+      currentAlbumIndex: currentAlbumIndex ?? this.currentAlbumIndex,
+    );
   }
 }
 

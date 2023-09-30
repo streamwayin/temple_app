@@ -2,11 +2,11 @@ import 'dart:convert';
 
 class AlbumModel {
   String name;
-  String thumbnail;
+  String? thumbnail;
   List<Song> songList;
   AlbumModel({
     required this.name,
-    required this.thumbnail,
+    this.thumbnail,
     required this.songList,
   });
 
@@ -20,8 +20,8 @@ class AlbumModel {
 
   factory AlbumModel.fromMap(Map<String, dynamic> map) {
     return AlbumModel(
-      name: map['name'] ?? '',
-      thumbnail: map['thumbnail'] ?? '',
+      name: map['name'],
+      thumbnail: map['thumbnail'],
       songList: List<Song>.from(map['songList']?.map((x) => Song.fromMap(x))),
     );
   }
@@ -33,26 +33,33 @@ class AlbumModel {
 }
 
 class Song {
-  String songUrl;
-  String songThumbnail;
+  String? songUrl;
+  String? songPath;
+  String? songThumbnail;
   String songName;
-  Song(
-      {required this.songUrl,
-      required this.songThumbnail,
-      required this.songName});
+  Song({
+    this.songUrl,
+    this.songPath,
+    this.songThumbnail,
+    required this.songName,
+  });
 
   Map<String, dynamic> toMap() {
     return {
       'songUrl': songUrl,
       'songThumbnail': songThumbnail,
+      'songName': songName,
+      'songPath': songPath
     };
   }
 
   factory Song.fromMap(Map<String, dynamic> map) {
     return Song(
-        songUrl: map['songUrl'] ?? '',
-        songThumbnail: map['songThumbnail'] ?? '',
-        songName: map['songName'] ?? '');
+      songUrl: map['songUrl'],
+      songPath: map['songPath'],
+      songThumbnail: map['songThumbnail'],
+      songName: map['songName'] ?? '',
+    );
   }
 
   String toJson() => json.encode(toMap());

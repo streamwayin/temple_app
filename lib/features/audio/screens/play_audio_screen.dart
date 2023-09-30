@@ -5,28 +5,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 
 import 'package:flutter/services.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
-import 'package:temple_app/modals/album_model.dart';
 
 import '../widgets/common.dart';
+import '../widgets/controller_buttons.dart';
 
 class PlayAudioScreen extends StatefulWidget {
-  const PlayAudioScreen({Key? key, required this.song}) : super(key: key);
-  final Song song;
+  const PlayAudioScreen({Key? key, required this.index}) : super(key: key);
+  final int index;
   static const String routeName = '/play-audio-screen';
   @override
   MyAppState createState() => MyAppState();
 }
 
-class MyAppState extends State<PlayAudioScreen> with WidgetsBindingObserver {
+class MyAppState extends State<PlayAudioScreen> {
   final _player = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
-    ambiguate(WidgetsBinding.instance)!.addObserver(this);
+
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.black,
     ));
@@ -48,6 +49,7 @@ class MyAppState extends State<PlayAudioScreen> with WidgetsBindingObserver {
       // AAC example: https://dl.espressif.com/dl/audio/ff-16b-2c-44100hz.aac
       await _player.setAudioSource(
           context.read<PlayAudioBloc>().state.concatenatingAudioSource!);
+      _player.seek(Duration.zero, index: widget.index);
     } catch (e) {
       print("Error loading audio source: $e");
     }
@@ -55,21 +57,10 @@ class MyAppState extends State<PlayAudioScreen> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    ambiguate(WidgetsBinding.instance)!.removeObserver(this);
     // Release decoders and buffers back to the operating system making them
     // available for other apps to use.
     _player.dispose();
     super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      // Release the player's resources when not in use. We use "stop" so that
-      // if the app resumes later, it will still remember what position to
-      // resume from.
-      _player.stop();
-    }
   }
 
   /// Collects the data useful for displaying in a seek bar, using a handy
@@ -106,28 +97,70 @@ class MyAppState extends State<PlayAudioScreen> with WidgetsBindingObserver {
                     alignment: const Alignment(-0.9, 0),
                     child: IconButton(
                         onPressed: () {
-                          // context.read<PlayAudioBloc>().add(DownloadSongEvent(song: ))
+                          context.read<PlayAudioBloc>().add(DownloadSongEvent(
+                              currentSongIndex: _player.currentIndex!,
+                              context: context));
                         },
                         icon: const Icon(Icons.download))),
-                Center(
-                  child: Container(
-                    height: size.height * .4,
-                    width: size.width * .8,
-                    decoration: const BoxDecoration(
-                        // color: Colors.redAccent,
-                        ),
-                    child:
-                        CachedNetworkImage(imageUrl: widget.song.songThumbnail),
+                SizedBox(
+                  height: size.height * .4,
+                  width: size.width * .8,
+                  child: StreamBuilder<SequenceState?>(
+                    stream: _player.sequenceStateStream,
+                    builder: (context, snapshot) {
+                      final state = snapshot.data;
+                      if (state?.sequence.isEmpty ?? true) {
+                        return const SizedBox();
+                      }
+                      final metadata = state!.currentSource!.tag as MediaItem;
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Container(
+                                  height: size.height * .4,
+                                  width: size.width * .8,
+                                  decoration: const BoxDecoration(
+                                      // color: Colors.redAccent,
+                                      ),
+                                  child: CachedNetworkImage(
+                                    imageUrl: metadata.artUri.toString(),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            metadata.title,
+                            style: const TextStyle(
+                                fontSize: 22, fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                          ),
+                          Text(
+                            metadata.artist!,
+                          ),
+                          (metadata.album == null)
+                              ? const SizedBox()
+                              : Text(
+                                  metadata.album!,
+                                  style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                ),
+                        ],
+                      );
+                    },
                   ),
                 ),
-                Text(
-                  widget.song.songName,
-                  style: const TextStyle(
-                      fontSize: 22, fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.center,
-                  maxLines: 2,
-                ),
-                const Text('@DJAnkurofficial x @DJAshuIndoreDJ Ankur'),
+
                 // Display seek bar. Using StreamBuilder, this widget rebuilds
                 // each time the position, buffered position or duration changes.
                 StreamBuilder<PositionData>(
@@ -150,118 +183,6 @@ class MyAppState extends State<PlayAudioScreen> with WidgetsBindingObserver {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// Displays the play/pause button and volume/speed sliders.
-class ControlButtons extends StatelessWidget {
-  final AudioPlayer player;
-
-  const ControlButtons(this.player, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        // Opens volume slider dialog
-        IconButton(
-          icon: const Icon(Icons.volume_up),
-          onPressed: () {
-            showSliderDialog(
-              context: context,
-              title: "Adjust volume",
-              divisions: 10,
-              min: 0.0,
-              max: 1.0,
-              value: player.volume,
-              stream: player.volumeStream,
-              onChanged: player.setVolume,
-            );
-          },
-        ),
-        IconButton(
-          iconSize: 50,
-          onPressed: () {
-            player.seekToPrevious();
-          },
-          icon: const Icon(
-            Icons.skip_previous_rounded,
-          ),
-        ),
-
-        /// This StreamBuilder rebuilds whenever the player state changes, which
-        /// includes the playing/paused state and also the
-        /// loading/buffering/ready state. Depending on the state we show the
-        /// appropriate button or loading indicator.
-        StreamBuilder<PlayerState>(
-          stream: player.playerStateStream,
-          builder: (context, snapshot) {
-            final playerState = snapshot.data;
-            final processingState = playerState?.processingState;
-            final playing = playerState?.playing;
-            if (processingState == ProcessingState.loading ||
-                processingState == ProcessingState.buffering) {
-              return Container(
-                margin: const EdgeInsets.all(8.0),
-                width: 64.0,
-                height: 64.0,
-                child: const CircularProgressIndicator(),
-              );
-            } else if (playing != true) {
-              return IconButton(
-                icon: const Icon(Icons.play_arrow),
-                iconSize: 64.0,
-                onPressed: player.play,
-              );
-            } else if (processingState != ProcessingState.completed) {
-              return IconButton(
-                icon: const Icon(Icons.pause),
-                iconSize: 64.0,
-                onPressed: player.pause,
-              );
-            } else {
-              return IconButton(
-                icon: const Icon(Icons.replay),
-                iconSize: 64.0,
-                onPressed: () => player.seek(Duration.zero),
-              );
-            }
-          },
-        ),
-        IconButton(
-          iconSize: 50,
-          onPressed: () {
-            player.seekToNext();
-          },
-          icon: const Icon(
-            Icons.skip_next_rounded,
-          ),
-        ),
-
-        // Opens speed slider dialog
-        StreamBuilder<double>(
-          stream: player.speedStream,
-          builder: (context, snapshot) => IconButton(
-            icon: Text("${snapshot.data?.toStringAsFixed(1)}x",
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            onPressed: () {
-              showSliderDialog(
-                context: context,
-                title: "Adjust speed",
-                divisions: 10,
-                min: 0.5,
-                max: 1.5,
-                value: player.speed,
-                stream: player.speedStream,
-                onChanged: player.setSpeed,
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 }

@@ -45,13 +45,15 @@ class AlbumScreen extends StatelessWidget {
                           onTap: () {
                             Navigator.pushNamed(
                                 context, PlayAudioScreen.routeName,
-                                arguments: song);
+                                arguments: ind);
                           },
-                          leading: CachedNetworkImage(
-                            imageUrl: song.songThumbnail,
-                            placeholder: (context, url) =>
-                                Image.asset('assets/images/sound-waves.png'),
-                          ),
+                          leading: (song.songThumbnail != null)
+                              ? CachedNetworkImage(
+                                  imageUrl: song.songThumbnail!,
+                                  placeholder: (context, url) => Image.asset(
+                                      'assets/images/sound-waves.png'),
+                                )
+                              : const SizedBox(),
                           title: Text(song.songName),
                         );
                       },

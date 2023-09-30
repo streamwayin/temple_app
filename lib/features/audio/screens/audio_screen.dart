@@ -47,16 +47,20 @@ class AudioScreen extends StatelessWidget {
                             child: Row(
                               children: [
                                 Container(
-                                  color: Colors.grey,
+                                  color:
+                                      const Color.fromARGB(255, 233, 232, 232)
+                                          .withOpacity(0.5),
                                   height: 50,
                                   width: 50,
-                                  child: CachedNetworkImage(
-                                    imageUrl: album.thumbnail,
-                                    fit: BoxFit.cover,
-                                    // 'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/album%20thumbnail%2Fhanumanji.jpg?alt=media&token=8850ddc4-9997-4511-a483-90d370c22acb',
-                                    errorWidget: (context, url, error) =>
-                                        const Icon(Icons.error),
-                                  ),
+                                  child: (album.thumbnail != null)
+                                      ? CachedNetworkImage(
+                                          imageUrl: album.thumbnail!,
+                                          fit: BoxFit.cover,
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        )
+                                      : Image.asset(
+                                          'assets/images/sound-waves.png'),
                                 ),
                                 SizedBox(width: 5.w),
                                 Text(

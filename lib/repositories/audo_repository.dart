@@ -10,6 +10,19 @@ import 'package:temple_app/modals/album_model.dart';
 import '../constants.dart';
 
 class AudioRepository {
+  // File? _musicFolder;
+  // AudioRepository() {
+  //   init();
+  // }
+  // Future<void> init() async {
+  //   Directory? documentDirectory = await getApplicationDocumentsDirectory();
+  //   final musicFolder = File('${documentDirectory.path}/downloaded_music/');
+  //   if (!await musicFolder.exists()) {
+  //     await musicFolder.create(recursive: true);
+  //   }
+  //   _musicFolder = musicFolder;
+  // }
+
   Future<List<AlbumModel>?> getAudioListFromweb() async {
     try {
       List<AlbumModel> albumModel = [];
@@ -33,12 +46,20 @@ class AudioRepository {
     if (response.statusCode == 200) {
       final Uint8List data = response.bodyBytes;
 
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/$fileName');
+      final directory = await getDownloadsDirectory();
+      if (directory == null) {
+        return null;
+      }
 
-      await file.writeAsBytes(data);
-      print('Song downloaded and saved to: ${file.path}');
-      return file;
+      final musicPath =
+          File('${directory.path}/downloaded_music/$fileName.mp3');
+      if (!await musicPath.exists()) {
+        await musicPath.create(recursive: true);
+      }
+
+      await musicPath.writeAsBytes(data);
+      print('Song downloaded and saved to: ${musicPath.path}');
+      return musicPath;
     } else {
       return null;
     }
