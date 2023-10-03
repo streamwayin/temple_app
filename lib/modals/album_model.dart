@@ -33,15 +33,19 @@ class AlbumModel {
 }
 
 class Song {
-  String? songUrl;
-  String? songPath;
+  String songUrl;
   String? songThumbnail;
   String songName;
+  String artistId;
+  String trackId;
+  String albumId;
   Song({
-    this.songUrl,
-    this.songPath,
+    required this.songUrl,
     this.songThumbnail,
     required this.songName,
+    required this.artistId,
+    required this.trackId,
+    required this.albumId,
   });
 
   Map<String, dynamic> toMap() {
@@ -49,16 +53,20 @@ class Song {
       'songUrl': songUrl,
       'songThumbnail': songThumbnail,
       'songName': songName,
-      'songPath': songPath
+      'artistId': artistId,
+      'trackId': trackId,
+      'albumId': albumId
     };
   }
 
   factory Song.fromMap(Map<String, dynamic> map) {
     return Song(
       songUrl: map['songUrl'],
-      songPath: map['songPath'],
       songThumbnail: map['songThumbnail'],
       songName: map['songName'] ?? '',
+      artistId: map['artistId'],
+      trackId: map['trackId'],
+      albumId: map['albumId'],
     );
   }
 

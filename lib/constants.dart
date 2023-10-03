@@ -1,8 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
-import 'package:temple_app/modals/album_model.dart';
-
-String OFFLINE_DOWNLOADED_SONG_KEY = 'offline_downloaded_songs';
+String OFFLINE_DOWNLOADED_SONG_LIST_KEY = 'offline_downloaded_songs';
+String DOWNLOADED_TRACK_JSON = 'downloaded_track_json';
 List<String> wallpaperImagesList = [
   'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/hanuman-with-lord-ram-and-sita-hanuman-lord-ram-sita-bhakti-thumbnail.jpg?alt=media&token=9154a6f0-d6bc-4ece-9e89-37d4c6ee4982',
   'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/hanuman-bhakti-bajrangi-god-gods-hanuman-jee-jay-shree-ram-lord-pray-ram-thumbnail.jpg?alt=media&token=848120e1-cc50-4bee-b041-afb7398c0faf',
@@ -19,8 +18,13 @@ List<Map<String, dynamic>> album = [
   {
     "name": "Shree ganesha",
     "thumbnail": "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+    "artistId": "artistId",
+    "albumId": "1",
     "songList": [
       {
+        "trackId": "asdf1",
+        "albumId": "1",
+        "artistId": "artistId",
         "songUrl":
             "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Deva Shree Ganesha(PagalWorld.com.se).mp3",
         "songThumbnail":
@@ -28,6 +32,9 @@ List<Map<String, dynamic>> album = [
         "songName": "Deva Shree Ganesha"
       },
       {
+        "trackId": "asdf2",
+        "albumId": "1",
+        "artistId": "artistId",
         "songUrl":
             "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Jai Ganesh Jai Ganesh Deva(PagalWorld.com.se).mp3",
         "songThumbnail":
@@ -35,6 +42,9 @@ List<Map<String, dynamic>> album = [
         "songName": "Jai Ganesh Jai Ganesh Deva"
       },
       {
+        "trackId": "asdf3",
+        "albumId": "1",
+        "artistId": "artistId",
         "songUrl":
             "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Morya(PagalWorld.com.se).mp3",
         "songThumbnail":
@@ -42,6 +52,9 @@ List<Map<String, dynamic>> album = [
         "songName": "Morya"
       },
       {
+        "trackId": "asdf4",
+        "albumId": "1",
+        "artistId": "artistId",
         "songUrl":
             "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Sukh Karta Dukh Harta(PagalWorld.com.se).mp3",
         "songThumbnail":
@@ -56,90 +69,140 @@ List<Map<String, dynamic>> album = [
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/album%20thumbnail%2Framji.jpg?alt=media&token=a8936039-abfc-484b-aaa0-4a01a2ea9da6",
     "songList": [
       {
+        "trackId": "asdf11",
+        "albumId": "2",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Deva Shree Ganesha(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Deva Shree Ganesha"
       },
       {
+        "trackId": "asdf22",
+        "albumId": "2",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Jai Ganesh Jai Ganesh Deva(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Jai Ganesh Jai Ganesh Deva"
       },
       {
+        "trackId": "asdf33",
+        "albumId": "2",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Morya(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Morya"
       },
       {
+        "trackId": "asdf44",
+        "albumId": "2",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Sukh Karta Dukh Harta(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Sukh Karta Dukh Harta"
       },
     ]
   },
   {
     "name": "shiv ji bhajan",
+    "albumId": "3",
     "thumbnail":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/album%20thumbnail%2Fshivji.jpg?alt=media&token=757fcf36-0f71-4ad1-94aa-4dca6a3ced60",
     "songList": [
       {
+        "trackId": "asdf1",
+        "albumId": "3",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Deva Shree Ganesha(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Deva Shree Ganesha"
       },
       {
+        "trackId": "asdf2",
+        "albumId": "3",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Jai Ganesh Jai Ganesh Deva(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Jai Ganesh Jai Ganesh Deva"
       },
       {
+        "trackId": "asdf3",
+        "albumId": "3",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Morya(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Morya"
       },
       {
+        "trackId": "asdf4",
+        "albumId": "3",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Sukh Karta Dukh Harta(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Sukh Karta Dukh Harta"
       },
     ]
   },
   {
     "name": "khatu shyam ji katha",
+    "albumId": "4",
     "thumbnail":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/album%20thumbnail%2Fkhatushyamji.jpg?alt=media&token=5b2744d4-0052-42ca-85f8-f8be9792af56",
     "songList": [
       {
+        "trackId": "asdf1",
+        "albumId": "4",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Deva Shree Ganesha(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Deva Shree Ganesha"
       },
       {
+        "trackId": "asdf2",
+        "albumId": "4",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Jai Ganesh Jai Ganesh Deva(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Jai Ganesh Jai Ganesh Deva"
       },
       {
+        "trackId": "asdf3",
+        "albumId": "4",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Morya(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Morya"
       },
       {
+        "trackId": "asdf4",
+        "albumId": "4",
+        "artistId": "artistId",
         "songUrl":
-            "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhajans%2Fvideoplayback.weba?alt=media&token=f979535d-bbf5-4560-ae7f-dde5780de3a7",
+            "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Sukh Karta Dukh Harta(PagalWorld.com.se).mp3",
         "songThumbnail":
-            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg"
+            "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
+        "songName": "Sukh Karta Dukh Harta"
       },
     ]
   },

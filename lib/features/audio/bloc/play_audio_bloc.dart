@@ -3,9 +3,11 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
@@ -34,18 +36,24 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   FutureOr<void> onGetAudioListFromWeb(
       GetAudioListFromWebEvent event, Emitter<PlayAudioState> emit) async {
     final list = await audioRepository.getAudioListFromweb();
-
+    Map<String, String> downloadedSongsMap = {};
     if (list != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? offlineSongs = prefs.getString(OFFLINE_DOWNLOADED_SONG_KEY);
+      String? offlineSongs = prefs.getString(OFFLINE_DOWNLOADED_SONG_LIST_KEY);
       if (offlineSongs != null) {
-        AlbumModel albumModel = AlbumModel.fromJson(offlineSongs);
-        list.add(albumModel);
+        final decodedMap = json.decode(offlineSongs);
+        decodedMap.forEach((key, value) {
+          downloadedSongsMap[key] = value.toString();
+        });
       }
-      emit(state.copyWith(albums: list));
+      emit(state.copyWith(
+        albums: list,
+        downloadedSongsMap: downloadedSongsMap,
+      ));
     }
   }
 
+// rearanging the albums
   FutureOr<void> onAlbumIndexChanged(
       AlbumIndexChanged event, Emitter<PlayAudioState> emit) {
     int oldIndex = event.oldIndex;
@@ -61,6 +69,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     emit(state.copyWith(albums: albumList));
   }
 
+// rearranging the songs
   FutureOr<void> onSongIndexChanged(
       SongIndexChanged event, Emitter<PlayAudioState> emit) {
     int oldIndex = event.oldIndex;
@@ -79,9 +88,9 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       LoadCurrentPlaylistEvent event, Emitter<PlayAudioState> emit) {
     List<AudioSource> audioSourceList = state.albums[event.albumIndex].songList
         .map(
-          (e) => (e.songUrl != null)
+          (e) => (!state.downloadedSongsMap.containsKey('trackid'))
               ? AudioSource.uri(
-                  Uri.parse(e.songUrl!),
+                  Uri.parse(e.songUrl),
                   tag: MediaItem(
                     id: '1',
                     title: e.songName,
@@ -89,8 +98,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
                     artUri: Uri.parse(e.songThumbnail!),
                   ),
                 )
-              : AudioSource.asset(
-                  e.songPath!,
+              : AudioSource.file(
+                  state.downloadedSongsMap['trackid']!,
                   tag: MediaItem(
                     id: '1',
                     title: e.songName,
@@ -114,36 +123,58 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
   FutureOr<void> onDownloadSongEvent(
       DownloadSongEvent event, Emitter<PlayAudioState> emit) async {
+    emit(state.copyWith(isSongDownloading: true));
     // doing this in order to get songs meta data so that we can store it in local storeage and use it when we will play downloaded song
     SharedPreferences prefs = await SharedPreferences.getInstance();
     Song saveSong =
         state.albums[state.currentAlbumIndex!].songList[event.currentSongIndex];
     try {
-      File? localImagePath = await audioRepository.downloadByUrl(
-          "https://pub-7180d0d5348f4af6a9888fce4502b6b5.r2.dev/Deva Shree Ganesha(PagalWorld.com.se).mp3",
-          'deva');
-      if (localImagePath == null) {
+      File? localImagePath;
+      if (!state.downloadedSongsMap.containsKey(saveSong.trackId)) {
+        localImagePath = await audioRepository.downloadByUrl(
+            saveSong.songUrl, saveSong.songName);
+        if (localImagePath == null) {
+          Utils.showSnackBar(
+            context: event.context,
+            message: 'Failed to download the video',
+          );
+          emit(state.copyWith(isSongDownloading: false));
+          return;
+        }
+      } else {
         Utils.showSnackBar(
-            context: event.context, message: 'Failed to download the video');
+            context: event.context, message: 'No need to download the song');
+        emit(state.copyWith(isSongDownloading: false));
         return;
       }
-      Song song = Song(
-          songPath: localImagePath.path,
-          songThumbnail: saveSong.songThumbnail,
-          songName: saveSong.songName);
-      AlbumModel? albumModel;
-      String? offlineSongs = prefs.getString(OFFLINE_DOWNLOADED_SONG_KEY);
-      if (offlineSongs != null) {
-        albumModel = AlbumModel.fromJson(offlineSongs);
-        albumModel.songList.add(song);
-      } else {
-        albumModel = AlbumModel(name: 'Downloaded', songList: [song]);
-      }
-      var encodedData = jsonEncode(albumModel.toMap());
 
-      prefs.setString(OFFLINE_DOWNLOADED_SONG_KEY, encodedData);
+      // Song song = Song(
+      //     // songPath: localImagePath.path,
+      //     songThumbnail: saveSong.songThumbnail,
+      //     songName: saveSong.songName);
+      Map<String, String> map = state.downloadedSongsMap;
+      // String? offlineSongs = prefs.getString(OFFLINE_DOWNLOADED_SONG_LIST_KEY);
+      // if (offlineSongs != null) {
+      //   // map = json.decode(offlineSongs);
+      //   // map[saveSong.trackId] = localImagePath.path;
+      //   // print(map);
+      //   // albumModel = AlbumModel.fromJson(offlineSongs);
+      //   // albumModel.songList.add(song);
+      // } else {
+      //   map = {saveSong.trackId: localImagePath.path};
+      // }
+      map[saveSong.trackId] = localImagePath.path;
+      var encodedData = jsonEncode(map);
+
+      prefs.setString(OFFLINE_DOWNLOADED_SONG_LIST_KEY, encodedData);
+      emit(state.copyWith(
+          snackbarMessage: 'Song Downloaded',
+          isSongDownloading: false,
+          downloadedSongsMap: map));
     } catch (e) {
-      // emit(PlayAudioErrorState(errorMesssage: e.toString()));
+      emit(state.copyWith(
+          snackbarMessage: 'Failed to download song',
+          isSongDownloading: false));
     }
   }
 }
