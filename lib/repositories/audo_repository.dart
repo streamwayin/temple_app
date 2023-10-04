@@ -2,27 +2,71 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:audio_session/audio_session.dart';
 import 'package:flutter/services.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
+import 'package:rxdart/rxdart.dart';
 import 'package:temple_app/modals/album_model.dart';
 
 import '../constants.dart';
+import '../features/audio/widgets/common.dart';
+import '../modals/music_player_data_model.dart';
 
 class AudioRepository {
-  // File? _musicFolder;
-  // AudioRepository() {
-  //   init();
-  // }
-  // Future<void> init() async {
-  //   Directory? documentDirectory = await getApplicationDocumentsDirectory();
-  //   final musicFolder = File('${documentDirectory.path}/downloaded_music/');
-  //   if (!await musicFolder.exists()) {
-  //     await musicFolder.create(recursive: true);
-  //   }
-  //   _musicFolder = musicFolder;
-  // }
+  final _player = AudioPlayer();
 
+  AudioRepository() {
+    _init();
+  }
+  Future<void> _init() async {
+    // Inform the operating system of our app's audio attributes etc.
+    // We pick a reasonable default for an app that plays speech.
+    final session = await AudioSession.instance;
+    await session.configure(const AudioSessionConfiguration.speech());
+    // Listen to errors during playback.
+    _player.playbackEventStream.listen((event) {},
+        onError: (Object e, StackTrace stackTrace) {
+      print('A stream error occurred: $e');
+    });
+  }
+
+  Stream<MusicPlayerDataModel> get musicPlayerDataStream => Rx.combineLatest5<
+          Duration,
+          Duration,
+          Duration?,
+          SequenceState?,
+          PlayerState?,
+          MusicPlayerDataModel>(
+      _player.positionStream,
+      _player.bufferedPositionStream,
+      _player.durationStream,
+      _player.sequenceStateStream,
+      _player.playerStateStream,
+      (position, bufferedPosition, duration, sequenceStateStream,
+              playerState) =>
+          MusicPlayerDataModel(
+              positionData: PositionData(
+                  position, bufferedPosition, duration ?? Duration.zero),
+              sequenceState: sequenceStateStream,
+              playerState: playerState));
+
+  Stream<SequenceState?> get sequenceStateStream => _player.sequenceStateStream;
+  Future<void> addPlaylist(ConcatenatingAudioSource playList) async {
+    try {
+      await _player.setAudioSource(playList);
+    } catch (e) {
+      print("Error loading audio source: $e");
+    }
+  }
+
+  void play() => _player.play();
+
+  void pause() => _player.pause();
+  void next() => _player.seekToNext();
+  void previous() => _player.seekToPrevious;
   Future<List<AlbumModel>?> getAudioListFromweb() async {
     try {
       List<AlbumModel> albumModel = [];

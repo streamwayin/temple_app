@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/audio/widgets/common.dart';
 
 class ControlButtons extends StatelessWidget {
@@ -10,43 +12,25 @@ class ControlButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Opens volume slider dialog
-        IconButton(
-          icon: const Icon(Icons.volume_up),
-          onPressed: () {
-            showSliderDialog(
-              context: context,
-              title: "Adjust volume",
-              divisions: 10,
-              min: 0.0,
-              max: 1.0,
-              value: player.volume,
-              stream: player.volumeStream,
-              onChanged: player.setVolume,
-            );
-          },
-        ),
         IconButton(
           iconSize: 50,
           onPressed: () {
-            player.seekToPrevious();
+            context
+                .read<PlayAudioBloc>()
+                .add(const ChangeSongEvent(previous: true));
           },
           icon: const Icon(
             Icons.skip_previous_rounded,
           ),
         ),
+        BlocConsumer<PlayAudioBloc, PlayAudioState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            PlayerState? playerState = state.musicPlayerDataModel?.playerState;
 
-        /// This StreamBuilder rebuilds whenever the player state changes, which
-        /// includes the playing/paused state and also the
-        /// loading/buffering/ready state. Depending on the state we show the
-        /// appropriate button or loading indicator.
-        StreamBuilder<PlayerState>(
-          stream: player.playerStateStream,
-          builder: (context, snapshot) {
-            final playerState = snapshot.data;
             final processingState = playerState?.processingState;
             final playing = playerState?.playing;
             if (processingState == ProcessingState.loading ||
@@ -61,13 +45,21 @@ class ControlButtons extends StatelessWidget {
               return IconButton(
                 icon: const Icon(Icons.play_arrow),
                 iconSize: 64.0,
-                onPressed: player.play,
+                onPressed: () {
+                  context
+                      .read<PlayAudioBloc>()
+                      .add(const PlayOrPauseSongEvent(play: true));
+                },
               );
             } else if (processingState != ProcessingState.completed) {
               return IconButton(
                 icon: const Icon(Icons.pause),
                 iconSize: 64.0,
-                onPressed: player.pause,
+                onPressed: () {
+                  context
+                      .read<PlayAudioBloc>()
+                      .add(const PlayOrPauseSongEvent(play: false));
+                },
               );
             } else {
               return IconButton(
@@ -81,31 +73,12 @@ class ControlButtons extends StatelessWidget {
         IconButton(
           iconSize: 50,
           onPressed: () {
-            player.seekToNext();
+            context
+                .read<PlayAudioBloc>()
+                .add(const ChangeSongEvent(next: true));
           },
           icon: const Icon(
             Icons.skip_next_rounded,
-          ),
-        ),
-
-        // Opens speed slider dialog
-        StreamBuilder<double>(
-          stream: player.speedStream,
-          builder: (context, snapshot) => IconButton(
-            icon: Text("${snapshot.data?.toStringAsFixed(1)}x",
-                style: const TextStyle(fontWeight: FontWeight.bold)),
-            onPressed: () {
-              showSliderDialog(
-                context: context,
-                title: "Adjust speed",
-                divisions: 10,
-                min: 0.5,
-                max: 1.5,
-                value: player.speed,
-                stream: player.speedStream,
-                onChanged: player.setSpeed,
-              );
-            },
           ),
         ),
       ],

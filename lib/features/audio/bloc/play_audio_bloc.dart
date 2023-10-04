@@ -14,6 +14,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/modals/album_model.dart';
+import 'package:temple_app/modals/music_player_data_model.dart';
 import 'package:temple_app/repositories/audo_repository.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -31,6 +32,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<SongIndexChanged>(onSongIndexChanged);
     on<LoadCurrentPlaylistEvent>(onLoadCurrentPlaylistEvent);
     on<DownloadSongEvent>(onDownloadSongEvent);
+    on<ChangeSongEvent>(onPlayNextSongEvent);
+    on<PlayOrPauseSongEvent>(onPlayOrPauseSongEvent);
   }
   AudioRepository audioRepository = AudioRepository();
   FutureOr<void> onGetAudioListFromWeb(
@@ -85,7 +88,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   }
 
   FutureOr<void> onLoadCurrentPlaylistEvent(
-      LoadCurrentPlaylistEvent event, Emitter<PlayAudioState> emit) {
+      LoadCurrentPlaylistEvent event, Emitter<PlayAudioState> emit) async {
     List<AudioSource> audioSourceList = state.albums[event.albumIndex].songList
         .map(
           (e) => (!state.downloadedSongsMap.containsKey('trackid'))
@@ -116,9 +119,15 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
       children: audioSourceList,
     );
-    emit(state.copyWith(
-        concatenatingAudioSource: playlist,
-        currentAlbumIndex: event.albumIndex));
+    audioRepository.addPlaylist(playlist);
+    audioRepository.play();
+    await emit.forEach(
+      audioRepository.musicPlayerDataStream,
+      onData: (data) {
+        return state.copyWith(
+            currentAlbumIndex: event.albumIndex, musicPlayerDataModel: data);
+      },
+    );
   }
 
   FutureOr<void> onDownloadSongEvent(
@@ -148,21 +157,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
         return;
       }
 
-      // Song song = Song(
-      //     // songPath: localImagePath.path,
-      //     songThumbnail: saveSong.songThumbnail,
-      //     songName: saveSong.songName);
       Map<String, String> map = state.downloadedSongsMap;
-      // String? offlineSongs = prefs.getString(OFFLINE_DOWNLOADED_SONG_LIST_KEY);
-      // if (offlineSongs != null) {
-      //   // map = json.decode(offlineSongs);
-      //   // map[saveSong.trackId] = localImagePath.path;
-      //   // print(map);
-      //   // albumModel = AlbumModel.fromJson(offlineSongs);
-      //   // albumModel.songList.add(song);
-      // } else {
-      //   map = {saveSong.trackId: localImagePath.path};
-      // }
+
       map[saveSong.trackId] = localImagePath.path;
       var encodedData = jsonEncode(map);
 
@@ -176,5 +172,20 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
           snackbarMessage: 'Failed to download song',
           isSongDownloading: false));
     }
+  }
+
+  FutureOr<void> onPlayNextSongEvent(
+      ChangeSongEvent event, Emitter<PlayAudioState> emit) {
+    if (event.next == true) {
+      audioRepository.next();
+    }
+    if (event.previous == true) {
+      audioRepository.previous();
+    }
+  }
+
+  FutureOr<void> onPlayOrPauseSongEvent(
+      PlayOrPauseSongEvent event, Emitter<PlayAudioState> emit) {
+    (event.play) ? audioRepository.play() : audioRepository.pause();
   }
 }

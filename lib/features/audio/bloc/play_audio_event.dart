@@ -45,3 +45,16 @@ class DownloadSongEvent extends PlayAudioEvent {
   const DownloadSongEvent(
       {required this.currentSongIndex, required this.context});
 }
+
+class ChangeSongEvent extends PlayAudioEvent {
+  final bool next;
+  final bool previous;
+
+  const ChangeSongEvent({this.next = false, this.previous = false});
+}
+
+class PlayOrPauseSongEvent extends PlayAudioEvent {
+  final bool play;
+
+  const PlayOrPauseSongEvent({required this.play});
+}

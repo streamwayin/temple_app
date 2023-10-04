@@ -7,13 +7,15 @@ class PlayAudioState extends Equatable {
   final String? snackbarMessage;
   final bool isSongDownloading;
   final Map<String, String> downloadedSongsMap;
+  final MusicPlayerDataModel? musicPlayerDataModel;
   const PlayAudioState(
       {this.albums = const [],
       this.concatenatingAudioSource,
       this.currentAlbumIndex,
       this.snackbarMessage,
       this.isSongDownloading = false,
-      this.downloadedSongsMap = const {}});
+      this.downloadedSongsMap = const {},
+      this.musicPlayerDataModel});
   @override
   List<Object?> get props => [
         albums,
@@ -21,7 +23,8 @@ class PlayAudioState extends Equatable {
         currentAlbumIndex,
         snackbarMessage,
         isSongDownloading,
-        downloadedSongsMap
+        downloadedSongsMap,
+        musicPlayerDataModel
       ];
 
   PlayAudioState copyWith({
@@ -31,15 +34,18 @@ class PlayAudioState extends Equatable {
     String? snackbarMessage,
     bool? isSongDownloading,
     Map<String, String>? downloadedSongsMap,
+    MusicPlayerDataModel? musicPlayerDataModel,
   }) {
     return PlayAudioState(
-        albums: albums ?? this.albums,
-        concatenatingAudioSource:
-            concatenatingAudioSource ?? this.concatenatingAudioSource,
-        currentAlbumIndex: currentAlbumIndex ?? this.currentAlbumIndex,
-        snackbarMessage: snackbarMessage,
-        isSongDownloading: isSongDownloading ?? this.isSongDownloading,
-        downloadedSongsMap: downloadedSongsMap ?? this.downloadedSongsMap);
+      albums: albums ?? this.albums,
+      concatenatingAudioSource:
+          concatenatingAudioSource ?? this.concatenatingAudioSource,
+      currentAlbumIndex: currentAlbumIndex ?? this.currentAlbumIndex,
+      snackbarMessage: snackbarMessage,
+      isSongDownloading: isSongDownloading ?? this.isSongDownloading,
+      downloadedSongsMap: downloadedSongsMap ?? this.downloadedSongsMap,
+      musicPlayerDataModel: musicPlayerDataModel ?? this.musicPlayerDataModel,
+    );
   }
 }
 

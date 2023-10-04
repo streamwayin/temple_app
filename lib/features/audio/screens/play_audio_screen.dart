@@ -106,6 +106,13 @@ class MyAppState extends State<PlayAudioScreen> {
                 }
               },
               builder: (context, state) {
+                MediaItem? sequenceState;
+                if (state.musicPlayerDataModel != null) {
+                  sequenceState = state.musicPlayerDataModel!.sequenceState
+                      ?.currentSource?.tag as MediaItem;
+                }
+                final PositionData? positionData =
+                    state.musicPlayerDataModel?.positionData;
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -131,80 +138,75 @@ class MyAppState extends State<PlayAudioScreen> {
                     SizedBox(
                       height: size.height * .4,
                       width: size.width * .8,
-                      child: StreamBuilder<SequenceState?>(
-                        stream: _player.sequenceStateStream,
-                        builder: (context, snapshot) {
-                          final state = snapshot.data;
-                          if (state?.sequence.isEmpty ?? true) {
-                            return const SizedBox();
-                          }
-                          final metadata =
-                              state!.currentSource!.tag as MediaItem;
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Center(
-                                    child: Container(
-                                      height: size.height * .4,
-                                      width: size.width * .8,
-                                      decoration: const BoxDecoration(
-                                          // color: Colors.redAccent,
-                                          ),
-                                      child: CachedNetworkImage(
-                                        imageUrl: metadata.artUri.toString(),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                        fit: BoxFit.cover,
+                      child: (sequenceState != null)
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Center(
+                                      child: Container(
+                                        height: size.height * .4,
+                                        width: size.width * .8,
+                                        decoration: const BoxDecoration(
+                                            // color: Colors.redAccent,
+                                            ),
+                                        child: CachedNetworkImage(
+                                          imageUrl:
+                                              sequenceState.artUri.toString(),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Text(
-                                metadata.title,
-                                style: const TextStyle(
-                                    fontSize: 22, fontWeight: FontWeight.w600),
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                              ),
-                              Text(
-                                metadata.artist!,
-                              ),
-                              (metadata.album == null)
-                                  ? const SizedBox()
-                                  : Text(
-                                      metadata.album!,
-                                      style: const TextStyle(
-                                          color: Colors.red,
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w600),
-                                      textAlign: TextAlign.center,
-                                      maxLines: 2,
-                                    ),
-                            ],
-                          );
-                        },
-                      ),
+                                Text(
+                                  sequenceState.title,
+                                  style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w600),
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                ),
+                                Text(
+                                  sequenceState.artist!,
+                                ),
+                                (sequenceState.album == null)
+                                    ? const SizedBox()
+                                    : Text(
+                                        sequenceState.album!,
+                                        style: const TextStyle(
+                                            color: Colors.red,
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w600),
+                                        textAlign: TextAlign.center,
+                                        maxLines: 2,
+                                      ),
+                              ],
+                            )
+                          : Center(
+                              child: SizedBox(
+                                  height: 50.h,
+                                  child: const AspectRatio(
+                                      aspectRatio: 1,
+                                      child: CircularProgressIndicator())),
+                            ),
                     ),
 
                     // Display seek bar. Using StreamBuilder, this widget rebuilds
                     // each time the position, buffered position or duration changes.
-                    StreamBuilder<PositionData>(
-                      stream: _positionDataStream,
-                      builder: (context, snapshot) {
-                        final positionData = snapshot.data;
-                        return SeekBar(
-                          duration: positionData?.duration ?? Duration.zero,
-                          position: positionData?.position ?? Duration.zero,
-                          bufferedPosition:
-                              positionData?.bufferedPosition ?? Duration.zero,
-                          onChangeEnd: _player.seek,
-                        );
-                      },
+
+                    SeekBar(
+                      duration: positionData?.duration ?? Duration.zero,
+                      position: positionData?.position ?? Duration.zero,
+                      bufferedPosition:
+                          positionData?.bufferedPosition ?? Duration.zero,
+                      onChangeEnd: _player.seek,
                     ),
+
                     // Display play/pause button and volume/speed sliders.
                     ControlButtons(_player),
                   ],
