@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:audio_session/audio_session.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:rxdart/rxdart.dart';
@@ -29,7 +28,7 @@ class AudioRepository {
     // Listen to errors during playback.
     _player.playbackEventStream.listen((event) {},
         onError: (Object e, StackTrace stackTrace) {
-      print('A stream error occurred: $e');
+      log('A stream error occurred: $e');
     });
   }
 
@@ -58,7 +57,7 @@ class AudioRepository {
     try {
       await _player.setAudioSource(playList);
     } catch (e) {
-      print("Error loading audio source: $e");
+      log("Error loading audio source: $e");
     }
   }
 
@@ -66,7 +65,9 @@ class AudioRepository {
 
   void pause() => _player.pause();
   void next() => _player.seekToNext();
+  int? currentSongIndex() => _player.currentIndex;
   void previous() => _player.seekToPrevious;
+  void setSeekDuration(Duration duration) => _player.seek(duration);
   Future<List<AlbumModel>?> getAudioListFromweb() async {
     try {
       List<AlbumModel> albumModel = [];
@@ -97,13 +98,11 @@ class AudioRepository {
 
       final musicPath =
           File('${directory.path}/downloaded_music/$fileName.mp3');
-      print("File musicPath $musicPath");
       if (!await musicPath.exists()) {
         await musicPath.create(recursive: true);
       }
 
       await musicPath.writeAsBytes(data);
-      print('Song downloaded and saved to: ${musicPath.path}');
       return musicPath;
     } else {
       return null;

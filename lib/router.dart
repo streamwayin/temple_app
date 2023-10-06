@@ -5,7 +5,6 @@ import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
-import 'package:temple_app/modals/album_model.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -25,10 +24,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const AudioScreen(),
       );
     case PlayAudioScreen.routeName:
-      int index = routeSettings.arguments as int;
+      // int index = routeSettings.arguments as int;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => PlayAudioScreen(index: index),
+        builder: (_) => const PlayAudioScreen(),
       );
     case VideoScreen.routeName:
       return MaterialPageRoute(

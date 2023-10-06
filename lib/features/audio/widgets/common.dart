@@ -1,21 +1,20 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/play_audio_bloc.dart';
 
 class SeekBar extends StatefulWidget {
   final Duration duration;
   final Duration position;
   final Duration bufferedPosition;
-  final ValueChanged<Duration>? onChanged;
-  final ValueChanged<Duration>? onChangeEnd;
 
   const SeekBar({
     Key? key,
     required this.duration,
     required this.position,
     required this.bufferedPosition,
-    this.onChanged,
-    this.onChangeEnd,
   }) : super(key: key);
 
   @override
@@ -55,14 +54,12 @@ class SeekBarState extends State<SeekBar> {
                 setState(() {
                   _dragValue = value;
                 });
-                if (widget.onChanged != null) {
-                  widget.onChanged!(Duration(milliseconds: value.round()));
-                }
+                context.read<PlayAudioBloc>().add(SetSeekDurationEvent(
+                    duration: Duration(milliseconds: value.round())));
               },
               onChangeEnd: (value) {
-                if (widget.onChangeEnd != null) {
-                  widget.onChangeEnd!(Duration(milliseconds: value.round()));
-                }
+                context.read<PlayAudioBloc>().add(SetSeekDurationEvent(
+                    duration: Duration(milliseconds: value.round())));
                 _dragValue = null;
               },
             ),
@@ -82,14 +79,12 @@ class SeekBarState extends State<SeekBar> {
               setState(() {
                 _dragValue = value;
               });
-              if (widget.onChanged != null) {
-                widget.onChanged!(Duration(milliseconds: value.round()));
-              }
+              context.read<PlayAudioBloc>().add(SetSeekDurationEvent(
+                  duration: Duration(milliseconds: value.round())));
             },
             onChangeEnd: (value) {
-              if (widget.onChangeEnd != null) {
-                widget.onChangeEnd!(Duration(milliseconds: value.round()));
-              }
+              context.read<PlayAudioBloc>().add(SetSeekDurationEvent(
+                  duration: Duration(milliseconds: value.round())));
               _dragValue = null;
             },
           ),

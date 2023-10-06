@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
-import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
+import 'package:temple_app/features/home/screens/home_screen.dart';
 
 import '../bloc/play_audio_bloc.dart';
 
@@ -14,7 +14,13 @@ class AudioScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Audio'),
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Albums'),
+            SongPlayingIndicator(),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 2),

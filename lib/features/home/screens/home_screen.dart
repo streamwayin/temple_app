@@ -1,10 +1,13 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
+import 'package:gif_view/gif_view.dart';
+import '../../audio/bloc/play_audio_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -42,15 +45,16 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
     return Scaffold(
       appBar: AppBar(
-        title: Row(
+        title: const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('Home Page'),
-            IconButton(
-                onPressed: () {
-                  FirebaseAuth.instance.signOut();
-                },
-                icon: const Icon(Icons.logout))
+            Text('Home Page'),
+            // IconButton(
+            //     onPressed: () {
+            //       FirebaseAuth.instance.signOut();
+            //     },
+            //     icon: const Icon(Icons.logout)),
+            SongPlayingIndicator()
           ],
         ),
       ),
@@ -79,33 +83,33 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            (isControlBarExpanded)
-                ? GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        isControlBarExpanded = false;
-                      });
-                    },
-                    child: Container(
-                      color: Colors.black.withOpacity(0.7),
-                    ),
-                  )
-                : Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            isControlBarExpanded = true;
-                          });
-                        },
-                        child: AnimatedContainer(
-                            height: isControlBarExpanded
-                                ? MediaQuery.of(context).size.height
-                                : 60,
-                            duration: const Duration(milliseconds: 10000),
-                            child: MusicControlBar())))
+            // (isControlBarExpanded)
+            //     ? GestureDetector(
+            //         onTap: () {
+            //           setState(() {
+            //             isControlBarExpanded = false;
+            //           });
+            //         },
+            //         child: Container(
+            //           color: Colors.black.withOpacity(0.7),
+            //         ),
+            //       )
+            //     : Positioned(
+            //         bottom: 0,
+            //         left: 0,
+            //         right: 0,
+            //         child: InkWell(
+            //             onTap: () {
+            //               setState(() {
+            //                 isControlBarExpanded = true;
+            //               });
+            //             },
+            //             child: AnimatedContainer(
+            //                 height: isControlBarExpanded
+            //                     ? MediaQuery.of(context).size.height
+            //                     : 60,
+            //                 duration: const Duration(milliseconds: 10000),
+            //                 child: MusicControlBar())))
           ],
         ),
       ),
@@ -113,7 +117,52 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
+class SongPlayingIndicator extends StatelessWidget {
+  const SongPlayingIndicator({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<PlayAudioBloc, PlayAudioState>(
+      listener: (context, state) {},
+      builder: (context, state) {
+        PlayerState? playerState = state.musicPlayerDataModel?.playerState;
+
+        final processingState = playerState?.processingState;
+        final playing = playerState?.playing;
+        if (processingState == ProcessingState.loading ||
+            processingState == ProcessingState.buffering) {
+          return Container(
+            margin: const EdgeInsets.all(8.0),
+            width: 64.0,
+            height: 64.0,
+            child: const CircularProgressIndicator(),
+          );
+        } else if (playing != true) {
+        } else if (processingState != ProcessingState.completed) {
+          return SizedBox(
+            height: 60,
+            width: 80,
+            child: GifView.asset(
+              'assets/images/playing.gif',
+              invertColors: true,
+              height: 200,
+              width: 200,
+            ),
+          );
+        } else {
+          return const SizedBox();
+        }
+        return const SizedBox();
+      },
+    );
+  }
+}
+
 class MusicControlBar extends StatelessWidget {
+  const MusicControlBar({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -123,25 +172,25 @@ class MusicControlBar extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           IconButton(
-            icon: Icon(Icons.repeat),
+            icon: const Icon(Icons.repeat),
             onPressed: () {
               // Handle repeat button press
             },
           ),
           IconButton(
-            icon: Icon(Icons.skip_previous),
+            icon: const Icon(Icons.skip_previous),
             onPressed: () {
               // Handle previous button press
             },
           ),
           IconButton(
-            icon: Icon(Icons.pause),
+            icon: const Icon(Icons.pause),
             onPressed: () {
               // Handle pause button press
             },
           ),
           IconButton(
-            icon: Icon(Icons.skip_next),
+            icon: const Icon(Icons.skip_next),
             onPressed: () {
               // Handle next button press
             },

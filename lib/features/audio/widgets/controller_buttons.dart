@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
-import 'package:temple_app/features/audio/widgets/common.dart';
 
 class ControlButtons extends StatelessWidget {
-  final AudioPlayer player;
-
-  const ControlButtons(this.player, {Key? key}) : super(key: key);
+  const ControlButtons({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +62,9 @@ class ControlButtons extends StatelessWidget {
               return IconButton(
                 icon: const Icon(Icons.replay),
                 iconSize: 64.0,
-                onPressed: () => player.seek(Duration.zero),
+                onPressed: () {
+                  // player.seek(Duration.zero)
+                },
               );
             }
           },

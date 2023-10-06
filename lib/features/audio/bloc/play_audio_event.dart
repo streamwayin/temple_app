@@ -39,11 +39,10 @@ class LoadCurrentPlaylistEvent extends PlayAudioEvent {
 }
 
 class DownloadSongEvent extends PlayAudioEvent {
-  final int currentSongIndex;
+  // final int currentSongIndex;
   final BuildContext context;
 
-  const DownloadSongEvent(
-      {required this.currentSongIndex, required this.context});
+  const DownloadSongEvent({required this.context});
 }
 
 class ChangeSongEvent extends PlayAudioEvent {
@@ -57,4 +56,10 @@ class PlayOrPauseSongEvent extends PlayAudioEvent {
   final bool play;
 
   const PlayOrPauseSongEvent({required this.play});
+}
+
+class SetSeekDurationEvent extends PlayAudioEvent {
+  final Duration duration;
+
+  const SetSeekDurationEvent({required this.duration});
 }

@@ -2,12 +2,9 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:just_audio/just_audio.dart';
@@ -16,8 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/modals/album_model.dart';
 import 'package:temple_app/modals/music_player_data_model.dart';
 import 'package:temple_app/repositories/audo_repository.dart';
-import 'package:http/http.dart' as http;
-import 'package:path_provider/path_provider.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 import '../../../constants.dart';
@@ -34,6 +29,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<DownloadSongEvent>(onDownloadSongEvent);
     on<ChangeSongEvent>(onPlayNextSongEvent);
     on<PlayOrPauseSongEvent>(onPlayOrPauseSongEvent);
+    on<SetSeekDurationEvent>(onSetSeekDurationEvent);
   }
   AudioRepository audioRepository = AudioRepository();
   FutureOr<void> onGetAudioListFromWeb(
@@ -135,8 +131,10 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     emit(state.copyWith(isSongDownloading: true));
     // doing this in order to get songs meta data so that we can store it in local storeage and use it when we will play downloaded song
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    Song saveSong =
-        state.albums[state.currentAlbumIndex!].songList[event.currentSongIndex];
+    // Song saveSong =
+    //     state.albums[state.currentAlbumIndex!].songList[event.currentSongIndex];
+    int? index = audioRepository.currentSongIndex();
+    Song saveSong = state.albums[state.currentAlbumIndex!].songList[index!];
     try {
       File? localImagePath;
       if (!state.downloadedSongsMap.containsKey(saveSong.trackId)) {
@@ -187,5 +185,10 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   FutureOr<void> onPlayOrPauseSongEvent(
       PlayOrPauseSongEvent event, Emitter<PlayAudioState> emit) {
     (event.play) ? audioRepository.play() : audioRepository.pause();
+  }
+
+  FutureOr<void> onSetSeekDurationEvent(
+      SetSeekDurationEvent event, Emitter<PlayAudioState> emit) {
+    audioRepository.setSeekDuration(event.duration);
   }
 }
