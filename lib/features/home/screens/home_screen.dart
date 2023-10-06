@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
+import 'package:temple_app/features/ebook/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
@@ -37,11 +38,11 @@ class _HomeScreenState extends State<HomeScreen> {
         "imagePath": "assets/images/series.png",
         "routeName": VideoScreen.routeName
       },
-      // {
-      //   "name": "Wallpapers",
-      //   "imagePath": "assets/images/images.png",
-      //   "routeName": WallpaperScreen.routeName
-      // }
+      {
+        "name": "E-Book",
+        "imagePath": "assets/images/ebook.png",
+        "routeName": EbookScreen.routeName
+      }
     ];
     return Scaffold(
       appBar: AppBar(
