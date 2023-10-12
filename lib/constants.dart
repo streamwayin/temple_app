@@ -207,3 +207,40 @@ List<Map<String, dynamic>> album = [
     ]
   },
 ];
+List<Map<String, String>> bookLIst = [
+  {
+    "name": 'book',
+    "bookId": "10001",
+    "thumbnailUrl": "",
+    "bookUrl":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fbook.epub?alt=media&token=a0989ec5-7d97-43ca-8357-82182f8fb346"
+  },
+  {
+    "name": 'Fasimov genetic effects of radiation',
+    "bookId": "10002",
+    "thumbnailUrl": "",
+    "bookUrl":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fasimov-genetic-effects-of-radiation.epub?alt=media&token=e19b400a-4500-46d0-84c7-87030470c53d"
+  },
+  {
+    "name": 'Book 2',
+    "bookId": "10003",
+    "thumbnailUrl": "",
+    "bookUrl":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fbook_2.epub?alt=media&token=2f366789-5d6f-40d9-b89f-13de7a85f0fe"
+  },
+  {
+    "name": 'book3',
+    "bookId": "10004",
+    "thumbnailUrl": "",
+    "bookUrl":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fbook_3.epub?alt=media&token=e2fbb157-9c43-44cf-8493-662a873ce90b"
+  },
+  {
+    "name": 'New Findings on Shirdi Sai Baba',
+    "bookId": "10005",
+    "thumbnailUrl": "",
+    "bookUrl":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2FNew-Findings-on-Shirdi-Sai-Baba.epub?alt=media&token=c743b351-5ec3-4b83-bbb8-e05dbb70e39e"
+  },
+];

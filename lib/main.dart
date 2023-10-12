@@ -7,10 +7,12 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
 import 'package:temple_app/features/auth/screens/auth_screen.dart';
-import 'package:temple_app/features/ebook/bloc/ebook_bloc.dart';
+import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
+import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
 import 'package:temple_app/firebase_options.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
+import 'package:temple_app/repositories/epub_repository.dart';
 import 'package:temple_app/router.dart';
 
 void main() async {
@@ -33,8 +35,15 @@ class MyApp extends StatelessWidget {
         minTextAdapt: true,
         splitScreenMode: true,
         builder: (_, child) {
-          return RepositoryProvider(
-              create: (context) => AuthRepository(),
+          return MultiRepositoryProvider(
+              providers: [
+                RepositoryProvider(
+                  create: (context) => AuthRepository(),
+                ),
+                RepositoryProvider(
+                  create: (context) => EpubRepository(),
+                ),
+              ],
               child: MultiBlocProvider(
                 providers: [
                   BlocProvider(
@@ -44,7 +53,11 @@ class MyApp extends StatelessWidget {
                   BlocProvider(
                       create: (context) =>
                           PlayAudioBloc()..add(GetAudioListFromWebEvent())),
-                  BlocProvider(create: (context) => EbookBloc()),
+                  BlocProvider(
+                      create: (context) =>
+                          EbookBloc(repository: EpubRepository())
+                            ..add(FetchEpubListEvent())),
+                  BlocProvider(create: (context) => EpubViewerBloc())
                 ],
                 child: MaterialApp(
                   title: 'Flutter Demo',
