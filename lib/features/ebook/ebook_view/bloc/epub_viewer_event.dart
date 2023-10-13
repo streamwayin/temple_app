@@ -7,7 +7,11 @@ class EpubViewerEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class EpubViewerInitialEvent extends EpubViewerEvent {}
+class EpubViewerInitialEvent extends EpubViewerEvent {
+  final String path;
+
+  const EpubViewerInitialEvent({required this.path});
+}
 
 class AddNewBookmarkEvent extends EpubViewerEvent {
   final String bookmarkName;
@@ -21,4 +25,14 @@ class GoTobookmark extends EpubViewerEvent {
   final Map<String, String> bookmarkMap;
 
   const GoTobookmark({required this.bookmarkMap});
+}
+
+class ChangeFontSizeEvent extends EpubViewerEvent {
+  final bool increase;
+  final bool decrease;
+
+  const ChangeFontSizeEvent({
+    this.increase = false,
+    this.decrease = false,
+  });
 }

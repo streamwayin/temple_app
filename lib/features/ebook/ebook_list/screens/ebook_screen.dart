@@ -1,10 +1,8 @@
-import 'package:epub_view/epub_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
 
-import '../../../../repositories/epub_repository.dart';
 import '../bloc/ebook_bloc.dart';
 
 class EbookScreen extends StatelessWidget {
@@ -13,61 +11,87 @@ class EbookScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     EbookBloc ebookBloc = context.read<EbookBloc>();
-    return BlocBuilder<EbookBloc, EbookState>(
+    return BlocConsumer<EbookBloc, EbookState>(
+      listener: (BuildContext context, EbookState state) {
+        if (state.pathString != null) {
+          context
+              .read<EpubViewerBloc>()
+              .add(EpubViewerInitialEvent(path: state.pathString!));
+          Navigator.pushNamed(context, EpubViwerScreen.routeName);
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(title: const Text('ebook')),
-          body: Padding(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 16.0).copyWith(top: 8),
-            child: Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    ebookBloc.add(DownloadBookEvent());
-                  },
-                  child: const Text('download'),
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0)
+                    .copyWith(top: 8),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: GridView.builder(
+                        itemCount: state.booksList.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 18,
+                                mainAxisSpacing: 10,
+                                mainAxisExtent: 163),
+                        itemBuilder: (context, index) {
+                          var item = state.booksList[index];
+                          return Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 1,
+                                color: const Color.fromARGB(255, 192, 192, 192),
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            padding: const EdgeInsets.all(10),
+                            child: Center(
+                              child: InkWell(
+                                onTap: () {
+                                  ebookBloc
+                                      .add(DownloadBookEvent(index: index));
+                                },
+                                child: SizedBox(
+                                  height: 150,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Container(
+                                        height: 100,
+                                        width: 80,
+                                        decoration: const BoxDecoration(
+                                          border: Border(),
+                                          color: Color.fromARGB(
+                                              255, 231, 203, 201),
+                                        ),
+                                      ),
+                                      Text(
+                                        item.name,
+                                        maxLines: 2,
+                                        style: const TextStyle(
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    context
-                        .read<EpubViewerBloc>()
-                        .add(EpubViewerInitialEvent());
-                    Navigator.pushNamed(context, EpubViwerScreen.routeName);
-                    // VocsyEpub.setConfig(
-                    //   themeColor: Theme.of(context).primaryColor,
-                    //   identifier: "iosBook",
-                    //   scrollDirection: EpubScrollDirection.ALLDIRECTIONS,
-                    //   allowSharing: true,
-                    //   enableTts: true,
-                    //   nightMode: true,
-                    // );
-                    // // get current locator
-                    // VocsyEpub.locatorStream.listen((locator) {
-                    //   print('LOCATOR: $locator');
-                    // });
-                    // await VocsyEpub.openAsset(
-                    //   'assets/images/ebooks/gaban_mob.epub',
-                    //   lastLocation: EpubLocator.fromJson({
-                    //     "bookId": "2239",
-                    //     "href": "/OEBPS/ch06.xhtml",
-                    //     "created": 1539934158390,
-                    //     "locations": {
-                    //       "cfi": "epubcfi(/0!/4/4[simple_book]/2/2/6)"
-                    //     }
-                    //   }),
-                    // );
-                  },
-                  child: const Text('Open Assets E-pub'),
-                ),
-                ElevatedButton(
-                    onPressed: () {
-                      EpubRepository epubRepository = EpubRepository();
-                      epubRepository.getEpubListFromWeb();
-                    },
-                    child: Text("get"))
-              ],
-            ),
+              ),
+              (state.loading == true) ? const Text('data') : const SizedBox()
+            ],
           ),
         );
       },

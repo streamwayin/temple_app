@@ -1,6 +1,7 @@
 import "package:epub_view/epub_view.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/auth/widgets/custom_text_field.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/widgets/utils.dart';
@@ -22,61 +23,120 @@ class EpubViwerScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Text('Book title'),
-            actions: [
-              IconButton(
-                  onPressed: () async {
-                    String? boomark =
-                        state.epubReaderController!.generateEpubCfi();
-                    if (context.mounted) {
-                      if (boomark == null) {
-                        Utils.showSnackBar(
-                            context: context, message: "something went wrong");
-                        return;
-                      }
-                      addBookmarkDialog(
-                          context, bookmarkNameController, size, boomark);
-                    }
-                  },
-                  icon: const Icon(Icons.bookmark_add))
-            ],
-          ),
-          drawer: Drawer(
-            child: SafeArea(
-              child: DefaultTabController(
-                length: 2,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Container(
-                      height: 50,
-                      color: Colors.black12,
-                      child: const TabBar(
-                          labelColor: Colors.deepOrange,
-                          unselectedLabelColor: Colors.white,
-                          tabs: [
-                            Tab(text: "Index"),
-                            Tab(text: "Bookmarks"),
-                          ]),
-                    ),
-                    Expanded(
-                      child: TabBarView(children: [
-                        EpubViewTableOfContents(
-                            controller: state.epubReaderController!),
-                        const Bookmarkcomponent(),
-                      ]),
-                    ),
-                  ],
+            automaticallyImplyLeading: false,
+
+            title: Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.tertiaryContainer,
+                      borderRadius: BorderRadius.circular(8)),
+                  width: 75.w,
+                  child: const Row(children: [
+                    Icon(Icons.keyboard_arrow_down_outlined, size: 30),
+                    Text(
+                      'Index',
+                      style: TextStyle(fontSize: 18),
+                    )
+                  ]),
                 ),
-              ),
+                const Text('Book title'),
+              ],
             ),
+
+            // actions: [
+            //   IconButton(
+            //       onPressed: () async {
+            //         String? boomark =
+            //             state.epubReaderController!.generateEpubCfi();
+            //         if (context.mounted) {
+            //           if (boomark == null) {
+            //             Utils.showSnackBar(
+            //                 context: context, message: "something went wrong");
+            //             return;
+            //           }
+            //           addBookmarkDialog(
+            //               context, bookmarkNameController, size, boomark);
+            //         }
+            //       },
+            //       icon: const Icon(Icons.bookmark_add))
+            // ],
           ),
-          body: EpubView(
-            builders: EpubViewBuilders<DefaultBuilderOptions>(
-              options: const DefaultBuilderOptions(),
-              chapterDividerBuilder: (_) => const Divider(),
+          // drawer: Drawer(
+          //   child: SafeArea(
+          //     child: DefaultTabController(
+          //       length: 2,
+          //       child: Column(
+          //         mainAxisSize: MainAxisSize.max,
+          //         children: <Widget>[
+          //           Container(
+          //             height: 50,
+          //             color: Colors.black12,
+          //             child: const TabBar(
+          //                 labelColor: Colors.deepOrange,
+          //                 unselectedLabelColor: Colors.white,
+          //                 tabs: [
+          //                   Tab(text: "Index"),
+          //                   Tab(text: "Bookmarks"),
+          //                 ]),
+          //           ),
+          //           Expanded(
+          //             child: TabBarView(children: [
+          //               EpubViewTableOfContents(
+          //                   controller: state.epubReaderController!),
+          //               const Bookmarkcomponent(),
+          //             ]),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
+          body: SizedBox(
+            height: size.height,
+            width: size.width,
+            child: Stack(
+              children: [
+                EpubView(
+                  builders: EpubViewBuilders<DefaultBuilderOptions>(
+                    options: DefaultBuilderOptions(
+                        textStyle: TextStyle(
+                      fontSize: state.fontSize,
+                    )),
+                    chapterDividerBuilder: (_) => const Divider(),
+                  ),
+                  controller: state.epubReaderController!,
+                ),
+                Positioned(
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                    child: Container(
+                      color: Colors.grey.withOpacity(0.9),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          IconButton(
+                            iconSize: 30,
+                            onPressed: () {
+                              context.read<EpubViewerBloc>().add(
+                                  const ChangeFontSizeEvent(decrease: true));
+                            },
+                            icon: const Icon(Icons.remove),
+                          ),
+                          IconButton(
+                            iconSize: 30,
+                            onPressed: () {
+                              context.read<EpubViewerBloc>().add(
+                                  const ChangeFontSizeEvent(increase: true));
+                            },
+                            icon: const Icon(Icons.add),
+                          ),
+                        ],
+                      ),
+                    ))
+              ],
             ),
-            controller: state.epubReaderController!,
           ),
         );
       },

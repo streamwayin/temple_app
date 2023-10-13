@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:epub_view/epub_view.dart';
 import 'package:equatable/equatable.dart';
@@ -12,14 +13,14 @@ class EpubViewerBloc extends Bloc<EpubViewerEvent, EpubViewerState> {
     on<EpubViewerInitialEvent>(onEpubViewerInitialEvent);
     on<AddNewBookmarkEvent>(onAddNewBookmarkEvent);
     on<GoTobookmark>(onGoTobookmark);
+    on<ChangeFontSizeEvent>(onChangeFontSizeEvent);
   }
 
   FutureOr<void> onEpubViewerInitialEvent(
       EpubViewerInitialEvent event, Emitter<EpubViewerState> emit) {
     emit(state.copyWith(status: EpubViewerStatus.loading));
-    EpubController controller = EpubController(
-        document: EpubDocument.openAsset(
-            'assets/images/ebooks/New-Findings-on-Shirdi-Sai-Baba.epub'));
+    EpubController controller =
+        EpubController(document: EpubDocument.openFile(File(event.path)));
     emit(state.copyWith(
         status: EpubViewerStatus.loaded, epubReaderController: controller));
   }
@@ -39,5 +40,17 @@ class EpubViewerBloc extends Bloc<EpubViewerEvent, EpubViewerState> {
   FutureOr<void> onGoTobookmark(
       GoTobookmark event, Emitter<EpubViewerState> emit) {
     state.epubReaderController!.gotoEpubCfi(event.bookmarkMap["epubcfi"]!);
+  }
+
+  FutureOr<void> onChangeFontSizeEvent(
+      ChangeFontSizeEvent event, Emitter<EpubViewerState> emit) {
+    double fontSize = state.fontSize;
+    if (event.decrease == true) {
+      fontSize -= 2;
+    }
+    if (event.increase == true) {
+      fontSize += 2;
+    }
+    emit(state.copyWith(fontSize: fontSize));
   }
 }

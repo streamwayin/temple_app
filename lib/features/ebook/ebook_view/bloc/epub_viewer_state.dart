@@ -11,26 +11,32 @@ class EpubViewerState extends Equatable {
   final EpubViewerStatus status;
   final List<Map<String, String>> bookmaks;
   final String? message;
+  final double fontSize;
+
   const EpubViewerState(
       {this.epubReaderController,
       this.status = EpubViewerStatus.loading,
       this.bookmaks = const [],
-      this.message});
+      this.message,
+      this.fontSize = 16.0});
 
   @override
-  List<Object?> get props => [epubReaderController, status, bookmaks, message];
+  List<Object?> get props =>
+      [epubReaderController, status, bookmaks, message, fontSize];
 
   EpubViewerState copyWith({
     EpubController? epubReaderController,
     EpubViewerStatus? status,
     List<Map<String, String>>? bookmaks,
     String? message,
+    double? fontSize,
   }) {
     return EpubViewerState(
       epubReaderController: epubReaderController ?? this.epubReaderController,
       status: status ?? this.status,
       bookmaks: bookmaks ?? this.bookmaks,
       message: message,
+      fontSize: fontSize ?? this.fontSize,
     );
   }
 }

@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/constants.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
@@ -23,50 +24,62 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
 
   FutureOr<void> onDownloadBookEvent(
       DownloadBookEvent event, Emitter<EbookState> emit) async {
-    if (Platform.isIOS) {
-      final PermissionStatus status = await Permission.storage.request();
-      if (status == PermissionStatus.granted) {
-        emit(state.copyWith(loading: true));
-        Map<String, dynamic> map = await startDownload();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    try {
+      EbookModel epubBook = state.booksList[event.index];
+      String? downloadedPath;
+      var map = {...state.downloadEbookMap};
+      if (map.containsKey(epubBook.bookId)) {
+        final path = map[epubBook.bookId];
+        emit(state.copyWith(pathString: path));
+        return;
+      }
+      if (Platform.isIOS) {
+        final PermissionStatus status = await Permission.storage.request();
+        if (status == PermissionStatus.granted) {
+          emit(state.copyWith(loading: true));
+          Map<String, dynamic> map =
+              await startDownload(epubBook.bookUrl, epubBook.name);
+          if (map['success'] == true) {
+            downloadedPath = map['path'];
+          }
+        } else {
+          await Permission.storage.request();
+        }
+      } else if (Platform.isAndroid) {
+        final map = await startDownload(epubBook.bookUrl, epubBook.name);
         if (map['success'] == true) {
-          emit(state.copyWith(loading: false, downloadedFilePath: map['path']));
+          downloadedPath = map['path'];
         }
       } else {
-        await Permission.storage.request();
+        state.copyWith(message: "Unable to download");
       }
-    } else if (Platform.isAndroid) {
-      final PermissionStatus status = await Permission.storage.request();
-      if (status == PermissionStatus.granted) {
-        print('object');
-        print('object');
-        final map = await startDownload();
-        print(map['path']);
-      } else {
-        await Permission.storage.request();
+      if (downloadedPath == null) {
+        return;
       }
-    } else {
-      PlatformException(code: '500');
+
+      map[epubBook.bookId] = downloadedPath;
+      var encodedData = jsonEncode(map);
+      prefs.setString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY, encodedData);
+      emit(state.copyWith(downloadEbookMap: map, pathString: downloadedPath));
+    } catch (e) {
+      emit(state.copyWith(message: "Something went wrong"));
     }
-    final map = await startDownload();
-    print(map['path']);
-    print(map['success']);
   }
 
-  Future<Map<String, dynamic>> startDownload() async {
+  Future<Map<String, dynamic>> startDownload(String url, String name) async {
     Map<String, dynamic> map = {"success": false, "path": ""};
     Directory? appDocDir = Platform.isAndroid
         ? await getExternalStorageDirectory()
         : await getApplicationDocumentsDirectory();
 
-    String path = '${appDocDir!.path}/sample.epub';
+    String path = '${appDocDir!.path}/$name.epub';
     File file = File(path);
 
     Dio dio = Dio();
     await file.create();
-    await dio.download(
-        "https://vocsyinfotech.in/envato/cc/flutter_ebook/uploads/22566_The-Racketeer---John-Grisham.epub",
-        path,
-        deleteOnError: true, onReceiveProgress: (receivedBytes, totalBytes) {
+    await dio.download(url, path, deleteOnError: true,
+        onReceiveProgress: (receivedBytes, totalBytes) {
       print('Download --- ${(receivedBytes / totalBytes) * 100}');
     });
     map["success"] = true;
@@ -78,6 +91,16 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
   FutureOr<void> onFetchEpubListEvent(
       FetchEpubListEvent event, Emitter<EbookState> emit) async {
     final list = await repository.getEpubListFromWeb();
-    state.copyWith(booksList: list);
+    Map<String, String> downloadedEbookMap = {};
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? offlineBooks =
+        prefs.getString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY);
+    if (offlineBooks != null) {
+      final decodedMap = json.decode(offlineBooks);
+      decodedMap.forEach((key, value) {
+        downloadedEbookMap[key] = value.toString();
+      });
+    }
+    emit(state.copyWith(booksList: list, downloadEbookMap: downloadedEbookMap));
   }
 }
