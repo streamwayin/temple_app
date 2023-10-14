@@ -24,6 +24,7 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
 
   FutureOr<void> onDownloadBookEvent(
       DownloadBookEvent event, Emitter<EbookState> emit) async {
+    emit(state.copyWith(loading: true));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
       EbookModel epubBook = state.booksList[event.index];
@@ -31,13 +32,12 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
       var map = {...state.downloadEbookMap};
       if (map.containsKey(epubBook.bookId)) {
         final path = map[epubBook.bookId];
-        emit(state.copyWith(pathString: path));
+        emit(state.copyWith(pathString: path, loading: false));
         return;
       }
       if (Platform.isIOS) {
         final PermissionStatus status = await Permission.storage.request();
         if (status == PermissionStatus.granted) {
-          emit(state.copyWith(loading: true));
           Map<String, dynamic> map =
               await startDownload(epubBook.bookUrl, epubBook.name);
           if (map['success'] == true) {
@@ -52,7 +52,7 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
           downloadedPath = map['path'];
         }
       } else {
-        state.copyWith(message: "Unable to download");
+        state.copyWith(message: "Unable to download", loading: false);
       }
       if (downloadedPath == null) {
         return;
@@ -61,10 +61,12 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
       map[epubBook.bookId] = downloadedPath;
       var encodedData = jsonEncode(map);
       prefs.setString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY, encodedData);
-      emit(state.copyWith(downloadEbookMap: map, pathString: downloadedPath));
+      emit(state.copyWith(
+          downloadEbookMap: map, pathString: downloadedPath, loading: false));
     } catch (e) {
-      emit(state.copyWith(message: "Something went wrong"));
+      emit(state.copyWith(message: "Something went wrong", loading: false));
     }
+    emit(state.copyWith(loading: false));
   }
 
   Future<Map<String, dynamic>> startDownload(String url, String name) async {

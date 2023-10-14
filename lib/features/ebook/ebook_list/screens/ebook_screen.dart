@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
+import 'package:temple_app/widgets/utils.dart';
 
 import '../bloc/ebook_bloc.dart';
 
@@ -10,6 +12,7 @@ class EbookScreen extends StatelessWidget {
   const EbookScreen({super.key});
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     EbookBloc ebookBloc = context.read<EbookBloc>();
     return BlocConsumer<EbookBloc, EbookState>(
       listener: (BuildContext context, EbookState state) {
@@ -90,7 +93,9 @@ class EbookScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              (state.loading == true) ? const Text('data') : const SizedBox()
+              (state.loading == true)
+                  ? Utils.showLoadingOnSceeen()
+                  : const SizedBox()
             ],
           ),
         );

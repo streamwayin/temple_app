@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:epub_view/epub_view.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'epub_viewer_event.dart';
@@ -14,6 +15,8 @@ class EpubViewerBloc extends Bloc<EpubViewerEvent, EpubViewerState> {
     on<AddNewBookmarkEvent>(onAddNewBookmarkEvent);
     on<GoTobookmark>(onGoTobookmark);
     on<ChangeFontSizeEvent>(onChangeFontSizeEvent);
+    on<BackgroundColorChangedEvent>(onBackgroundColorChangedEvet);
+    on<ShowBookIndexEvent>(onShowBookIndexEvent);
   }
 
   FutureOr<void> onEpubViewerInitialEvent(
@@ -52,5 +55,17 @@ class EpubViewerBloc extends Bloc<EpubViewerEvent, EpubViewerState> {
       fontSize += 2;
     }
     emit(state.copyWith(fontSize: fontSize));
+  }
+
+  FutureOr<void> onBackgroundColorChangedEvet(
+      BackgroundColorChangedEvent event, Emitter<EpubViewerState> emit) {
+    emit(state.copyWith(backgroundColor: event.backgroundColor));
+  }
+
+  FutureOr<void> onShowBookIndexEvent(
+      ShowBookIndexEvent event, Emitter<EpubViewerState> emit) {
+    if (event.showBookIndex == true) {
+      emit(state.copyWith(showBookIndex: true));
+    }
   }
 }

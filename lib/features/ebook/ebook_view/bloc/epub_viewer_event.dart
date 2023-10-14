@@ -36,3 +36,15 @@ class ChangeFontSizeEvent extends EpubViewerEvent {
     this.decrease = false,
   });
 }
+
+class BackgroundColorChangedEvent extends EpubViewerEvent {
+  final int backgroundColor;
+
+  const BackgroundColorChangedEvent({required this.backgroundColor});
+}
+
+class ShowBookIndexEvent extends EpubViewerEvent {
+  final bool showBookIndex;
+
+  const ShowBookIndexEvent({required this.showBookIndex});
+}

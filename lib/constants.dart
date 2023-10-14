@@ -245,3 +245,9 @@ List<Map<String, String>> bookLIst = [
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2FNew-Findings-on-Shirdi-Sai-Baba.epub?alt=media&token=c743b351-5ec3-4b83-bbb8-e05dbb70e39e"
   },
 ];
+List<int> ebookBackgroundColorList = [
+  0xffffffff,
+  0xfffffcda,
+  0xff464646,
+  0xff000000,
+];

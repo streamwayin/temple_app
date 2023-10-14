@@ -2,9 +2,13 @@ import "package:epub_view/epub_view.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pinput/pinput.dart';
 import 'package:temple_app/features/auth/widgets/custom_text_field.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
+import 'package:temple_app/features/ebook/ebook_view/widgets/toggle_font_size_widget.dart';
 import 'package:temple_app/widgets/utils.dart';
+
+import '../../../constants.dart';
 
 class EpubViwerScreen extends StatelessWidget {
   static const String routeName = "epub-view-screen";
@@ -22,45 +26,70 @@ class EpubViwerScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            automaticallyImplyLeading: false,
-
-            title: Row(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.tertiaryContainer,
-                      borderRadius: BorderRadius.circular(8)),
-                  width: 75.w,
-                  child: const Row(children: [
-                    Icon(Icons.keyboard_arrow_down_outlined, size: 30),
-                    Text(
-                      'Index',
-                      style: TextStyle(fontSize: 18),
-                    )
-                  ]),
+          appBar: PreferredSize(
+            preferredSize: Size(size.width, 40.h),
+            child: AppBar(
+              backgroundColor: (state.backgroundColor == 0xff464646 ||
+                      state.backgroundColor == 0xff000000)
+                  ? const Color(0xff2b2b2b)
+                  : null,
+              automaticallyImplyLeading: false,
+              title: Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.tertiaryContainer,
+                        borderRadius: BorderRadius.circular(8)),
+                    width: 75.w,
+                    child: const Row(children: [
+                      Icon(Icons.keyboard_arrow_down_outlined, size: 30),
+                      Text(
+                        'Index',
+                        style: TextStyle(fontSize: 18),
+                      )
+                    ]),
+                  ),
+                  Text(
+                    'Book title',
+                    style: TextStyle(
+                        color: (state.backgroundColor == 0xff464646 ||
+                                state.backgroundColor == 0xff000000)
+                            ? Colors.white
+                            : null),
+                  ),
+                ],
+              ),
+              actions: [
+                IconButton(
+                    onPressed: () async {
+                      String? boomark =
+                          state.epubReaderController!.generateEpubCfi();
+                      if (context.mounted) {
+                        if (boomark == null) {
+                          Utils.showSnackBar(
+                              context: context,
+                              message: "something went wrong");
+                          return;
+                        }
+                        addBookmarkDialog(
+                            context, bookmarkNameController, size, boomark);
+                      }
+                    },
+                    icon: const Icon(Icons.bookmark_add)),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.bookmarks_rounded),
                 ),
-                const Text('Book title'),
+                IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.close,
+                      weight: 20,
+                    ))
               ],
             ),
-
-            // actions: [
-            //   IconButton(
-            //       onPressed: () async {
-            //         String? boomark =
-            //             state.epubReaderController!.generateEpubCfi();
-            //         if (context.mounted) {
-            //           if (boomark == null) {
-            //             Utils.showSnackBar(
-            //                 context: context, message: "something went wrong");
-            //             return;
-            //           }
-            //           addBookmarkDialog(
-            //               context, bookmarkNameController, size, boomark);
-            //         }
-            //       },
-            //       icon: const Icon(Icons.bookmark_add))
-            // ],
           ),
           // drawer: Drawer(
           //   child: SafeArea(
@@ -92,52 +121,7 @@ class EpubViwerScreen extends StatelessWidget {
           //     ),
           //   ),
           // ),
-          body: SizedBox(
-            height: size.height,
-            width: size.width,
-            child: Stack(
-              children: [
-                EpubView(
-                  builders: EpubViewBuilders<DefaultBuilderOptions>(
-                    options: DefaultBuilderOptions(
-                        textStyle: TextStyle(
-                      fontSize: state.fontSize,
-                    )),
-                    chapterDividerBuilder: (_) => const Divider(),
-                  ),
-                  controller: state.epubReaderController!,
-                ),
-                Positioned(
-                    bottom: 0,
-                    right: 0,
-                    left: 0,
-                    child: Container(
-                      color: Colors.grey.withOpacity(0.9),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          IconButton(
-                            iconSize: 30,
-                            onPressed: () {
-                              context.read<EpubViewerBloc>().add(
-                                  const ChangeFontSizeEvent(decrease: true));
-                            },
-                            icon: const Icon(Icons.remove),
-                          ),
-                          IconButton(
-                            iconSize: 30,
-                            onPressed: () {
-                              context.read<EpubViewerBloc>().add(
-                                  const ChangeFontSizeEvent(increase: true));
-                            },
-                            icon: const Icon(Icons.add),
-                          ),
-                        ],
-                      ),
-                    ))
-              ],
-            ),
-          ),
+          body: EpubViewerWIdget(size: size, state: state),
         );
       },
     );
@@ -187,6 +171,110 @@ class EpubViwerScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class EpubViewerWIdget extends StatelessWidget {
+  const EpubViewerWIdget({
+    super.key,
+    required this.size,
+    required this.state,
+  });
+  final EpubViewerState state;
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Color(state.backgroundColor),
+      child: Column(
+        children: [
+          EpubViewActualChapter(
+            controller: state.epubReaderController!,
+            builder: (chapterValue) {
+              return Container(
+                width: size.width,
+                color: Theme.of(context).colorScheme.tertiaryContainer,
+                child: Text(
+                  'Chapter ${chapterValue!.chapter!.Title ?? ''}',
+                  maxLines: 1,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    fontSize: 20.0,
+                    overflow: TextOverflow.ellipsis,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              );
+            },
+          ),
+          SizedBox(
+            height: size.height - 136.9.h,
+            width: size.width,
+            child: Stack(
+              children: [
+                EpubView(
+                  builders: EpubViewBuilders<DefaultBuilderOptions>(
+                    options: DefaultBuilderOptions(
+                        textStyle: TextStyle(
+                      fontSize: state.fontSize,
+                    )),
+                    chapterDividerBuilder: (_) => const Divider(),
+                  ),
+                  controller: state.epubReaderController!,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 50.h,
+            width: double.infinity,
+            child: Material(
+              color: (state.backgroundColor == 0xff464646 ||
+                      state.backgroundColor == 0xff000000)
+                  ? const Color(0xff2b2b2b)
+                  : null,
+              elevation: 4,
+              child: Row(
+                children: [
+                  const ToggleFontSizeWidget(),
+                  PopupMenuButton(
+                    constraints:
+                        BoxConstraints.expand(width: 45.w, height: 200),
+                    child: Center(
+                      child: Icon(
+                        Icons.color_lens,
+                        color: Colors.green[300],
+                      ),
+                    ),
+                    itemBuilder: (context) {
+                      return List.generate(
+                        ebookBackgroundColorList.length,
+                        (index) {
+                          return PopupMenuItem(
+                            onTap: () {
+                              context.read<EpubViewerBloc>().add(
+                                  BackgroundColorChangedEvent(
+                                      backgroundColor:
+                                          ebookBackgroundColorList[index]));
+                            },
+                            child: CircleAvatar(
+                              radius: 10,
+                              backgroundColor:
+                                  Color(ebookBackgroundColorList[index]),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  )
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
