@@ -43,8 +43,13 @@ class BackgroundColorChangedEvent extends EpubViewerEvent {
   const BackgroundColorChangedEvent({required this.backgroundColor});
 }
 
-class ShowBookIndexEvent extends EpubViewerEvent {
-  final bool showBookIndex;
+class ChangeBodyStackIndexEvent extends EpubViewerEvent {
+  final int bodyIndex;
+  const ChangeBodyStackIndexEvent({required this.bodyIndex});
+}
 
-  const ShowBookIndexEvent({required this.showBookIndex});
+class ScrollToEvent extends EpubViewerEvent {
+  final int index;
+
+  const ScrollToEvent({required this.index});
 }

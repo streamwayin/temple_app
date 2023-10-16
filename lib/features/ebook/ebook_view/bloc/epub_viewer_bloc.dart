@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:epub_view/epub_view.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'epub_viewer_event.dart';
@@ -16,16 +15,17 @@ class EpubViewerBloc extends Bloc<EpubViewerEvent, EpubViewerState> {
     on<GoTobookmark>(onGoTobookmark);
     on<ChangeFontSizeEvent>(onChangeFontSizeEvent);
     on<BackgroundColorChangedEvent>(onBackgroundColorChangedEvet);
-    on<ShowBookIndexEvent>(onShowBookIndexEvent);
+    on<ChangeBodyStackIndexEvent>(onChangeBodyStackIndexEvent);
   }
-
+  EpubController? epubReaderController;
   FutureOr<void> onEpubViewerInitialEvent(
       EpubViewerInitialEvent event, Emitter<EpubViewerState> emit) {
     emit(state.copyWith(status: EpubViewerStatus.loading));
-    EpubController controller =
+    epubReaderController =
         EpubController(document: EpubDocument.openFile(File(event.path)));
     emit(state.copyWith(
-        status: EpubViewerStatus.loaded, epubReaderController: controller));
+        status: EpubViewerStatus.loaded,
+        epubReaderController: epubReaderController));
   }
 
   FutureOr<void> onAddNewBookmarkEvent(
@@ -62,10 +62,14 @@ class EpubViewerBloc extends Bloc<EpubViewerEvent, EpubViewerState> {
     emit(state.copyWith(backgroundColor: event.backgroundColor));
   }
 
-  FutureOr<void> onShowBookIndexEvent(
-      ShowBookIndexEvent event, Emitter<EpubViewerState> emit) {
-    if (event.showBookIndex == true) {
-      emit(state.copyWith(showBookIndex: true));
+  FutureOr<void> onChangeBodyStackIndexEvent(
+      ChangeBodyStackIndexEvent event, Emitter<EpubViewerState> emit) {
+    if (event.bodyIndex == 1) {
+      emit(state.copyWith(bodyIndex: event.bodyIndex, openIndexIcon: false));
+    } else if (event.bodyIndex == 2) {
+      emit(state.copyWith(bodyIndex: event.bodyIndex, openIndexIcon: false));
+    } else {
+      emit(state.copyWith(bodyIndex: event.bodyIndex, openIndexIcon: true));
     }
   }
 }

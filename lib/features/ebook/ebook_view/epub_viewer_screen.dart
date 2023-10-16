@@ -2,7 +2,6 @@ import "package:epub_view/epub_view.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:pinput/pinput.dart';
 import 'package:temple_app/features/auth/widgets/custom_text_field.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/widgets/toggle_font_size_widget.dart';
@@ -36,18 +35,36 @@ class EpubViwerScreen extends StatelessWidget {
               automaticallyImplyLeading: false,
               title: Row(
                 children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.tertiaryContainer,
-                        borderRadius: BorderRadius.circular(8)),
-                    width: 75.w,
-                    child: const Row(children: [
-                      Icon(Icons.keyboard_arrow_down_outlined, size: 30),
-                      Text(
-                        'Index',
-                        style: TextStyle(fontSize: 18),
-                      )
-                    ]),
+                  InkWell(
+                    onTap: () {
+                      if (state.openIndexIcon == true) {
+                        context
+                            .read<EpubViewerBloc>()
+                            .add(const ChangeBodyStackIndexEvent(bodyIndex: 1));
+                      } else {
+                        context
+                            .read<EpubViewerBloc>()
+                            .add(const ChangeBodyStackIndexEvent(bodyIndex: 0));
+                      }
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).colorScheme.tertiaryContainer,
+                          borderRadius: BorderRadius.circular(8)),
+                      width: 75.w,
+                      child: Row(children: [
+                        Icon(
+                            (state.openIndexIcon)
+                                ? Icons.keyboard_arrow_down_outlined
+                                : Icons.keyboard_arrow_up,
+                            size: 30),
+                        const Text(
+                          'Index',
+                          style: TextStyle(fontSize: 18),
+                        )
+                      ]),
+                    ),
                   ),
                   Text(
                     'Book title',
@@ -77,51 +94,44 @@ class EpubViwerScreen extends StatelessWidget {
                     },
                     icon: const Icon(Icons.bookmark_add)),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context
+                        .read<EpubViewerBloc>()
+                        .add(const ChangeBodyStackIndexEvent(bodyIndex: 2));
+                  },
                   icon: const Icon(Icons.bookmarks_rounded),
                 ),
                 IconButton(
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
-                    icon: const Icon(
-                      Icons.close,
-                      weight: 20,
-                    ))
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                    weight: 20,
+                  ),
+                ),
               ],
             ),
           ),
-          // drawer: Drawer(
-          //   child: SafeArea(
-          //     child: DefaultTabController(
-          //       length: 2,
-          //       child: Column(
-          //         mainAxisSize: MainAxisSize.max,
-          //         children: <Widget>[
-          //           Container(
-          //             height: 50,
-          //             color: Colors.black12,
-          //             child: const TabBar(
-          //                 labelColor: Colors.deepOrange,
-          //                 unselectedLabelColor: Colors.white,
-          //                 tabs: [
-          //                   Tab(text: "Index"),
-          //                   Tab(text: "Bookmarks"),
-          //                 ]),
-          //           ),
-          //           Expanded(
-          //             child: TabBarView(children: [
-          //               EpubViewTableOfContents(
-          //                   controller: state.epubReaderController!),
-          //               const Bookmarkcomponent(),
-          //             ]),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          body: EpubViewerWIdget(size: size, state: state),
+          body: SizedBox(
+            height: size.height,
+            width: size.width,
+            child: IndexedStack(
+              index: state.bodyIndex,
+              children: [
+                EpubViewerWIdget(size: size, state: state),
+                EpubViewTableOfContents(
+                  controller: state.epubReaderController!,
+                  func: () {
+                    context
+                        .read<EpubViewerBloc>()
+                        .add(const ChangeBodyStackIndexEvent(bodyIndex: 0));
+                  },
+                ),
+                const Bookmarkcomponent()
+              ],
+            ),
+          ),
         );
       },
     );
@@ -238,8 +248,10 @@ class EpubViewerWIdget extends StatelessWidget {
                   : null,
               elevation: 4,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const ToggleFontSizeWidget(),
+                  SizedBox(width: 15.w),
                   PopupMenuButton(
                     constraints:
                         BoxConstraints.expand(width: 45.w, height: 200),
@@ -269,7 +281,12 @@ class EpubViewerWIdget extends StatelessWidget {
                         },
                       );
                     },
-                  )
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.restart_alt_rounded),
+                  ),
+                  SizedBox(width: 10.w),
                 ],
               ),
             ),

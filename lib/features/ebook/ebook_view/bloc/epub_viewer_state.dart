@@ -13,8 +13,8 @@ class EpubViewerState extends Equatable {
   final String? message;
   final double fontSize;
   final int backgroundColor;
-  final bool showBookIndex;
-  final bool showSavedIndex;
+  final bool openIndexIcon;
+  final int bodyIndex;
 
   const EpubViewerState({
     this.epubReaderController,
@@ -23,8 +23,8 @@ class EpubViewerState extends Equatable {
     this.message,
     this.fontSize = 16.0,
     this.backgroundColor = 0xFFFFFFFF,
-    this.showBookIndex = false,
-    this.showSavedIndex = false,
+    this.bodyIndex = 0,
+    this.openIndexIcon = true,
   });
 
   @override
@@ -35,8 +35,8 @@ class EpubViewerState extends Equatable {
         message,
         fontSize,
         backgroundColor,
-        showBookIndex,
-        showSavedIndex
+        openIndexIcon,
+        bodyIndex,
       ];
 
   EpubViewerState copyWith({
@@ -48,6 +48,8 @@ class EpubViewerState extends Equatable {
     int? backgroundColor,
     bool? showBookIndex,
     bool? showSavedIndex,
+    bool? openIndexIcon,
+    int? bodyIndex,
   }) {
     return EpubViewerState(
       epubReaderController: epubReaderController ?? this.epubReaderController,
@@ -56,8 +58,8 @@ class EpubViewerState extends Equatable {
       message: message,
       fontSize: fontSize ?? this.fontSize,
       backgroundColor: backgroundColor ?? this.backgroundColor,
-      showBookIndex: showBookIndex ?? this.showBookIndex,
-      showSavedIndex: showSavedIndex ?? this.showSavedIndex,
+      openIndexIcon: openIndexIcon ?? this.openIndexIcon,
+      bodyIndex: bodyIndex ?? this.bodyIndex,
     );
   }
 }
