@@ -3,6 +3,9 @@
 String OFFLINE_DOWNLOADED_SONG_LIST_KEY = 'offline_downloaded_songs';
 String OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY = 'offline_downloaded_ebooks';
 String DOWNLOADED_TRACK_JSON = 'downloaded_track_json';
+String DEFAULT_EPUB_BACKGROUND_COLOR = 'epub_background_color';
+String DEFAULT_EPUB_FONT_SIZE = 'epub_font_size';
+
 List<String> wallpaperImagesList = [
   'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/hanuman-with-lord-ram-and-sita-hanuman-lord-ram-sita-bhakti-thumbnail.jpg?alt=media&token=9154a6f0-d6bc-4ece-9e89-37d4c6ee4982',
   'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/hanuman-bhakti-bajrangi-god-gods-hanuman-jee-jay-shree-ram-lord-pray-ram-thumbnail.jpg?alt=media&token=848120e1-cc50-4bee-b041-afb7398c0faf',
@@ -211,10 +214,10 @@ List<Map<String, dynamic>> album = [
 List<Map<String, String>> bookLIst = [
   {
     "name": 'book',
-    "bookId": "10001",
+    "bookId": "1000189dddpd",
     "thumbnailUrl": "",
     "bookUrl":
-        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fbook.epub?alt=media&token=a0989ec5-7d97-43ca-8357-82182f8fb346"
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Frangbhumi.epub?alt=media&token=b3a93b80-be8a-4ab2-a7bd-79f66ad3cee0"
   },
   {
     "name": 'Fasimov genetic effects of radiation',

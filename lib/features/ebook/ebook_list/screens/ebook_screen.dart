@@ -17,9 +17,8 @@ class EbookScreen extends StatelessWidget {
     return BlocConsumer<EbookBloc, EbookState>(
       listener: (BuildContext context, EbookState state) {
         if (state.pathString != null) {
-          context
-              .read<EpubViewerBloc>()
-              .add(EpubViewerInitialEvent(path: state.pathString!));
+          context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
+              path: state.pathString!, book: state.selectedBook!));
           Navigator.pushNamed(context, EpubViwerScreen.routeName);
         }
       },

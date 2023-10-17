@@ -32,7 +32,8 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
       var map = {...state.downloadEbookMap};
       if (map.containsKey(epubBook.bookId)) {
         final path = map[epubBook.bookId];
-        emit(state.copyWith(pathString: path, loading: false));
+        emit(state.copyWith(
+            pathString: path, loading: false, selectedBook: epubBook));
         return;
       }
       if (Platform.isIOS) {
@@ -62,7 +63,10 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
       var encodedData = jsonEncode(map);
       prefs.setString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY, encodedData);
       emit(state.copyWith(
-          downloadEbookMap: map, pathString: downloadedPath, loading: false));
+          downloadEbookMap: map,
+          pathString: downloadedPath,
+          loading: false,
+          selectedBook: epubBook));
     } catch (e) {
       emit(state.copyWith(message: "Something went wrong", loading: false));
     }

@@ -9,8 +9,9 @@ class EpubViewerEvent extends Equatable {
 
 class EpubViewerInitialEvent extends EpubViewerEvent {
   final String path;
+  final EbookModel book;
 
-  const EpubViewerInitialEvent({required this.path});
+  const EpubViewerInitialEvent({required this.path, required this.book});
 }
 
 class AddNewBookmarkEvent extends EpubViewerEvent {

@@ -7,6 +7,7 @@ class EbookState extends Equatable {
   final String? message;
   final Map<String, String> downloadEbookMap;
   final String? pathString;
+  final EbookModel? selectedBook;
   const EbookState({
     this.loading = false,
     this.downloadedFilePath,
@@ -14,6 +15,7 @@ class EbookState extends Equatable {
     this.message,
     this.downloadEbookMap = const {},
     this.pathString,
+    this.selectedBook,
   });
 
   @override
@@ -23,7 +25,8 @@ class EbookState extends Equatable {
         booksList,
         message,
         downloadEbookMap,
-        pathString
+        pathString,
+        selectedBook
       ];
 
   EbookState copyWith({
@@ -33,13 +36,16 @@ class EbookState extends Equatable {
     String? message,
     Map<String, String>? downloadEbookMap,
     String? pathString,
+    EbookModel? selectedBook,
   }) {
     return EbookState(
-        loading: loading ?? this.loading,
-        downloadedFilePath: downloadedFilePath ?? this.downloadedFilePath,
-        booksList: booksList ?? this.booksList,
-        message: this.message,
-        downloadEbookMap: downloadEbookMap ?? this.downloadEbookMap,
-        pathString: pathString);
+      loading: loading ?? this.loading,
+      downloadedFilePath: downloadedFilePath ?? this.downloadedFilePath,
+      booksList: booksList ?? this.booksList,
+      message: this.message,
+      downloadEbookMap: downloadEbookMap ?? this.downloadEbookMap,
+      pathString: pathString,
+      selectedBook: selectedBook ?? this.selectedBook,
+    );
   }
 }

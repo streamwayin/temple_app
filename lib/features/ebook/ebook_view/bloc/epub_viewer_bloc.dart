@@ -4,6 +4,10 @@ import 'dart:io';
 import 'package:epub_view/epub_view.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../constants.dart';
+import '../../../../modals/ebook_model.dart';
 
 part 'epub_viewer_event.dart';
 part 'epub_viewer_state.dart';
@@ -18,14 +22,31 @@ class EpubViewerBloc extends Bloc<EpubViewerEvent, EpubViewerState> {
     on<ChangeBodyStackIndexEvent>(onChangeBodyStackIndexEvent);
   }
   EpubController? epubReaderController;
+  SharedPreferences? prefs;
   FutureOr<void> onEpubViewerInitialEvent(
-      EpubViewerInitialEvent event, Emitter<EpubViewerState> emit) {
+      EpubViewerInitialEvent event, Emitter<EpubViewerState> emit) async {
+    prefs = await SharedPreferences.getInstance();
     emit(state.copyWith(status: EpubViewerStatus.loading));
     epubReaderController =
         EpubController(document: EpubDocument.openFile(File(event.path)));
+        
+
+    int? backgroundColor = prefs!.getInt(DEFAULT_EPUB_BACKGROUND_COLOR);
+    double? fontSizeEpub = prefs!.getDouble(DEFAULT_EPUB_FONT_SIZE);
+    if (backgroundColor == null) {
+      prefs!.setInt(DEFAULT_EPUB_BACKGROUND_COLOR, 0xFFFFFFFF);
+      backgroundColor = 0xFFFFFFFF;
+    }
+    if (fontSizeEpub == null) {
+      prefs!.setDouble(DEFAULT_EPUB_FONT_SIZE, 16.0);
+      fontSizeEpub = 16.0;
+    }
     emit(state.copyWith(
         status: EpubViewerStatus.loaded,
-        epubReaderController: epubReaderController));
+        epubReaderController: epubReaderController,
+        book: event.book,
+        backgroundColor: backgroundColor,
+        fontSize: fontSizeEpub));
   }
 
   FutureOr<void> onAddNewBookmarkEvent(
@@ -50,15 +71,18 @@ class EpubViewerBloc extends Bloc<EpubViewerEvent, EpubViewerState> {
     double fontSize = state.fontSize;
     if (event.decrease == true) {
       fontSize -= 2;
+      prefs!.setDouble(DEFAULT_EPUB_FONT_SIZE, fontSize);
     }
     if (event.increase == true) {
       fontSize += 2;
+      prefs!.setDouble(DEFAULT_EPUB_FONT_SIZE, fontSize);
     }
     emit(state.copyWith(fontSize: fontSize));
   }
 
   FutureOr<void> onBackgroundColorChangedEvet(
       BackgroundColorChangedEvent event, Emitter<EpubViewerState> emit) {
+    prefs!.setInt(DEFAULT_EPUB_BACKGROUND_COLOR, event.backgroundColor);
     emit(state.copyWith(backgroundColor: event.backgroundColor));
   }
 
