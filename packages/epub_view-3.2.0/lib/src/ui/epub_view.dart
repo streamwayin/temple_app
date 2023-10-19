@@ -343,6 +343,7 @@ class _EpubViewState extends State<EpubView> {
           onLinkTap: (href, _, __) => onExternalLinkPressed(href!),
           style: {
             'html': Style(
+              textAlign: TextAlign.center,
               padding: HtmlPaddings.only(
                 top: (options.paragraphPadding as EdgeInsets?)?.top,
                 right: (options.paragraphPadding as EdgeInsets?)?.right,

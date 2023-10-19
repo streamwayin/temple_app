@@ -27,10 +27,15 @@ class EpubViewerBloc extends Bloc<EpubViewerEvent, EpubViewerState> {
       EpubViewerInitialEvent event, Emitter<EpubViewerState> emit) async {
     prefs = await SharedPreferences.getInstance();
     emit(state.copyWith(status: EpubViewerStatus.loading));
-    epubReaderController =
-        EpubController(document: EpubDocument.openFile(File(event.path)));
-        
-
+    epubReaderController = EpubController(
+      document: EpubDocument.openFile(
+        File(event.path),
+      ),
+    );
+    // epubReaderController = EpubController(
+    //   document: EpubDocument.openAsset(
+    //       "assets/images/ebooks/Sri Hanuman Chalisa - Tulsidas Ji.epub"),
+    // );
     int? backgroundColor = prefs!.getInt(DEFAULT_EPUB_BACKGROUND_COLOR);
     double? fontSizeEpub = prefs!.getDouble(DEFAULT_EPUB_FONT_SIZE);
     if (backgroundColor == null) {

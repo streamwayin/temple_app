@@ -22,24 +22,26 @@ class EpubViewerWidget extends StatelessWidget {
       color: Color(state.backgroundColor),
       child: Column(
         children: [
-          EpubViewActualChapter(
-            controller: state.epubReaderController!,
-            builder: (chapterValue) {
-              return Container(
-                width: size.width,
-                color: Theme.of(context).colorScheme.tertiaryContainer,
-                child: Text(
-                  'Chapter ${chapterValue!.chapter!.Title ?? ''}',
-                  maxLines: 1,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    overflow: TextOverflow.ellipsis,
-                    fontWeight: FontWeight.bold,
+          Expanded(
+            child: EpubViewActualChapter(
+              controller: state.epubReaderController!,
+              builder: (chapterValue) {
+                return Container(
+                  width: size.width,
+                  color: Theme.of(context).colorScheme.tertiaryContainer,
+                  child: Text(
+                    'Chapter ${chapterValue!.chapter!.Title ?? ''}',
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
           SizedBox(
             height: size.height - 136.9.h,

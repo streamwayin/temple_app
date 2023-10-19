@@ -152,7 +152,16 @@ class EpubViwerScreen extends StatelessWidget {
                         .add(const ChangeBodyStackIndexEvent(bodyIndex: 0));
                   },
                 ),
-                const Bookmarkcomponent(),
+                Bookmarkcomponent(
+                  func: (Map<String, String> map) {
+                    context
+                        .read<EpubViewerBloc>()
+                        .add(GoTobookmark(bookmarkMap: map));
+                    context
+                        .read<EpubViewerBloc>()
+                        .add(const ChangeBodyStackIndexEvent(bodyIndex: 0));
+                  },
+                ),
               ],
             ),
           ),

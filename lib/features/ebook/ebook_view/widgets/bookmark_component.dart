@@ -5,8 +5,9 @@ import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart'
 class Bookmarkcomponent extends StatelessWidget {
   const Bookmarkcomponent({
     super.key,
+    required this.func,
   });
-
+  final Function(Map<String, String>) func;
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EpubViewerBloc, EpubViewerState>(
@@ -25,11 +26,7 @@ class Bookmarkcomponent extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 20)
                       .copyWith(top: 20),
                   child: InkWell(
-                    onTap: () {
-                      context
-                          .read<EpubViewerBloc>()
-                          .add(GoTobookmark(bookmarkMap: list[index]));
-                    },
+                    onTap: () => func(list[index]),
                     child: Text(
                       list[index]["name"]!,
                       style: const TextStyle(
