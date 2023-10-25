@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
+import 'package:temple_app/features/auth/screens/auth_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
@@ -10,6 +11,11 @@ import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
+    case AuthScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const AuthScreen(),
+      );
     case HomeScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,

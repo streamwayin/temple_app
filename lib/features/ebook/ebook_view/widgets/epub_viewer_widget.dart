@@ -51,18 +51,19 @@ class EpubViewerWidget extends StatelessWidget {
                 EpubView(
                   builders: EpubViewBuilders<DefaultBuilderOptions>(
                     options: DefaultBuilderOptions(
-                        textStyle: TextStyle(
-                      color: (state.backgroundColor == 0xff464646 ||
-                              state.backgroundColor == 0xff000000)
-                          ? Colors.white
-                          : null,
-                      fontSize: state.fontSize,
-                    )),
+                      textStyle: TextStyle(
+                          color: (state.backgroundColor == 0xff464646 ||
+                                  state.backgroundColor == 0xff000000)
+                              ? Colors.white
+                              : null,
+                          fontSize: state.fontSize,
+                          fontFamily: 'KRDEV020'),
+                    ),
                     chapterDividerBuilder: (_) => const Divider(),
                   ),
                   controller: state.epubReaderController!,
                   onDocumentLoaded: (document) {
-                    print(document);
+                    print(document.Content);
                     print(document.Chapters);
                   },
                   onChapterChanged: (chapter) {},

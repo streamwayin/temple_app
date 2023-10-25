@@ -1,9 +1,11 @@
 part of 'auth_bloc.dart';
 
-abstract class AuthEvent extends Equatable {
+class AuthEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
+
+class AuthEventInitial extends AuthEvent {}
 
 class SignInWithGoogelEvent extends AuthEvent {
   final BuildContext context;

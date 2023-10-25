@@ -8,6 +8,7 @@ import 'package:temple_app/features/home/screens/widgets/home_category_component
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
 import 'package:gif_view/gif_view.dart';
+import '../../../widgets/common_background_component.dart';
 import '../../audio/bloc/play_audio_bloc.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -45,25 +46,26 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     ];
     return Scaffold(
-      appBar: AppBar(
-        title: const Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text('Home Page'),
-            // IconButton(
-            //     onPressed: () {
-            //       FirebaseAuth.instance.signOut();
-            //     },
-            //     icon: const Icon(Icons.logout)),
-            SongPlayingIndicator()
-          ],
-        ),
-      ),
+      // appBar: AppBar(
+      //   title: const Row(
+      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //     children: [
+      //       Text('Home Page'),
+      //       // IconButton(
+      //       //     onPressed: () {
+      //       //       FirebaseAuth.instance.signOut();
+      //       //     },
+      //       //     icon: const Icon(Icons.logout)),
+      //       SongPlayingIndicator()
+      //     ],
+      //   ),
+      // ),
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
         child: Stack(
           children: [
+            const CommonBackgroundComponent(),
             Padding(
               padding: const EdgeInsets.all(24.0),
               child: GridView.builder(
@@ -84,33 +86,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-            // (isControlBarExpanded)
-            //     ? GestureDetector(
-            //         onTap: () {
-            //           setState(() {
-            //             isControlBarExpanded = false;
-            //           });
-            //         },
-            //         child: Container(
-            //           color: Colors.black.withOpacity(0.7),
-            //         ),
-            //       )
-            //     : Positioned(
-            //         bottom: 0,
-            //         left: 0,
-            //         right: 0,
-            //         child: InkWell(
-            //             onTap: () {
-            //               setState(() {
-            //                 isControlBarExpanded = true;
-            //               });
-            //             },
-            //             child: AnimatedContainer(
-            //                 height: isControlBarExpanded
-            //                     ? MediaQuery.of(context).size.height
-            //                     : 60,
-            //                 duration: const Duration(milliseconds: 10000),
-            //                 child: MusicControlBar())))
           ],
         ),
       ),

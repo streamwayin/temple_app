@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,10 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
-import 'package:temple_app/features/auth/screens/auth_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
+import 'package:temple_app/features/onboarding/screens/onboarding_screen1.dart';
+import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
 import 'package:temple_app/firebase_options.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
@@ -31,55 +31,47 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: const Size(360, 690),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (_, child) {
-          return MultiRepositoryProvider(
-              providers: [
-                RepositoryProvider(
-                  create: (context) => AuthRepository(),
+      designSize: const Size(360, 690),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) {
+        return MultiRepositoryProvider(
+          providers: [
+            RepositoryProvider(
+              create: (context) => AuthRepository(),
+            ),
+            RepositoryProvider(
+              create: (context) => EpubRepository(),
+            ),
+          ],
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => AuthBloc(authRepository: AuthRepository()),
+              ),
+              BlocProvider(
+                  create: (context) =>
+                      PlayAudioBloc()..add(GetAudioListFromWebEvent())),
+              BlocProvider(
+                  create: (context) => EbookBloc(repository: EpubRepository())
+                    ..add(FetchEpubListEvent())),
+              BlocProvider(create: (context) => EpubViewerBloc())
+            ],
+            child: MaterialApp(
+                title: 'Flutter Demo',
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData(
+                  colorScheme:
+                      ColorScheme.fromSeed(seedColor: Colors.yellowAccent),
+                  useMaterial3: true,
                 ),
-                RepositoryProvider(
-                  create: (context) => EpubRepository(),
+                onGenerateRoute: (settings) => generateRoute(settings),
+                home: const OnboardingScreen()
+                // const SplashScreen(),
                 ),
-              ],
-              child: MultiBlocProvider(
-                providers: [
-                  BlocProvider(
-                    create: (context) =>
-                        AuthBloc(authRepository: AuthRepository()),
-                  ),
-                  BlocProvider(
-                      create: (context) =>
-                          PlayAudioBloc()..add(GetAudioListFromWebEvent())),
-                  BlocProvider(
-                      create: (context) =>
-                          EbookBloc(repository: EpubRepository())
-                            ..add(FetchEpubListEvent())),
-                  BlocProvider(create: (context) => EpubViewerBloc())
-                ],
-                child: MaterialApp(
-                  title: 'Flutter Demo',
-                  debugShowCheckedModeBanner: false,
-                  theme: ThemeData(
-                    colorScheme:
-                        ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-                    useMaterial3: true,
-                  ),
-                  onGenerateRoute: (settings) => generateRoute(settings),
-                  home: StreamBuilder<User?>(
-                      stream: FirebaseAuth.instance.authStateChanges(),
-                      builder: (context, snapshot) {
-                        // if user logged in we show bottom bar
-                        if (snapshot.hasData) {
-                          return const HomeScreen();
-                        }
-                        // if user  is not logged in we show onboarding screen
-                        return const AuthScreen();
-                      }),
-                ),
-              ));
-        });
+          ),
+        );
+      },
+    );
   }
 }

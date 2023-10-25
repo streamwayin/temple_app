@@ -5,6 +5,7 @@ String OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY = 'offline_downloaded_ebooks';
 String DOWNLOADED_TRACK_JSON = 'downloaded_track_json';
 String DEFAULT_EPUB_BACKGROUND_COLOR = 'epub_background_color';
 String DEFAULT_EPUB_FONT_SIZE = 'epub_font_size';
+String IS_USER_LOGGED_IN = 'user_logged_in_key';
 
 List<String> wallpaperImagesList = [
   'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/hanuman-with-lord-ram-and-sita-hanuman-lord-ram-sita-bhakti-thumbnail.jpg?alt=media&token=9154a6f0-d6bc-4ece-9e89-37d4c6ee4982',

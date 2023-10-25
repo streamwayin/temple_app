@@ -5,18 +5,24 @@ enum AuthType { signinWithEmail, signupWithEmail, loginWithPhone }
 class AuthState extends Equatable {
   final AuthType authType;
   final CountryCode code;
-  const AuthState(
-      {this.authType = AuthType.signinWithEmail,
-      this.code =
-          const CountryCode(name: 'India', code: 'IN', dialCode: '+91')});
+  final bool? isLoggedIn;
+  const AuthState({
+    this.authType = AuthType.signinWithEmail,
+    this.code = const CountryCode(name: 'India', code: 'IN', dialCode: '+91'),
+    this.isLoggedIn,
+  });
   @override
-  List<Object?> get props => [authType, code];
+  List<Object?> get props => [authType, code, isLoggedIn];
 
-  AuthState copyWith({AuthType? authType, CountryCode? code}) {
+  AuthState copyWith({
+    AuthType? authType,
+    CountryCode? code,
+    bool? isLoggedIn,
+  }) {
     return AuthState(
-      authType: authType ?? this.authType,
-      code: code ?? this.code,
-    );
+        authType: authType ?? this.authType,
+        code: code ?? this.code,
+        isLoggedIn: isLoggedIn);
   }
 }
 

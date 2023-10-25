@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatefulWidget {
-  const CustomTextField({
-    super.key,
-    required this.isPassword,
-    required this.controller,
-    required this.hintText,
-  });
+  const CustomTextField(
+      {super.key,
+      required this.isPassword,
+      required this.controller,
+      required this.hintText,
+      this.fill = false});
 
   final TextEditingController controller;
   final bool isPassword;
   final String hintText;
+  final bool? fill;
 
   @override
   State<CustomTextField> createState() => _CustomTextFieldState();
@@ -33,6 +34,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
         return null;
       },
       decoration: InputDecoration(
+        filled: widget.fill,
+        fillColor: Colors.white,
         hintText: widget.hintText,
         isDense: true,
         contentPadding: const EdgeInsets.all(18),
