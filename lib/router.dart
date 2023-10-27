@@ -6,6 +6,7 @@ import 'package:temple_app/features/auth/screens/auth_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
+import 'package:temple_app/features/onboarding/screens/onboarding_screen1.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
 
@@ -57,6 +58,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const EpubViwerScreen(),
+      );
+    case OnboardingScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const OnboardingScreen(),
       );
 
     default:

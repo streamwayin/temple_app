@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
+import 'package:temple_app/features/onboarding/screens/onboarding_screen1.dart';
 import 'package:temple_app/features/onboarding/widgets/rotating_circle.dart';
 
 import '../widgets/pendulum_animation.dart';
@@ -17,10 +17,16 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  bool onBoardingVisited = false;
   @override
   void initState() {
-    Future.delayed(const Duration(seconds: 2))
-        .then((value) => Navigator.pushNamed(context, HomeScreen.routeName));
+    if (onBoardingVisited) {
+      Future.delayed(const Duration(seconds: 2))
+          .then((value) => Navigator.pushNamed(context, HomeScreen.routeName));
+    } else {
+      Future.delayed(const Duration(seconds: 2)).then(
+          (value) => Navigator.pushNamed(context, OnboardingScreen.routeName));
+    }
     super.initState();
   }
 

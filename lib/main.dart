@@ -7,7 +7,7 @@ import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
-import 'package:temple_app/features/home/screens/home_screen.dart';
+import 'package:temple_app/features/onboarding/bloc/splash_bloc.dart';
 import 'package:temple_app/features/onboarding/screens/onboarding_screen1.dart';
 import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
 import 'package:temple_app/firebase_options.dart';
@@ -55,20 +55,20 @@ class MyApp extends StatelessWidget {
               BlocProvider(
                   create: (context) => EbookBloc(repository: EpubRepository())
                     ..add(FetchEpubListEvent())),
-              BlocProvider(create: (context) => EpubViewerBloc())
+              BlocProvider(create: (context) => EpubViewerBloc()),
+              BlocProvider(create: (context) => SplashBloc()),
             ],
             child: MaterialApp(
-                title: 'Flutter Demo',
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData(
-                  colorScheme:
-                      ColorScheme.fromSeed(seedColor: Colors.yellowAccent),
-                  useMaterial3: true,
-                ),
-                onGenerateRoute: (settings) => generateRoute(settings),
-                home: const OnboardingScreen()
-                // const SplashScreen(),
-                ),
+              title: 'Flutter Demo',
+              debugShowCheckedModeBanner: false,
+              theme: ThemeData(
+                colorScheme:
+                    ColorScheme.fromSeed(seedColor: Colors.yellowAccent),
+                useMaterial3: true,
+              ),
+              onGenerateRoute: (settings) => generateRoute(settings),
+              home: const SplashScreen(),
+            ),
           ),
         );
       },

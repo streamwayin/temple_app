@@ -105,7 +105,6 @@ class _SingleWallpaperComponentState extends State<SingleWallpaperComponent> {
 setwallpaper(BuildContext context) async {
   var width = MediaQuery.of(context).size.width;
   var height = MediaQuery.of(context).size.height;
-  String home = await Wallpaper.homeScreen(
+  await Wallpaper.homeScreen(
       options: RequestSizeOptions.RESIZE_FIT, width: width, height: height);
-  print(home);
 }
