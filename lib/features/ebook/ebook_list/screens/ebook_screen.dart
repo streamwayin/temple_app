@@ -188,7 +188,9 @@ class EbookAppBar extends StatelessWidget {
             Row(
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pop(context);
+                  },
                   child: const Icon(
                     Icons.arrow_back_ios_new,
                     weight: BorderSide.strokeAlignOutside,

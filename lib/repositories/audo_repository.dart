@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:audio_session/audio_session.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:path_provider/path_provider.dart';
@@ -68,20 +69,35 @@ class AudioRepository {
   int? currentSongIndex() => _player.currentIndex;
   void previous() => _player.seekToPrevious;
   void setSeekDuration(Duration duration) => _player.seek(duration);
+
+  // get audio from fire base
+
   Future<List<AlbumModel>?> getAudioListFromweb() async {
     try {
       List<AlbumModel> albumModel = [];
-
-      for (var a in album) {
-        var data = AlbumModel.fromJson(jsonEncode(a));
-        albumModel.add(data);
+      final data = await FirebaseFirestore.instance.collection('audio').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> a = data.docs;
+      for (var b in a) {
+        if (b.exists) {
+          albumModel.add(AlbumModel.fromJson(jsonEncode(b.data())));
+        }
       }
-
       return albumModel;
     } catch (e) {
       log('$e');
       // print(e);
       return null;
+    }
+  }
+
+  Future<void> uploadDataToFirebase() async {
+    try {
+      for (var a in album) {
+        final docRef = FirebaseFirestore.instance.collection("audio").doc();
+        await docRef.set(a);
+      }
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 
