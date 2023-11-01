@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import "package:epub_view/epub_view.dart";
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -59,9 +60,9 @@ class EpubViwerScreen extends StatelessWidget {
                                 : Icons.keyboard_arrow_up,
                             size: 30),
                         const Text(
-                          'Index',
+                          "index",
                           style: TextStyle(fontSize: 18),
-                        )
+                        ).tr()
                       ]),
                     ),
                   ),
@@ -184,13 +185,13 @@ class EpubViwerScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 const Text(
-                  'Add bookmark',
+                  'addbookmark',
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                ),
+                ).tr(),
                 CustomTextField(
                     isPassword: false,
                     controller: controller,
-                    hintText: 'Name'),
+                    hintText: 'name'.tr()),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -198,7 +199,7 @@ class EpubViwerScreen extends StatelessWidget {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text('Cancel'),
+                      child: Text('cancel'.tr()),
                     ),
                     OutlinedButton(
                       onPressed: () {
@@ -206,7 +207,7 @@ class EpubViwerScreen extends StatelessWidget {
                             bookmarkName: controller.text, epubcfi: epubcfi));
                         Navigator.pop(context);
                       },
-                      child: const Text("Add"),
+                      child: Text("add".tr()),
                     ),
                   ],
                 ),

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,18 @@ void main() async {
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
   );
-  runApp(const MyApp());
+  await EasyLocalization.ensureInitialized();
+  runApp(
+    EasyLocalization(
+        supportedLocales: const [
+          Locale('en', 'US'),
+          Locale('hi', 'IN'),
+        ],
+        path: 'assets/translations',
+        startLocale: const Locale('hi', 'IN'),
+        fallbackLocale: const Locale('hi', 'IN'),
+        child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -68,6 +80,9 @@ class MyApp extends StatelessWidget {
               ),
               onGenerateRoute: (settings) => generateRoute(settings),
               home: const SplashScreen(),
+              localizationsDelegates: context.localizationDelegates,
+              supportedLocales: context.supportedLocales,
+              locale: context.locale,
             ),
           ),
         );

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -34,7 +35,10 @@ class HomeCategoryComponent extends StatelessWidget {
                   ),
                   borderRadius: BorderRadius.circular(10)),
             ),
-            Text(name)
+            Text(
+              name,
+              style: const TextStyle(fontFamily: "KRDEV020"),
+            ).tr()
           ],
         ),
       ),

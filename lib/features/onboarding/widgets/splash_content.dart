@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -78,8 +79,17 @@ class SplashContent extends StatelessWidget {
           children: [
             SizedBox(width: 15.w),
             Text(
-              '${index + 1}/3 steps',
-              style: const TextStyle(fontSize: 18),
+              '${index + 1}/3 ',
+              style: const TextStyle(fontSize: 18, fontFamily: 'KRDEV020'),
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Text(
+                  'steps',
+                  style: TextStyle(fontSize: 18, fontFamily: 'KRDEV020'),
+                ).tr(),
+              ],
             ),
             Column(
               children: [
@@ -111,9 +121,9 @@ class SplashContent extends StatelessWidget {
                   height: 5.h,
                 ),
                 Text(
-                  index == 2 ? "Skip" : 'Next',
+                  index == 2 ? "skip" : 'next',
                   style: const TextStyle(fontSize: 20),
-                ),
+                ).tr(),
                 SizedBox(width: 195.w),
               ],
             )

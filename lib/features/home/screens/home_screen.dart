@@ -25,22 +25,22 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     List<Map<String, String>> homeComponentList = [
       {
-        "name": "Wallpapers",
+        "name": "wallpaper",
         "imagePath": "assets/images/images.png",
         "routeName": WallpaperScreen.routeName
       },
       {
-        "name": "Audio",
+        "name": "audio",
         "imagePath": "assets/images/volume.png",
         "routeName": AudioScreen.routeName
       },
       {
-        "name": "Video",
+        "name": "video",
         "imagePath": "assets/images/series.png",
         "routeName": VideoScreen.routeName
       },
       {
-        "name": "E-Book",
+        "name": "ebook",
         "imagePath": "assets/images/ebook.png",
         "routeName": EbookScreen.routeName
       }
