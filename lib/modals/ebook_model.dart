@@ -22,7 +22,7 @@ class EbookModel {
   factory EbookModel.fromJson(Map<String, dynamic> map) {
     return EbookModel(
       name: map['name'],
-      bookId: map['bookId'],
+      bookId: map['bookId'] ?? '',
       thumbnailUrl: map['thumbnailUrl'],
       bookUrl: map['bookUrl'],
     );

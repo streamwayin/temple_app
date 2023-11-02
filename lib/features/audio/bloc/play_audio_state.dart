@@ -3,49 +3,67 @@ part of 'play_audio_bloc.dart';
 class PlayAudioState extends Equatable {
   final List<AlbumModel> albums;
   final ConcatenatingAudioSource? concatenatingAudioSource;
-  final int? currentAlbumIndex;
+  final int? singleSongIndex;
   final String? snackbarMessage;
   final bool isSongDownloading;
   final Map<String, String> downloadedSongsMap;
   final MusicPlayerDataModel? musicPlayerDataModel;
+  final List<TrackModel>? tracks;
+  final bool? isTracksAvailable;
+  final bool albumsPageLoading;
+  final bool tracksPageLoading;
   const PlayAudioState(
       {this.albums = const [],
       this.concatenatingAudioSource,
-      this.currentAlbumIndex,
+      this.singleSongIndex,
       this.snackbarMessage,
       this.isSongDownloading = false,
       this.downloadedSongsMap = const {},
-      this.musicPlayerDataModel});
+      this.musicPlayerDataModel,
+      this.tracks,
+      this.isTracksAvailable,
+      this.albumsPageLoading = true,
+      this.tracksPageLoading = true});
   @override
   List<Object?> get props => [
         albums,
         concatenatingAudioSource,
-        currentAlbumIndex,
+        singleSongIndex,
         snackbarMessage,
         isSongDownloading,
         downloadedSongsMap,
-        musicPlayerDataModel
+        musicPlayerDataModel,
+        tracks,
+        isTracksAvailable,
+        albumsPageLoading,
+        tracksPageLoading
       ];
 
-  PlayAudioState copyWith({
-    List<AlbumModel>? albums,
-    ConcatenatingAudioSource? concatenatingAudioSource,
-    int? currentAlbumIndex,
-    String? snackbarMessage,
-    bool? isSongDownloading,
-    Map<String, String>? downloadedSongsMap,
-    MusicPlayerDataModel? musicPlayerDataModel,
-  }) {
+  PlayAudioState copyWith(
+      {List<AlbumModel>? albums,
+      ConcatenatingAudioSource? concatenatingAudioSource,
+      int? singleSongIndex,
+      String? snackbarMessage,
+      bool? isSongDownloading,
+      Map<String, String>? downloadedSongsMap,
+      MusicPlayerDataModel? musicPlayerDataModel,
+      List<TrackModel>? tracks,
+      bool? isTracksAvailable,
+      bool? albumsPageLoading,
+      bool? tracksPageLoading}) {
     return PlayAudioState(
-      albums: albums ?? this.albums,
-      concatenatingAudioSource:
-          concatenatingAudioSource ?? this.concatenatingAudioSource,
-      currentAlbumIndex: currentAlbumIndex ?? this.currentAlbumIndex,
-      snackbarMessage: snackbarMessage,
-      isSongDownloading: isSongDownloading ?? this.isSongDownloading,
-      downloadedSongsMap: downloadedSongsMap ?? this.downloadedSongsMap,
-      musicPlayerDataModel: musicPlayerDataModel ?? this.musicPlayerDataModel,
-    );
+        albums: albums ?? this.albums,
+        concatenatingAudioSource:
+            concatenatingAudioSource ?? this.concatenatingAudioSource,
+        singleSongIndex: singleSongIndex ?? this.singleSongIndex,
+        snackbarMessage: snackbarMessage,
+        isSongDownloading: isSongDownloading ?? this.isSongDownloading,
+        downloadedSongsMap: downloadedSongsMap ?? this.downloadedSongsMap,
+        musicPlayerDataModel: musicPlayerDataModel ?? this.musicPlayerDataModel,
+        tracks: tracks ?? this.tracks,
+        isTracksAvailable: isTracksAvailable,
+        albumsPageLoading: albumsPageLoading ?? this.albumsPageLoading,
+        tracksPageLoading: tracksPageLoading ?? this.tracksPageLoading);
   }
 }
 

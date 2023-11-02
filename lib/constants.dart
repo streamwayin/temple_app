@@ -23,7 +23,7 @@ List<Map<String, dynamic>> album = [
   {
     "name": "Shree ganesha",
     "thumbnail": "https://m.media-amazon.com/images/I/81hzkhVFGBL._SX425_.jpg",
-    "artistId": "artistId",
+    "artistId": "6FHrfNsgSCcjOA6giiYy",
     "albumId": "1",
     "songList": [
       {
@@ -216,35 +216,40 @@ List<Map<String, String>> bookLIst = [
   {
     "name": 'book',
     "bookId": "1000189dddpd",
-    "thumbnailUrl": "",
+    "thumbnailUrl":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
     "bookUrl":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Frangbhumi.epub?alt=media&token=b3a93b80-be8a-4ab2-a7bd-79f66ad3cee0"
   },
   {
     "name": 'Fasimov genetic effects of radiation',
     "bookId": "10002",
-    "thumbnailUrl": "",
+    "thumbnailUrl":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
     "bookUrl":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fasimov-genetic-effects-of-radiation.epub?alt=media&token=e19b400a-4500-46d0-84c7-87030470c53d"
   },
   {
     "name": 'Book 2',
     "bookId": "10003",
-    "thumbnailUrl": "",
+    "thumbnailUrl":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
     "bookUrl":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fbook_2.epub?alt=media&token=2f366789-5d6f-40d9-b89f-13de7a85f0fe"
   },
   {
     "name": 'book3',
     "bookId": "10004",
-    "thumbnailUrl": "",
+    "thumbnailUrl":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
     "bookUrl":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fbook_3.epub?alt=media&token=e2fbb157-9c43-44cf-8493-662a873ce90b"
   },
   {
     "name": 'New Findings on Shirdi Sai Baba',
     "bookId": "10005",
-    "thumbnailUrl": "",
+    "thumbnailUrl":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
     "bookUrl":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2FNew-Findings-on-Shirdi-Sai-Baba.epub?alt=media&token=c743b351-5ec3-4b83-bbb8-e05dbb70e39e"
   },

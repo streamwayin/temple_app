@@ -33,9 +33,12 @@ class SongIndexChanged extends PlayAudioEvent {
 }
 
 class LoadCurrentPlaylistEvent extends PlayAudioEvent {
-  final int albumIndex;
+  const LoadCurrentPlaylistEvent();
+}
 
-  const LoadCurrentPlaylistEvent({required this.albumIndex});
+class PlaySinglesongEvent extends PlayAudioEvent {
+  final int index;
+  const PlaySinglesongEvent({required this.index});
 }
 
 class DownloadSongEvent extends PlayAudioEvent {
@@ -62,4 +65,10 @@ class SetSeekDurationEvent extends PlayAudioEvent {
   final Duration duration;
 
   const SetSeekDurationEvent({required this.duration});
+}
+
+class FetchSongsOfAlbum extends PlayAudioEvent {
+  final String albumId;
+
+  const FetchSongsOfAlbum({required this.albumId});
 }

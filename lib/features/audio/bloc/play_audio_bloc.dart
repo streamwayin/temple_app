@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/modals/album_model.dart';
 import 'package:temple_app/modals/music_player_data_model.dart';
+import 'package:temple_app/modals/track_model.dart';
 import 'package:temple_app/repositories/audo_repository.dart';
 import 'package:temple_app/widgets/utils.dart';
 
@@ -30,11 +32,13 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<ChangeSongEvent>(onPlayNextSongEvent);
     on<PlayOrPauseSongEvent>(onPlayOrPauseSongEvent);
     on<SetSeekDurationEvent>(onSetSeekDurationEvent);
+    on<FetchSongsOfAlbum>(onFetchSongsOfAlbum);
+    on<PlaySinglesongEvent>(onPlaySinglesongEvent);
   }
   AudioRepository audioRepository = AudioRepository();
   FutureOr<void> onGetAudioListFromWeb(
       GetAudioListFromWebEvent event, Emitter<PlayAudioState> emit) async {
-    final list = await audioRepository.getAudioListFromweb();
+    final list = await audioRepository.getAlbumListFromDb();
     Map<String, String> downloadedSongsMap = {};
     if (list != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -48,6 +52,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       emit(state.copyWith(
         albums: list,
         downloadedSongsMap: downloadedSongsMap,
+        albumsPageLoading: false,
       ));
     }
   }
@@ -73,8 +78,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       SongIndexChanged event, Emitter<PlayAudioState> emit) {
     int oldIndex = event.oldIndex;
     int newIndex = event.newIndex;
-    var songs = state.albums[event.albumIndex].songList;
-    var song = songs[oldIndex];
+    var songs = state.tracks;
+    var song = songs![oldIndex];
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
@@ -85,23 +90,23 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
   FutureOr<void> onLoadCurrentPlaylistEvent(
       LoadCurrentPlaylistEvent event, Emitter<PlayAudioState> emit) async {
-    List<AudioSource> audioSourceList = state.albums[event.albumIndex].songList
+    List<AudioSource> audioSourceList = state.tracks!
         .map(
           (e) => (!state.downloadedSongsMap.containsKey('trackid'))
               ? AudioSource.uri(
                   Uri.parse(e.songUrl),
                   tag: MediaItem(
                     id: '1',
-                    title: e.songName,
+                    title: e.name,
                     artist: 'singer..',
-                    artUri: Uri.parse(e.songThumbnail!),
+                    artUri: Uri.parse(e.thumbnail!),
                   ),
                 )
               : AudioSource.file(
                   state.downloadedSongsMap['trackid']!,
                   tag: MediaItem(
                     id: '1',
-                    title: e.songName,
+                    title: e.name,
                     artist: '',
                   ),
                 ),
@@ -116,12 +121,12 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       children: audioSourceList,
     );
     audioRepository.addPlaylist(playlist);
-    audioRepository.play();
     await emit.forEach(
       audioRepository.musicPlayerDataStream,
       onData: (data) {
         return state.copyWith(
-            currentAlbumIndex: event.albumIndex, musicPlayerDataModel: data);
+            // currentAlbumIndex: event.albumIndex,
+            musicPlayerDataModel: data);
       },
     );
   }
@@ -134,12 +139,12 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     // Song saveSong =
     //     state.albums[state.currentAlbumIndex!].songList[event.currentSongIndex];
     int? index = audioRepository.currentSongIndex();
-    Song saveSong = state.albums[state.currentAlbumIndex!].songList[index!];
+    TrackModel saveSong = state.tracks![index!];
     try {
       File? localImagePath;
       if (!state.downloadedSongsMap.containsKey(saveSong.trackId)) {
         localImagePath = await audioRepository.downloadByUrl(
-            saveSong.songUrl, saveSong.songName);
+            saveSong.songUrl, saveSong.name);
         if (localImagePath == null) {
           Utils.showSnackBar(
             context: event.context,
@@ -190,5 +195,19 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   FutureOr<void> onSetSeekDurationEvent(
       SetSeekDurationEvent event, Emitter<PlayAudioState> emit) {
     audioRepository.setSeekDuration(event.duration);
+  }
+
+  FutureOr<void> onFetchSongsOfAlbum(
+      FetchSongsOfAlbum event, Emitter<PlayAudioState> emit) async {
+    final tracks = await audioRepository.getTracksListFromDb(event.albumId);
+    emit(state.copyWith(
+        tracks: tracks, isTracksAvailable: true, tracksPageLoading: false));
+  }
+
+  FutureOr<void> onPlaySinglesongEvent(
+      PlaySinglesongEvent event, Emitter<PlayAudioState> emit) {
+    audioRepository.playSingleSong(event.index);
+
+    emit(state.copyWith(singleSongIndex: event.index));
   }
 }

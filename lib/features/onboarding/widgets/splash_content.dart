@@ -51,7 +51,10 @@ class SplashContent extends StatelessWidget {
         const Text(
           '।आपका धर्म, आपका ऐप,\nआपका आध्यात्मिक संगी।',
           maxLines: 2,
-          style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600),
+          style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w600,
+              fontFamily: "KRDEV020"),
         ),
         _gap(20),
         Padding(

@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -19,7 +20,6 @@ class EbookScreen extends StatelessWidget {
       "assets/images/bookcover11.png",
       "assets/images/bookcover11.png",
     ];
-    Size size = MediaQuery.of(context).size;
     EbookBloc ebookBloc = context.read<EbookBloc>();
     return BlocConsumer<EbookBloc, EbookState>(
       listener: (BuildContext context, EbookState state) {
@@ -78,10 +78,11 @@ class EbookScreen extends StatelessWidget {
                                           .withOpacity(0.7),
                                   borderRadius: BorderRadius.circular(30),
                                   image: DecorationImage(
-                                      image: AssetImage(
-                                        trendingBookList[index],
-                                      ),
-                                      fit: BoxFit.cover),
+                                    image: AssetImage(
+                                      trendingBookList[index],
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
                             );
@@ -129,13 +130,19 @@ class EbookScreen extends StatelessWidget {
                                           MainAxisAlignment.start,
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Container(
+                                        SizedBox(
                                           height: 100,
                                           width: 80,
-                                          decoration: const BoxDecoration(
-                                            border: Border(),
-                                            color: Color.fromARGB(
-                                                255, 231, 203, 201),
+                                          child: CachedNetworkImage(
+                                            imageUrl: item.thumbnailUrl,
+                                            fit: BoxFit.cover,
+                                            placeholder: (context, url) =>
+                                                const Center(
+                                                    child:
+                                                        CircularProgressIndicator()),
+                                            errorWidget:
+                                                (context, url, error) =>
+                                                    const Icon(Icons.error),
                                           ),
                                         ),
                                         Text(

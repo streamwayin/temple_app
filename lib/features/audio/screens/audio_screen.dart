@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
+import 'package:temple_app/widgets/utils.dart';
 
 import '../bloc/play_audio_bloc.dart';
 
@@ -22,86 +23,112 @@ class AudioScreen extends StatelessWidget {
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 2),
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0.w),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      body: BlocBuilder<PlayAudioBloc, PlayAudioState>(
+        builder: (context, state) {
+          return Stack(
             children: [
-              BlocBuilder<PlayAudioBloc, PlayAudioState>(
-                builder: (context, state) {
-                  return Expanded(
-                    child: ReorderableListView.builder(
-                      itemCount: state.albums.length,
-                      onReorder: (oldIndex, newIndex) {
-                        context.read<PlayAudioBloc>().add(AlbumIndexChanged(
-                            newIndex: newIndex, oldIndex: oldIndex));
-                      },
-                      itemBuilder: (context, index) {
-                        var album = state.albums[index];
-                        return GestureDetector(
-                          key: Key('$index'),
-                          onTap: () {
-                            Navigator.pushNamed(context, AlbumScreen.routeName,
-                                arguments: index);
-                            context.read<PlayAudioBloc>().add(
-                                LoadCurrentPlaylistEvent(albumIndex: index));
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                Container(
-                                  color:
-                                      const Color.fromARGB(255, 233, 232, 232)
-                                          .withOpacity(0.5),
-                                  height: 50,
-                                  width: 50,
-                                  child: (album.thumbnail != null)
-                                      ? CachedNetworkImage(
-                                          imageUrl: album.thumbnail!,
-                                          fit: BoxFit.cover,
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      BlocConsumer<PlayAudioBloc, PlayAudioState>(
+                        listener: (context, state) {
+                          if (state.isTracksAvailable != null) {
+                            context
+                                .read<PlayAudioBloc>()
+                                .add(const LoadCurrentPlaylistEvent());
+                            context
+                                .read<PlayAudioBloc>()
+                                .add(const PlayOrPauseSongEvent(play: true));
+                          }
+                        },
+                        builder: (context, state) {
+                          return Expanded(
+                            child: ReorderableListView.builder(
+                              itemCount: state.albums.length,
+                              onReorder: (oldIndex, newIndex) {
+                                context.read<PlayAudioBloc>().add(
+                                    AlbumIndexChanged(
+                                        newIndex: newIndex,
+                                        oldIndex: oldIndex));
+                              },
+                              itemBuilder: (context, index) {
+                                var album = state.albums[index];
+                                return GestureDetector(
+                                  key: Key('$index'),
+                                  onTap: () {
+                                    Navigator.pushNamed(
+                                        context, AlbumScreen.routeName,
+                                        arguments: index);
+                                    context.read<PlayAudioBloc>().add(
+                                        FetchSongsOfAlbum(
+                                            albumId: album.albumId));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Container(
+                                          color: const Color.fromARGB(
+                                                  255, 233, 232, 232)
+                                              .withOpacity(0.5),
+                                          height: 50,
+                                          width: 50,
+                                          child: (album.thumbnail != null)
+                                              ? CachedNetworkImage(
+                                                  imageUrl: album.thumbnail!,
+                                                  fit: BoxFit.cover,
+                                                  errorWidget: (context, url,
+                                                          error) =>
+                                                      const Icon(Icons.error),
+                                                )
+                                              : Image.asset(
+                                                  'assets/images/sound-waves.png'),
+                                        ),
+                                        SizedBox(width: 5.w),
+                                        Text(
+                                          album.name,
+                                          style: const TextStyle(fontSize: 24),
                                         )
-                                      : Image.asset(
-                                          'assets/images/sound-waves.png'),
-                                ),
-                                SizedBox(width: 5.w),
-                                Text(
-                                  album.name,
-                                  style: const TextStyle(fontSize: 24),
-                                )
-                              ],
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
+                          );
+                        },
+                      ),
+                      // GestureDetector(
+                      //   onTap: () {},
+                      //   child: Row(
+                      //     crossAxisAlignment: CrossAxisAlignment.end,
+                      //     children: [
+                      //       Image.asset(
+                      //         'assets/images/folder.png',
+                      //         scale: 12,
+                      //       ),
+                      //       SizedBox(width: 5.w),
+                      //       const Text(
+                      //         'My fav',
+                      //         style: TextStyle(fontSize: 24),
+                      //       )
+                      //     ],
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                ),
               ),
-              // GestureDetector(
-              //   onTap: () {},
-              //   child: Row(
-              //     crossAxisAlignment: CrossAxisAlignment.end,
-              //     children: [
-              //       Image.asset(
-              //         'assets/images/folder.png',
-              //         scale: 12,
-              //       ),
-              //       SizedBox(width: 5.w),
-              //       const Text(
-              //         'My fav',
-              //         style: TextStyle(fontSize: 24),
-              //       )
-              //     ],
-              //   ),
-              // ),
+              (state.albumsPageLoading == true)
+                  ? Utils.showLoadingOnSceeen()
+                  : const SizedBox()
             ],
-          ),
-        ),
+          );
+        },
       ),
     );
   }
