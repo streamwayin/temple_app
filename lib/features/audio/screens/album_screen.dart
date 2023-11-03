@@ -82,6 +82,9 @@ class AlbumScreen extends StatelessWidget {
                                   return ListTile(
                                     key: Key(ind.toString()),
                                     onTap: () {
+                                      context.read<PlayAudioBloc>().add(
+                                          const PlayOrPauseSongEvent(
+                                              play: true));
                                       Navigator.pushNamed(
                                           context, PlayAudioScreen.routeName);
                                       context

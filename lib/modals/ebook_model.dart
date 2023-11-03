@@ -3,12 +3,13 @@ class EbookModel {
   final String bookId;
   final String thumbnailUrl;
   final String bookUrl;
-  EbookModel({
-    required this.name,
-    required this.bookId,
-    required this.thumbnailUrl,
-    required this.bookUrl,
-  });
+  final String? autherName;
+  EbookModel(
+      {required this.name,
+      required this.bookId,
+      required this.thumbnailUrl,
+      required this.bookUrl,
+      this.autherName});
 
   Map<String, dynamic> toJson() {
     return {
@@ -16,15 +17,16 @@ class EbookModel {
       'bookId': bookId,
       'thumbnailUrl': thumbnailUrl,
       'url': bookUrl,
+      'autherName': autherName
     };
   }
 
   factory EbookModel.fromJson(Map<String, dynamic> map) {
     return EbookModel(
-      name: map['name'],
-      bookId: map['bookId'] ?? '',
-      thumbnailUrl: map['thumbnailUrl'],
-      bookUrl: map['bookUrl'],
-    );
+        name: map['name'],
+        bookId: map['bookId'],
+        thumbnailUrl: map['thumbnailUrl'],
+        bookUrl: map['bookUrl'],
+        autherName: map['autherName']);
   }
 }

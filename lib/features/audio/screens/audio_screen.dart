@@ -40,9 +40,6 @@ class AudioScreen extends StatelessWidget {
                             context
                                 .read<PlayAudioBloc>()
                                 .add(const LoadCurrentPlaylistEvent());
-                            context
-                                .read<PlayAudioBloc>()
-                                .add(const PlayOrPauseSongEvent(play: true));
                           }
                         },
                         builder: (context, state) {
@@ -102,23 +99,6 @@ class AudioScreen extends StatelessWidget {
                           );
                         },
                       ),
-                      // GestureDetector(
-                      //   onTap: () {},
-                      //   child: Row(
-                      //     crossAxisAlignment: CrossAxisAlignment.end,
-                      //     children: [
-                      //       Image.asset(
-                      //         'assets/images/folder.png',
-                      //         scale: 12,
-                      //       ),
-                      //       SizedBox(width: 5.w),
-                      //       const Text(
-                      //         'My fav',
-                      //         style: TextStyle(fontSize: 24),
-                      //       )
-                      //     ],
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),

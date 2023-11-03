@@ -8,6 +8,7 @@ import 'package:temple_app/widgets/common_background_component.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 import '../bloc/ebook_bloc.dart';
+import '../widget/ebook_app_bar.dart';
 
 class EbookScreen extends StatelessWidget {
   static const String routeName = '/ebook-screen';
@@ -53,7 +54,7 @@ class EbookScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 50.h),
-                      const EbookAppBar(),
+                      EbookAppBar(books: state.booksList),
                       SizedBox(height: 20.h),
                       const Text(
                         'Trending',
@@ -121,7 +122,7 @@ class EbookScreen extends StatelessWidget {
                                 child: InkWell(
                                   onTap: () {
                                     ebookBloc
-                                        .add(DownloadBookEvent(index: index));
+                                        .add(DownloadBookEvent(book: item));
                                   },
                                   child: SizedBox(
                                     height: 150,
@@ -172,63 +173,6 @@ class EbookScreen extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class EbookAppBar extends StatelessWidget {
-  const EbookAppBar({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-    return SizedBox(
-      height: 56.h,
-      width: size.width,
-      child: Padding(
-        padding: const EdgeInsets.only(right: 16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                InkWell(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(
-                    Icons.arrow_back_ios_new,
-                    weight: BorderSide.strokeAlignOutside,
-                  ),
-                ),
-                SizedBox(width: 10.w),
-                Text(
-                  'My Library',
-                  style:
-                      TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
-            InkWell(
-              onTap: () {
-                print('search');
-              },
-              child: Container(
-                height: 30.h,
-                width: 30.w,
-                decoration: BoxDecoration(
-                    color: const Color(0xfffba140),
-                    borderRadius: BorderRadius.circular(10)),
-                child: const Center(
-                  child: Icon(Icons.search),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

@@ -1,30 +1,54 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:temple_app/constants.dart';
-import 'package:temple_app/modals/ebook_model.dart';
-import 'package:temple_app/repositories/epub_repository.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-part 'ebook_event.dart';
-part 'ebook_state.dart';
+import '../../../../constants.dart';
+import '../../../../modals/ebook_model.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EbookBloc extends Bloc<EbookEvent, EbookState> {
-  final EpubRepository repository;
-  EbookBloc({required this.repository}) : super(const EbookState()) {
-    on<FetchEpubListEvent>(onFetchEpubListEvent);
+part 'search_book_event.dart';
+part 'search_book_state.dart';
+
+class SearchBookBloc extends Bloc<SearchBookEvent, SearchBookState> {
+  SearchBookBloc() : super(SearchBookInitial()) {
+    on<SearchBookInitialEvent>(onSearchBookInitialEvent);
+    on<SearchEvent>(onSearchEvent);
     on<DownloadBookEvent>(onDownloadBookEvent);
   }
 
-  FutureOr<void> onDownloadBookEvent(
-      DownloadBookEvent event, Emitter<EbookState> emit) async {
+  FutureOr<void> onSearchEvent(event, Emitter<dynamic> emit) {
+    print('object');
+    var books = state.books;
+    List<EbookModel> _filteredBooks = [];
+    _filteredBooks = books
+        .where((book) =>
+            book.name.toLowerCase().contains(event.keyWord.toLowerCase()))
+        .toList();
+    print(_filteredBooks);
+    emit(state.copyWith(filteredBooks: _filteredBooks));
+  }
+
+  FutureOr<void> onSearchBookInitialEvent(event, Emitter<dynamic> emit) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? offlineBooks =
+        prefs.getString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY);
+    Map<String, String> downloadedEbookMap = {};
+    if (offlineBooks != null) {
+      final decodedMap = json.decode(offlineBooks);
+      decodedMap.forEach((key, value) {
+        downloadedEbookMap[key] = value.toString();
+      });
+    }
+    emit(state.copyWith(
+        books: event.books, downloadEbookMap: downloadedEbookMap));
+  }
+
+  FutureOr<void> onDownloadBookEvent(event, Emitter<dynamic> emit) async {
     emit(state.copyWith(loading: true));
     SharedPreferences prefs = await SharedPreferences.getInstance();
     try {
@@ -93,21 +117,5 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
     map['path'] = file.path;
 
     return map;
-  }
-
-  FutureOr<void> onFetchEpubListEvent(
-      FetchEpubListEvent event, Emitter<EbookState> emit) async {
-    final list = await repository.getEpubListFromWeb();
-    Map<String, String> downloadedEbookMap = {};
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? offlineBooks =
-        prefs.getString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY);
-    if (offlineBooks != null) {
-      final decodedMap = json.decode(offlineBooks);
-      decodedMap.forEach((key, value) {
-        downloadedEbookMap[key] = value.toString();
-      });
-    }
-    emit(state.copyWith(booksList: list, downloadEbookMap: downloadedEbookMap));
   }
 }
