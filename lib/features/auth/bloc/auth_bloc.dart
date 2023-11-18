@@ -67,7 +67,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   FutureOr<void> onAuthTypeChangedEvent(
       AuthTypeChangedEvent event, Emitter<AuthState> emit) {
-    emit(state.copyWith(authType: event.authType));
+    // emit(state.copyWith(authType: event.authType));
   }
 
   FutureOr<void> onCountryCodeUpdatedEvent(
@@ -128,7 +128,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user.user != null) {
           sharedPreferences.setBool(IS_USER_LOGGED_IN, true);
           emit(state.copyWith(
-              authType: AuthType.signinWithEmail, isLoggedIn: true));
+              // authType: AuthType.signinWithEmail,
+              isLoggedIn: true));
         }
       });
     } on FirebaseAuthException catch (e) {

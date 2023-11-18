@@ -2,7 +2,9 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../constants.dart';
 import '../../auth/widgets/custom_text_field.dart';
 import '../../home/onboarding/home_screen.dart';
 import '../bloc/splash_bloc.dart';
@@ -61,23 +63,24 @@ class SplashContent extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
             children: [
-              CustomTextField(
-                isPassword: false,
-                controller: controller1,
-                hintText: "What is your weight",
-                fill: true,
-              ),
-              _gap(10),
-              CustomTextField(
-                isPassword: false,
-                controller: controller2,
-                hintText: "What is your height",
-                fill: true,
-              ),
+              // CustomTextField(
+              //   isPassword: false,
+              //   controller: controller1,
+              //   hintText: "What is your weight",
+              //   fill: true,
+              // ),
+              // _gap(10),
+              // CustomTextField(
+              //   isPassword: false,
+              //   controller: controller2,
+              //   hintText: "What is your height",
+              //   fill: true,
+              // ),
             ],
           ),
         ),
-        _gap(50),
+        Spacer(),
+        // _gap(50),
         Row(
           children: [
             SizedBox(width: 15.w),
@@ -100,9 +103,15 @@ class SplashContent extends StatelessWidget {
                   decoration: const BoxDecoration(
                       color: Color(0xff23233c), shape: BoxShape.circle),
                   child: IconButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (index == 2) {
-                        Navigator.pushNamed(context, HomeScreen.routeName);
+                        SharedPreferences sharedPreferences =
+                            await SharedPreferences.getInstance();
+                        await sharedPreferences.setBool(
+                            HAS_USER_VISITED_ONBOARDING_SCREEN, true);
+                        if (context.mounted) {
+                          Navigator.pushNamed(context, HomeScreen.routeName);
+                        }
                       } else {
                         int ind = index + 1;
                         context
@@ -132,6 +141,7 @@ class SplashContent extends StatelessWidget {
             )
           ],
         ),
+        _gap(50),
       ],
     );
   }

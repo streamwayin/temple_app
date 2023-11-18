@@ -13,6 +13,7 @@ class AudioScreen extends StatelessWidget {
   static const String routeName = '/audio-screen';
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: const Row(
@@ -69,26 +70,45 @@ class AudioScreen extends StatelessWidget {
                                     child: Row(
                                       children: [
                                         Container(
-                                          color: const Color.fromARGB(
-                                                  255, 233, 232, 232)
-                                              .withOpacity(0.5),
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                    255, 233, 232, 232)
+                                                .withOpacity(0.5),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
                                           height: 50,
                                           width: 50,
                                           child: (album.thumbnail != null)
-                                              ? CachedNetworkImage(
-                                                  imageUrl: album.thumbnail!,
-                                                  fit: BoxFit.cover,
-                                                  errorWidget: (context, url,
-                                                          error) =>
-                                                      const Icon(Icons.error),
+                                              ? ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: album.thumbnail!,
+                                                    fit: BoxFit.cover,
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        const Icon(Icons.error),
+                                                  ),
                                                 )
-                                              : Image.asset(
-                                                  'assets/images/sound-waves.png'),
+                                              : ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Image.asset(
+                                                      'assets/images/sound-waves.png'),
+                                                ),
                                         ),
                                         SizedBox(width: 5.w),
-                                        Text(
-                                          album.name,
-                                          style: const TextStyle(fontSize: 24),
+                                        SizedBox(
+                                          width: size.width.w - 110.w,
+                                          child: Text(
+                                            album.name,
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 1,
+                                            style: const TextStyle(
+                                              fontSize: 24,
+                                            ),
+                                          ),
                                         )
                                       ],
                                     ),

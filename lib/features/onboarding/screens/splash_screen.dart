@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
 import 'package:temple_app/features/onboarding/screens/onboarding_screen1.dart';
 import 'package:temple_app/features/onboarding/widgets/rotating_circle.dart';
 
+import '../../../constants.dart';
 import '../widgets/pendulum_animation.dart';
 import '../widgets/rsp_custom_painter.dart';
 import '../widgets/rsp_custom_painter2.dart';
@@ -17,16 +19,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  bool onBoardingVisited = false;
+  // bool onBoardingVisited = false;
   @override
   void initState() {
-    if (onBoardingVisited) {
-      Future.delayed(const Duration(seconds: 2))
-          .then((value) => Navigator.pushNamed(context, HomeScreen.routeName));
-    } else {
-      Future.delayed(const Duration(seconds: 2)).then(
-          (value) => Navigator.pushNamed(context, OnboardingScreen.routeName));
-    }
+    navigateToNextScreen();
     super.initState();
   }
 
@@ -117,5 +113,18 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
       ),
     );
+  }
+
+  void navigateToNextScreen() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    bool? onBoardingVisited =
+        sharedPreferences.getBool(HAS_USER_VISITED_ONBOARDING_SCREEN);
+    if (onBoardingVisited != null && onBoardingVisited == true) {
+      Future.delayed(const Duration(seconds: 2))
+          .then((value) => Navigator.pushNamed(context, HomeScreen.routeName));
+    } else {
+      Future.delayed(const Duration(seconds: 2)).then(
+          (value) => Navigator.pushNamed(context, OnboardingScreen.routeName));
+    }
   }
 }

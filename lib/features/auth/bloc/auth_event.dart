@@ -32,9 +32,9 @@ class SignUpRequested extends AuthEvent {
 }
 
 class AuthTypeChangedEvent extends AuthEvent {
-  final AuthType authType;
+  // final AuthType authType;
 
-  AuthTypeChangedEvent({required this.authType});
+  // AuthTypeChangedEvent({required this.authType});
 }
 
 class CountryCodeUpdatedEvent extends AuthEvent {

@@ -42,10 +42,14 @@ class AlbumScreen extends StatelessWidget {
                               },
                               child: const Icon(Icons.arrow_back)),
                           SizedBox(width: 10.w),
-                          Text(
-                            state.albums[albumIndex].name,
-                            style: const TextStyle(
-                                fontSize: 24, fontWeight: FontWeight.w500),
+                          SizedBox(
+                            width: size.width.w - 150.w,
+                            child: Text(
+                              state.albums[albumIndex].name,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontSize: 24, fontWeight: FontWeight.w500),
+                            ),
                           ),
                           const Spacer(),
                           InkWell(
@@ -79,27 +83,42 @@ class AlbumScreen extends StatelessWidget {
                             : ReorderableListView.builder(
                                 itemBuilder: (context, ind) {
                                   TrackModel song = songList[ind];
-                                  return ListTile(
+                                  return Padding(
                                     key: Key(ind.toString()),
-                                    onTap: () {
-                                      context.read<PlayAudioBloc>().add(
-                                          const PlayOrPauseSongEvent(
-                                              play: true));
-                                      Navigator.pushNamed(
-                                          context, PlayAudioScreen.routeName);
-                                      context
-                                          .read<PlayAudioBloc>()
-                                          .add(PlaySinglesongEvent(index: ind));
-                                    },
-                                    leading: (song.thumbnail != null)
-                                        ? CachedNetworkImage(
-                                            imageUrl: song.thumbnail!,
-                                            placeholder: (context, url) =>
-                                                Image.asset(
-                                                    'assets/images/sound-waves.png'),
-                                          )
-                                        : const SizedBox(),
-                                    title: Text(song.name),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4.0),
+                                    child: ListTile(
+                                      onTap: () {
+                                        context.read<PlayAudioBloc>().add(
+                                            const PlayOrPauseSongEvent(
+                                                play: true));
+                                        Navigator.pushNamed(
+                                            context, PlayAudioScreen.routeName);
+                                        context.read<PlayAudioBloc>().add(
+                                            PlaySinglesongEvent(index: ind));
+                                      },
+                                      leading: (song.thumbnail != null)
+                                          ? SizedBox(
+                                              width: 60.w,
+                                              child: ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                child: CachedNetworkImage(
+                                                  imageUrl: song.thumbnail!,
+                                                  placeholder: (context, url) =>
+                                                      Image.asset(
+                                                          'assets/images/sound-waves.png'),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            )
+                                          : const SizedBox(),
+                                      title: Text(
+                                        song.title,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                      ),
+                                    ),
                                   );
                                 },
                                 itemCount: songList.length,

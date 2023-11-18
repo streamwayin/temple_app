@@ -97,8 +97,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
                   Uri.parse(e.songUrl),
                   tag: MediaItem(
                     id: '1',
-                    title: e.name,
-                    artist: 'singer..',
+                    title: e.title,
+                    artist: e.artistName,
                     artUri: Uri.parse(e.thumbnail!),
                   ),
                 )
@@ -106,7 +106,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
                   state.downloadedSongsMap['trackid']!,
                   tag: MediaItem(
                     id: '1',
-                    title: e.name,
+                    title: e.title,
                     artist: '',
                   ),
                 ),
@@ -144,7 +144,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       File? localImagePath;
       if (!state.downloadedSongsMap.containsKey(saveSong.trackId)) {
         localImagePath = await audioRepository.downloadByUrl(
-            saveSong.songUrl, saveSong.name);
+            saveSong.songUrl, saveSong.title);
         if (localImagePath == null) {
           Utils.showSnackBar(
             context: event.context,

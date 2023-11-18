@@ -113,18 +113,25 @@ class SongPlayingIndicator extends StatelessWidget {
             margin: const EdgeInsets.all(8.0),
             width: 64.0,
             height: 64.0,
-            child: const CircularProgressIndicator(),
+            // child: const CircularProgressIndicator(),
           );
         } else if (playing != true) {
         } else if (processingState != ProcessingState.completed) {
-          return SizedBox(
-            height: 60,
-            width: 80,
-            child: GifView.asset(
-              'assets/images/playing.gif',
-              invertColors: true,
-              height: 200,
-              width: 200,
+          return InkWell(
+            onTap: () {
+              context
+                  .read<PlayAudioBloc>()
+                  .add(const PlayOrPauseSongEvent(play: false));
+            },
+            child: SizedBox(
+              height: 60,
+              width: 80,
+              child: GifView.asset(
+                'assets/images/playing.gif',
+                invertColors: true,
+                height: 200,
+                width: 200,
+              ),
             ),
           );
         } else {

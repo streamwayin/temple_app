@@ -1,5 +1,6 @@
 import 'dart:developer' as lgr;
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/wallpaper/widgets/set_wallpaper_as_dialog.dart';
@@ -29,14 +30,15 @@ class _SingleWallpaperComponentState extends State<SingleWallpaperComponent> {
       child: Column(
         children: [
           Container(
+            color: const Color.fromARGB(162, 207, 207, 207),
             height: 250.h,
-            width: size.width * .4,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: NetworkImage(
-                    widget.wallpaperUrl,
-                  ),
-                  fit: BoxFit.fitHeight),
+            width: size.width.h * .35.h,
+            child: CachedNetworkImage(
+              imageUrl: widget.wallpaperUrl,
+              fit: BoxFit.fitHeight,
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+              progressIndicatorBuilder: (context, url, progress) =>
+                  const Center(child: CircularProgressIndicator()),
             ),
           ),
           Container(

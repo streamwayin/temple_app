@@ -1,26 +1,26 @@
 part of 'auth_bloc.dart';
 
-enum AuthType { signinWithEmail, signupWithEmail, loginWithPhone }
+// enum AuthType { signinWithEmail, signupWithEmail, loginWithPhone }
 
 class AuthState extends Equatable {
-  final AuthType authType;
+  // final AuthType authType;
   final CountryCode code;
   final bool? isLoggedIn;
   const AuthState({
-    this.authType = AuthType.signinWithEmail,
+    // this.authType = AuthType.signinWithEmail,
     this.code = const CountryCode(name: 'India', code: 'IN', dialCode: '+91'),
     this.isLoggedIn,
   });
   @override
-  List<Object?> get props => [authType, code, isLoggedIn];
+  List<Object?> get props => [ code, isLoggedIn];
 
   AuthState copyWith({
-    AuthType? authType,
+    // AuthType? authType,
     CountryCode? code,
     bool? isLoggedIn,
   }) {
     return AuthState(
-        authType: authType ?? this.authType,
+        // authType: authType ?? this.authType,
         code: code ?? this.code,
         isLoggedIn: isLoggedIn);
   }

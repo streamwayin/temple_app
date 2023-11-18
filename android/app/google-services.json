@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "234235346375",
-    "project_id": "temple-app-b30a8",
-    "storage_bucket": "temple-app-b30a8.appspot.com"
+    "project_number": "147635598668",
+    "project_id": "religiousapp-e15d2",
+    "storage_bucket": "religiousapp-e15d2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:234235346375:android:20897805245b41f7592de2",
+        "mobilesdk_app_id": "1:147635598668:android:720f467ba99169d4b04be9",
         "android_client_info": {
           "package_name": "in.streamway.temple_app"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDiNU2GTMbwaV8MeZePyElyikVR7P-4muI"
+          "current_key": "AIzaSyBOZH5ZmfK9W66b7Bk091scEhydUqMdbeM"
         }
       ],
       "services": {

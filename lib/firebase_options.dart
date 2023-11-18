@@ -50,19 +50,19 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDiNU2GTMbwaV8MeZePyElyikVR7P-4muI',
-    appId: '1:234235346375:android:20897805245b41f7592de2',
-    messagingSenderId: '234235346375',
-    projectId: 'temple-app-b30a8',
-    storageBucket: 'temple-app-b30a8.appspot.com',
+    apiKey: 'AIzaSyBOZH5ZmfK9W66b7Bk091scEhydUqMdbeM',
+    appId: '1:147635598668:android:720f467ba99169d4b04be9',
+    messagingSenderId: '147635598668',
+    projectId: 'religiousapp-e15d2',
+    storageBucket: 'religiousapp-e15d2.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCZh8w5MaZ3Pm3hbDFMpdRqw1tIK04Ddfs',
-    appId: '1:234235346375:ios:4c0d36d8fa418b39592de2',
-    messagingSenderId: '234235346375',
-    projectId: 'temple-app-b30a8',
-    storageBucket: 'temple-app-b30a8.appspot.com',
+    apiKey: 'AIzaSyDLLX6vE83BC8OLmfcIANJtnDsShItxL7Y',
+    appId: '1:147635598668:ios:bf692ce3ec3b3830b04be9',
+    messagingSenderId: '147635598668',
+    projectId: 'religiousapp-e15d2',
+    storageBucket: 'religiousapp-e15d2.appspot.com',
     iosBundleId: 'in.streamway.templeApp',
   );
 }

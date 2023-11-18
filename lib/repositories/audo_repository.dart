@@ -138,7 +138,7 @@ class AudioRepository {
   Future<void> uploadBookDataToFirebase() async {
     try {
       for (var a in bookLIst) {
-        final docRef = FirebaseFirestore.instance.collection("audio").doc();
+        final docRef = FirebaseFirestore.instance.collection("books").doc();
         await docRef.set(a);
       }
     } catch (e) {

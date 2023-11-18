@@ -2,6 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
+import 'package:temple_app/features/auth/screens/auth_screen.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
 import 'package:temple_app/widgets/common_background_component.dart';
@@ -28,6 +30,16 @@ class EbookScreen extends StatelessWidget {
           context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
               path: state.pathString!, book: state.selectedBook!));
           Navigator.pushNamed(context, EpubViwerScreen.routeName);
+
+          // navigate user based on is logged in or not
+          // bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
+          // if (isUserLoggedIn != null && isUserLoggedIn == true) {
+          //   context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
+          //       path: state.pathString!, book: state.selectedBook!));
+          //   Navigator.pushNamed(context, EpubViwerScreen.routeName);
+          // } else {
+          //   Navigator.pushNamed(context, AuthScreen.routeName);
+          // }
         }
       },
       builder: (context, state) {

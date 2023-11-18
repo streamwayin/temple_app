@@ -1,14 +1,17 @@
 class TrackModel {
   String albumId;
   String artistId;
-  String name;
+  String? artistName;
+  String title;
   String songUrl;
   String? thumbnail;
   String trackId;
+
   TrackModel({
     required this.albumId,
     required this.artistId,
-    required this.name,
+    required this.artistName,
+    required this.title,
     required this.songUrl,
     required this.thumbnail,
     required this.trackId,
@@ -18,7 +21,8 @@ class TrackModel {
     return {
       'albumId': albumId,
       'artistId': artistId,
-      'name': name,
+      'artistName': artistName,
+      'title': title,
       'songUrl': songUrl,
       'thumbnail': thumbnail,
       'trackId': trackId,
@@ -29,7 +33,8 @@ class TrackModel {
     return TrackModel(
       albumId: map['albumId'] ?? '',
       artistId: map['artistId'] ?? '',
-      name: map['name'] ?? '',
+      artistName: map['artistName'] ?? '',
+      title: map['title'] ?? '',
       songUrl: map['songUrl'] ?? '',
       thumbnail: map['thumbnail'] ?? '',
       trackId: map['trackId'] ?? '',

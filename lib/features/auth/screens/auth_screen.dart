@@ -56,7 +56,7 @@ class AuthScreen extends StatelessWidget {
                               icon: const Icon(
                                 Icons.close_rounded,
                                 size: 40,
-                                color: Colors.white,
+                                color: Color.fromARGB(255, 51, 51, 51),
                               ),
                             ),
                           ],
@@ -68,12 +68,13 @@ class AuthScreen extends StatelessWidget {
                               phoneNo: state.phoneNumber)
                           : Column(
                               children: [
-                                (state.authType == AuthType.signupWithEmail)
-                                    ? const SignupWithEmail()
-                                    : const SizedBox(),
-                                (state.authType == AuthType.loginWithPhone)
-                                    ? const LoginWithPhone()
-                                    : const SizedBox(),
+                                LoginWithPhone()
+                                // (state.authType == AuthType.signupWithEmail)
+                                //     ? const SignupWithEmail()
+                                //     : const SizedBox(),
+                                // (state.authType == AuthType.loginWithPhone)
+                                //     ? const LoginWithPhone()
+                                //     : const SizedBox(),
                               ],
                             ),
                       CustomAuthButton(
@@ -85,17 +86,25 @@ class AuthScreen extends StatelessWidget {
                               .add(SignInWithGoogelEvent(context: context));
                         },
                       ),
-                      (state.authType != AuthType.loginWithPhone)
-                          ? CustomAuthButton(
-                              assetUrl: 'assets/images/phone.png',
-                              title: 'Login with phone',
-                              onTap: () {
-                                context.read<AuthBloc>().add(
-                                    AuthTypeChangedEvent(
-                                        authType: AuthType.loginWithPhone));
-                              },
-                            )
-                          : const SizedBox(),
+                      // CustomAuthButton(
+                      //   assetUrl: 'assets/images/phone.png',
+                      //   title: 'Login with phone',
+                      //   onTap: () {
+                      //     // context.read<AuthBloc>().add(AuthTypeChangedEvent(
+                      //     //     authType: AuthType.loginWithPhone));
+                      //   },
+                      // )
+                      // (state.authType != AuthType.loginWithPhone)
+                      //     ? CustomAuthButton(
+                      //         assetUrl: 'assets/images/phone.png',
+                      //         title: 'Login with phone',
+                      //         onTap: () {
+                      //           context.read<AuthBloc>().add(
+                      //               AuthTypeChangedEvent(
+                      //                   authType: AuthType.loginWithPhone));
+                      //         },
+                      //       )
+                      //     : const SizedBox(),
                     ],
                   );
                 },
