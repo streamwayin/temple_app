@@ -13,7 +13,7 @@ import '../widgets/rsp_custom_painter2.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
-
+  static const String routeName = '/splash-screen';
   @override
   State<SplashScreen> createState() => _SplashScreenState();
 }

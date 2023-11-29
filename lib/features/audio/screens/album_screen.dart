@@ -43,7 +43,7 @@ class AlbumScreen extends StatelessWidget {
                               child: const Icon(Icons.arrow_back)),
                           SizedBox(width: 10.w),
                           SizedBox(
-                            width: size.width.w - 150.w,
+                            width: size.width - 150.w,
                             child: Text(
                               state.albums[albumIndex].name,
                               overflow: TextOverflow.ellipsis,

@@ -8,11 +8,17 @@ import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
 import 'package:temple_app/features/ebook/search/screens/search_book_screen.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
 import 'package:temple_app/features/onboarding/screens/onboarding_screen1.dart';
+import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
+    case SplashScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const SplashScreen(),
+      );
     case AuthScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,

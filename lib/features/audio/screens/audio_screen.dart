@@ -100,7 +100,7 @@ class AudioScreen extends StatelessWidget {
                                         ),
                                         SizedBox(width: 5.w),
                                         SizedBox(
-                                          width: size.width.w - 110.w,
+                                          width: size.width - 110.w,
                                           child: Text(
                                             album.name,
                                             overflow: TextOverflow.ellipsis,

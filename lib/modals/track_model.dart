@@ -6,6 +6,7 @@ class TrackModel {
   String songUrl;
   String? thumbnail;
   String trackId;
+  int? index;
 
   TrackModel({
     required this.albumId,
@@ -15,6 +16,7 @@ class TrackModel {
     required this.songUrl,
     required this.thumbnail,
     required this.trackId,
+    this.index,
   });
 
   Map<String, dynamic> toJson() {
@@ -26,6 +28,7 @@ class TrackModel {
       'songUrl': songUrl,
       'thumbnail': thumbnail,
       'trackId': trackId,
+      'index': index,
     };
   }
 
@@ -38,6 +41,7 @@ class TrackModel {
       songUrl: map['songUrl'] ?? '',
       thumbnail: map['thumbnail'] ?? '',
       trackId: map['trackId'] ?? '',
+      index: (map['index'] != null) ? int.parse(map['index'].toString()) : null,
     );
   }
 }

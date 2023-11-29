@@ -199,9 +199,26 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
   FutureOr<void> onFetchSongsOfAlbum(
       FetchSongsOfAlbum event, Emitter<PlayAudioState> emit) async {
-    final tracks = await audioRepository.getTracksListFromDb(event.albumId);
+    List<TrackModel>? tracks =
+        await audioRepository.getTracksListFromDb(event.albumId);
+    // List<TrackModel> shortedList = [];
+    print('=====================');
+    print(tracks?.length);
+    print('=====================');
+    if (tracks != null && tracks.isNotEmpty && tracks[0].index != null) {
+      // Create a copy of the list before sorting
+      List<TrackModel> tempTracks = List.from(tracks);
+      tempTracks.sort((a, b) => (a.index ?? 0).compareTo(b.index ?? 0));
+      tracks = tempTracks;
+      for (var a in tracks) {
+        print(a.index);
+      }
+    }
     emit(state.copyWith(
-        tracks: tracks, isTracksAvailable: true, tracksPageLoading: false));
+      tracks: tracks, // Use shortedList instead of tracks
+      isTracksAvailable: true,
+      tracksPageLoading: false,
+    ));
   }
 
   FutureOr<void> onPlaySinglesongEvent(
