@@ -72,3 +72,9 @@ class FetchSongsOfAlbum extends PlayAudioEvent {
 
   const FetchSongsOfAlbum({required this.albumId});
 }
+
+class UpdateSelectedAlbumIndex extends PlayAudioEvent {
+  final int index;
+
+  const UpdateSelectedAlbumIndex({required this.index});
+}

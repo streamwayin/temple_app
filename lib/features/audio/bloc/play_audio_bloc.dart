@@ -34,6 +34,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<SetSeekDurationEvent>(onSetSeekDurationEvent);
     on<FetchSongsOfAlbum>(onFetchSongsOfAlbum);
     on<PlaySinglesongEvent>(onPlaySinglesongEvent);
+    on<UpdateSelectedAlbumIndex>(onUpdateSelectedAlbumIndex);
   }
   AudioRepository audioRepository = AudioRepository();
   FutureOr<void> onGetAudioListFromWeb(
@@ -181,9 +182,18 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       ChangeSongEvent event, Emitter<PlayAudioState> emit) {
     if (event.next == true) {
       audioRepository.next();
+
+      int? index = state.singleSongIndex;
+      if (index != null) {
+        emit(state.copyWith(singleSongIndex: index + 1));
+      }
     }
     if (event.previous == true) {
       audioRepository.previous();
+      int? index = state.singleSongIndex;
+      if (index != null) {
+        emit(state.copyWith(singleSongIndex: index + 1));
+      }
     }
   }
 
@@ -226,5 +236,10 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     audioRepository.playSingleSong(event.index);
 
     emit(state.copyWith(singleSongIndex: event.index));
+  }
+
+  FutureOr<void> onUpdateSelectedAlbumIndex(
+      UpdateSelectedAlbumIndex event, Emitter<PlayAudioState> emit) {
+    emit(state.copyWith(currentAlbumIndex: event.index));
   }
 }

@@ -99,17 +99,49 @@ class AlbumScreen extends StatelessWidget {
                                       },
                                       leading: (song.thumbnail != null)
                                           ? SizedBox(
-                                              width: 60.w,
-                                              child: ClipRRect(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                child: CachedNetworkImage(
-                                                  imageUrl: song.thumbnail!,
-                                                  placeholder: (context, url) =>
-                                                      Image.asset(
-                                                          'assets/images/sound-waves.png'),
-                                                  fit: BoxFit.cover,
-                                                ),
+                                              width: 55.w,
+                                              height: 55.h,
+                                              child: Stack(
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    child: CachedNetworkImage(
+                                                      imageUrl: song.thumbnail!,
+                                                      placeholder: (context,
+                                                              url) =>
+                                                          Image.asset(
+                                                              'assets/images/sound-waves.png'),
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  ),
+                                                  state.singleSongIndex == ind
+                                                      ? Positioned(
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          5),
+                                                            ),
+                                                            height: 55.h,
+                                                            width: 55.w,
+                                                            child: SizedBox(
+                                                              height: 10.h,
+                                                              width: 10.w,
+                                                              child:
+                                                                  Image.asset(
+                                                                'assets/images/music.gif',
+                                                                // fit: BoxFit
+                                                                //     .contain,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : const SizedBox(),
+                                                ],
                                               ),
                                             )
                                           : const SizedBox(),

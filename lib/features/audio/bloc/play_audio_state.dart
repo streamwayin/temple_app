@@ -12,6 +12,7 @@ class PlayAudioState extends Equatable {
   final bool? isTracksAvailable;
   final bool albumsPageLoading;
   final bool tracksPageLoading;
+  final int? currentAlbumIndex;
   const PlayAudioState(
       {this.albums = const [],
       this.concatenatingAudioSource,
@@ -23,7 +24,8 @@ class PlayAudioState extends Equatable {
       this.tracks,
       this.isTracksAvailable,
       this.albumsPageLoading = true,
-      this.tracksPageLoading = true});
+      this.tracksPageLoading = true,
+      this.currentAlbumIndex});
   @override
   List<Object?> get props => [
         albums,
@@ -36,34 +38,39 @@ class PlayAudioState extends Equatable {
         tracks,
         isTracksAvailable,
         albumsPageLoading,
-        tracksPageLoading
+        tracksPageLoading,
+        currentAlbumIndex
       ];
 
-  PlayAudioState copyWith(
-      {List<AlbumModel>? albums,
-      ConcatenatingAudioSource? concatenatingAudioSource,
-      int? singleSongIndex,
-      String? snackbarMessage,
-      bool? isSongDownloading,
-      Map<String, String>? downloadedSongsMap,
-      MusicPlayerDataModel? musicPlayerDataModel,
-      List<TrackModel>? tracks,
-      bool? isTracksAvailable,
-      bool? albumsPageLoading,
-      bool? tracksPageLoading}) {
+  PlayAudioState copyWith({
+    List<AlbumModel>? albums,
+    ConcatenatingAudioSource? concatenatingAudioSource,
+    int? singleSongIndex,
+    String? snackbarMessage,
+    bool? isSongDownloading,
+    Map<String, String>? downloadedSongsMap,
+    MusicPlayerDataModel? musicPlayerDataModel,
+    List<TrackModel>? tracks,
+    bool? isTracksAvailable,
+    bool? albumsPageLoading,
+    bool? tracksPageLoading,
+    int? currentAlbumIndex,
+  }) {
     return PlayAudioState(
-        albums: albums ?? this.albums,
-        concatenatingAudioSource:
-            concatenatingAudioSource ?? this.concatenatingAudioSource,
-        singleSongIndex: singleSongIndex ?? this.singleSongIndex,
-        snackbarMessage: snackbarMessage,
-        isSongDownloading: isSongDownloading ?? this.isSongDownloading,
-        downloadedSongsMap: downloadedSongsMap ?? this.downloadedSongsMap,
-        musicPlayerDataModel: musicPlayerDataModel ?? this.musicPlayerDataModel,
-        tracks: tracks ?? this.tracks,
-        isTracksAvailable: isTracksAvailable,
-        albumsPageLoading: albumsPageLoading ?? this.albumsPageLoading,
-        tracksPageLoading: tracksPageLoading ?? this.tracksPageLoading);
+      albums: albums ?? this.albums,
+      concatenatingAudioSource:
+          concatenatingAudioSource ?? this.concatenatingAudioSource,
+      singleSongIndex: singleSongIndex ?? this.singleSongIndex,
+      snackbarMessage: snackbarMessage,
+      isSongDownloading: isSongDownloading ?? this.isSongDownloading,
+      downloadedSongsMap: downloadedSongsMap ?? this.downloadedSongsMap,
+      musicPlayerDataModel: musicPlayerDataModel ?? this.musicPlayerDataModel,
+      tracks: tracks ?? this.tracks,
+      isTracksAvailable: isTracksAvailable,
+      albumsPageLoading: albumsPageLoading ?? this.albumsPageLoading,
+      tracksPageLoading: tracksPageLoading ?? this.tracksPageLoading,
+      currentAlbumIndex: currentAlbumIndex ?? this.currentAlbumIndex,
+    );
   }
 }
 

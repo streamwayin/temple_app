@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:temple_app/widgets/bottom_audio_controller.dart';
+import 'package:temple_app/widgets/song_playing_indicator.dart';
 
 class CustomStackWithBottomPlayer extends StatelessWidget {
   final Widget child;
@@ -16,7 +16,8 @@ class CustomStackWithBottomPlayer extends StatelessWidget {
             bottom: 0,
             left: 0,
             right: 0,
-            child: BottomAudioController(),
+            // child: Text('data'),
+            child: SongPlayingIndicator(),
           ),
         ],
       ),

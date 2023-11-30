@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
-import 'package:temple_app/features/home/screens/home_screen.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 import '../bloc/play_audio_bloc.dart';
@@ -20,7 +19,6 @@ class AudioScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text('Albums'),
-            SongPlayingIndicator(),
           ],
         ),
       ),
@@ -62,6 +60,8 @@ class AudioScreen extends StatelessWidget {
                                         context, AlbumScreen.routeName,
                                         arguments: index);
                                     context.read<PlayAudioBloc>().add(
+                                        UpdateSelectedAlbumIndex(index: index));
+                                    context.read<PlayAudioBloc>().add(
                                         FetchSongsOfAlbum(
                                             albumId: album.albumId));
                                   },
@@ -69,34 +69,52 @@ class AudioScreen extends StatelessWidget {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
                                       children: [
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            color: const Color.fromARGB(
-                                                    255, 233, 232, 232)
-                                                .withOpacity(0.5),
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          height: 50,
-                                          width: 50,
-                                          child: (album.thumbnail != null)
-                                              ? ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: album.thumbnail!,
-                                                    fit: BoxFit.cover,
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        const Icon(Icons.error),
-                                                  ),
-                                                )
-                                              : ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                  child: Image.asset(
-                                                      'assets/images/sound-waves.png'),
-                                                ),
+                                        Stack(
+                                          children: [
+                                            Container(
+                                              height: 45.h,
+                                              width: 50.w,
+                                              decoration: BoxDecoration(
+                                                color: const Color.fromARGB(
+                                                        255, 233, 232, 232)
+                                                    .withOpacity(0.5),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                              child: (album.thumbnail != null)
+                                                  ? ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            album.thumbnail!,
+                                                        fit: BoxFit.cover,
+                                                        errorWidget: (context,
+                                                                url, error) =>
+                                                            const Icon(
+                                                                Icons.error),
+                                                      ),
+                                                    )
+                                                  : ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: Image.asset(
+                                                          'assets/images/sound-waves.png'),
+                                                    ),
+                                            ),
+                                            state.currentAlbumIndex == index
+                                                ? SizedBox(
+                                                    height: 45.h,
+                                                    width: 50.w,
+                                                    child: Image.asset(
+                                                      'assets/images/music.gif',
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  )
+                                                : const SizedBox(),
+                                          ],
                                         ),
                                         SizedBox(width: 5.w),
                                         SizedBox(
