@@ -104,7 +104,13 @@ class AudioScreen extends StatelessWidget {
                                                           'assets/images/sound-waves.png'),
                                                     ),
                                             ),
-                                            state.currentAlbumIndex == index
+                                            state.currentAlbumIndex != null &&
+                                                    state
+                                                            .albums[state
+                                                                .currentAlbumIndex!]
+                                                            .albumId ==
+                                                        state.albums[index]
+                                                            .albumId
                                                 ? SizedBox(
                                                     height: 45.h,
                                                     width: 50.w,

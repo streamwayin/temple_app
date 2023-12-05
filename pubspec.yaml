@@ -65,6 +65,8 @@ dependencies:
   intl: ^0.18.1
   flutter_localization: ^0.1.14
   easy_localization: ^3.0.3
+  hydrated_bloc: ^9.1.2
+  url_launcher: ^6.2.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

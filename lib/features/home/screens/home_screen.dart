@@ -1,11 +1,22 @@
+import 'dart:convert';
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
+import 'package:temple_app/modals/album_model.dart';
+import 'package:temple_app/modals/track_model.dart';
+import '../../../constants.dart';
+import '../../../modals/ebook_model.dart';
 import '../../../widgets/common_background_component.dart';
+import '../../about-us/screens/about_us_screen.dart';
+import '../../contact-us/screens/contact_us_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -39,7 +50,17 @@ class _HomeScreenState extends State<HomeScreen> {
         "name": "ebook",
         "imagePath": "assets/images/ebook.png",
         "routeName": EbookScreen.routeName
-      }
+      },
+      {
+        "name": "aboutUs",
+        "imagePath": "assets/images/personal-information.png",
+        "routeName": AboutUsScreen.routeName
+      },
+      {
+        "name": "contactUs",
+        "imagePath": "assets/images/operator.png",
+        "routeName": ContactUsScreen.routeName
+      },
     ];
     return Scaffold(
       // appBar: AppBar(
@@ -82,6 +103,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     print('object');
+            //     final db = FirebaseFirestore.instance;
+            //     db.settings = const Settings(
+            //       persistenceEnabled: true,
+            //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+            //     );
+            //   },
+            //   child: const Text("enable presistance"),
+            // ),
           ],
         ),
       ),

@@ -7,7 +7,7 @@ class PlayAudioEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetAudioListFromWebEvent extends PlayAudioEvent {}
+class PlayAudioEventInitial extends PlayAudioEvent {}
 
 class AlbumIndexChanged extends PlayAudioEvent {
   final int oldIndex;
@@ -77,4 +77,22 @@ class UpdateSelectedAlbumIndex extends PlayAudioEvent {
   final int index;
 
   const UpdateSelectedAlbumIndex({required this.index});
+}
+
+class ChangeOnPlayAudioSreenOrNot extends PlayAudioEvent {
+  final bool onPlayAudioScreen;
+
+  const ChangeOnPlayAudioSreenOrNot({required this.onPlayAudioScreen});
+}
+
+class ChangeShowBottomMusicController extends PlayAudioEvent {
+  final bool changeShowBottomMusicController;
+
+  const ChangeShowBottomMusicController(
+      {required this.changeShowBottomMusicController});
+}
+
+class SaveCurrentAlbumToLocalStorage extends PlayAudioEvent {}
+class LoadSavedTrackInPlayerEvent extends PlayAudioEvent{
+  
 }

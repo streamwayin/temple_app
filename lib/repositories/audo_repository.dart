@@ -68,7 +68,7 @@ class AudioRepository {
   void pause() => _player.pause();
   void next() => _player.seekToNext();
   int? currentSongIndex() => _player.currentIndex;
-  void previous() => _player.seekToPrevious;
+  void previous() => _player.seekToPrevious();
   void setSeekDuration(Duration duration) => _player.seek(duration);
   void playSingleSong(int index) async {
     await _player.seek(Duration.zero, index: index);
@@ -78,7 +78,9 @@ class AudioRepository {
   Future<List<AlbumModel>?> getAlbumListFromDb() async {
     try {
       List<AlbumModel> albumModel = [];
-      final data = await FirebaseFirestore.instance.collection('albums').get();
+      final data = await FirebaseFirestore.instance.collection('albums').get(
+            const GetOptions(source: Source.serverAndCache),
+          );
       // final dataa = await FirebaseFirestore.instance.collection('tracks').where(album).get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> a = data.docs;
       for (var b in a) {

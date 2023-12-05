@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:temple_app/features/about-us/screens/about_us_screen.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
 import 'package:temple_app/features/auth/screens/auth_screen.dart';
+import 'package:temple_app/features/contact-us/screens/contact_us_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
 import 'package:temple_app/features/ebook/search/screens/search_book_screen.dart';
@@ -75,6 +77,16 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const SearchBookScreen(),
+      );
+    case AboutUsScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const AboutUsScreen(),
+      );
+    case ContactUsScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const ContactUsScreen(),
       );
 
     default:

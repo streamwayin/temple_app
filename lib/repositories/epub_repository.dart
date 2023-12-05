@@ -7,7 +7,9 @@ class EpubRepository {
   Future<List<EbookModel>?> getEpubListFromWeb() async {
     try {
       List<EbookModel> ebookList = [];
-      final data = await FirebaseFirestore.instance.collection('books').get();
+      final data = await FirebaseFirestore.instance.collection('books').get(
+            const GetOptions(source: Source.serverAndCache),
+          );
       List<QueryDocumentSnapshot<Map<String, dynamic>>> a = data.docs;
       for (var b in a) {
         if (b.exists) {

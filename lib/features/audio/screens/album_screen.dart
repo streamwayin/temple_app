@@ -25,7 +25,6 @@ class AlbumScreen extends StatelessWidget {
         child: BlocBuilder<PlayAudioBloc, PlayAudioState>(
           builder: (context, state) {
             List<TrackModel>? songList = state.tracks;
-
             return Stack(
               children: [
                 Padding(
@@ -37,10 +36,11 @@ class AlbumScreen extends StatelessWidget {
                       Row(
                         children: [
                           InkWell(
-                              onTap: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Icon(Icons.arrow_back)),
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(Icons.arrow_back),
+                          ),
                           SizedBox(width: 10.w),
                           SizedBox(
                             width: size.width - 150.w,
@@ -67,13 +67,13 @@ class AlbumScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                   border: Border.all(),
                                   borderRadius: BorderRadius.circular(10)),
-                              child: const Text("Play all"),
+                              child: const Text("Play All"),
                             ),
                           )
                         ],
                       ),
                       SizedBox(
-                        height: size.height * .9,
+                        height: size.height * .89,
                         child: songList == null
                             ? (state.tracksPageLoading == true)
                                 ? const SizedBox()
@@ -92,10 +92,21 @@ class AlbumScreen extends StatelessWidget {
                                         context.read<PlayAudioBloc>().add(
                                             const PlayOrPauseSongEvent(
                                                 play: true));
+                                        context.read<PlayAudioBloc>().add(
+                                              const ChangeOnPlayAudioSreenOrNot(
+                                                  onPlayAudioScreen: true),
+                                            );
+                                        context.read<PlayAudioBloc>().add(
+                                              const ChangeShowBottomMusicController(
+                                                  changeShowBottomMusicController:
+                                                      true),
+                                            );
                                         Navigator.pushNamed(
                                             context, PlayAudioScreen.routeName);
                                         context.read<PlayAudioBloc>().add(
                                             PlaySinglesongEvent(index: ind));
+                                        context.read<PlayAudioBloc>().add(
+                                            SaveCurrentAlbumToLocalStorage());
                                       },
                                       leading: (song.thumbnail != null)
                                           ? SizedBox(
@@ -116,7 +127,10 @@ class AlbumScreen extends StatelessWidget {
                                                       fit: BoxFit.cover,
                                                     ),
                                                   ),
-                                                  state.singleSongIndex == ind
+                                                  state.singleSongIndex ==
+                                                              ind &&
+                                                          state.showBottomMusicController ==
+                                                              true
                                                       ? Positioned(
                                                           child: Container(
                                                             decoration:

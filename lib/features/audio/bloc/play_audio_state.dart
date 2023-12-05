@@ -13,19 +13,28 @@ class PlayAudioState extends Equatable {
   final bool albumsPageLoading;
   final bool tracksPageLoading;
   final int? currentAlbumIndex;
-  const PlayAudioState(
-      {this.albums = const [],
-      this.concatenatingAudioSource,
-      this.singleSongIndex,
-      this.snackbarMessage,
-      this.isSongDownloading = false,
-      this.downloadedSongsMap = const {},
-      this.musicPlayerDataModel,
-      this.tracks,
-      this.isTracksAvailable,
-      this.albumsPageLoading = true,
-      this.tracksPageLoading = true,
-      this.currentAlbumIndex});
+  final bool showBottomMusicController;
+  final bool onPlayAudioScreen;
+  final bool isPreviouslyTracksSaved;
+  final List<TrackModel>? previouslySavedTracks;
+  const PlayAudioState({
+    this.albums = const [],
+    this.concatenatingAudioSource,
+    this.singleSongIndex,
+    this.snackbarMessage,
+    this.isSongDownloading = false,
+    this.downloadedSongsMap = const {},
+    this.musicPlayerDataModel,
+    this.tracks,
+    this.isTracksAvailable,
+    this.albumsPageLoading = true,
+    this.tracksPageLoading = true,
+    this.currentAlbumIndex,
+    this.showBottomMusicController = false,
+    this.onPlayAudioScreen = false,
+    this.isPreviouslyTracksSaved = false,
+    this.previouslySavedTracks,
+  });
   @override
   List<Object?> get props => [
         albums,
@@ -39,7 +48,11 @@ class PlayAudioState extends Equatable {
         isTracksAvailable,
         albumsPageLoading,
         tracksPageLoading,
-        currentAlbumIndex
+        currentAlbumIndex,
+        showBottomMusicController,
+        onPlayAudioScreen,
+        isPreviouslyTracksSaved,
+        previouslySavedTracks
       ];
 
   PlayAudioState copyWith({
@@ -55,6 +68,10 @@ class PlayAudioState extends Equatable {
     bool? albumsPageLoading,
     bool? tracksPageLoading,
     int? currentAlbumIndex,
+    bool? showBottomMusicController,
+    bool? onPlayAudioScreen,
+    bool? isPreviouslyTracksSaved,
+    List<TrackModel>? previouslySavedTracks,
   }) {
     return PlayAudioState(
       albums: albums ?? this.albums,
@@ -70,6 +87,13 @@ class PlayAudioState extends Equatable {
       albumsPageLoading: albumsPageLoading ?? this.albumsPageLoading,
       tracksPageLoading: tracksPageLoading ?? this.tracksPageLoading,
       currentAlbumIndex: currentAlbumIndex ?? this.currentAlbumIndex,
+      showBottomMusicController:
+          showBottomMusicController ?? this.showBottomMusicController,
+      onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
+      isPreviouslyTracksSaved:
+          isPreviouslyTracksSaved ?? this.isPreviouslyTracksSaved,
+      previouslySavedTracks:
+          previouslySavedTracks ?? this.previouslySavedTracks,
     );
   }
 }

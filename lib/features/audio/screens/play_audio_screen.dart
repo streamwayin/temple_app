@@ -26,17 +26,25 @@ class MyAppState extends State<PlayAudioScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        context.read<PlayAudioBloc>().add(
+              const ChangeOnPlayAudioSreenOrNot(onPlayAudioScreen: false),
+            );
+        return true;
+      },
+      child: Scaffold(
         body: SafeArea(
           child: BlocListener<PlayAudioBloc, PlayAudioState>(
             listener: (context, state) {
               if (state is PlayAudioErrorState) {
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
                     content: Text(
-                  state.errorMesssage,
-                )));
+                      state.errorMesssage,
+                    ),
+                  ),
+                );
               }
             },
             child: BlocConsumer<PlayAudioBloc, PlayAudioState>(

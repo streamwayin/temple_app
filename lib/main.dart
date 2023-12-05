@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider(
                 create: (context) =>
-                    PlayAudioBloc()..add(GetAudioListFromWebEvent()),
+                    PlayAudioBloc()..add(PlayAudioEventInitial()),
               ),
               BlocProvider(
                 create: (context) => EbookBloc(repository: EpubRepository())
