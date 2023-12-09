@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
+import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/modals/track_model.dart';
 
 import '../../../widgets/utils.dart';
@@ -92,10 +93,13 @@ class AlbumScreen extends StatelessWidget {
                                         context.read<PlayAudioBloc>().add(
                                             const PlayOrPauseSongEvent(
                                                 play: true));
-                                        context.read<PlayAudioBloc>().add(
-                                              const ChangeOnPlayAudioSreenOrNot(
-                                                  onPlayAudioScreen: true),
-                                            );
+                                        // context.read<PlayAudioBloc>().add(
+                                        //       const ChangeOnPlayAudioSreenOrNot(
+                                        //           onPlayAudioScreen: true),
+                                        //     );
+                                        context.read<HomeBloc>().add(
+                                            const ChangeOnPlayAudioSreenOrNot(
+                                                onPlayAudioScreen: true));
                                         context.read<PlayAudioBloc>().add(
                                               const ChangeShowBottomMusicController(
                                                   changeShowBottomMusicController:
@@ -106,7 +110,7 @@ class AlbumScreen extends StatelessWidget {
                                         context.read<PlayAudioBloc>().add(
                                             PlaySinglesongEvent(index: ind));
                                         context.read<PlayAudioBloc>().add(
-                                            SaveCurrentAlbumToLocalStorage());
+                                            const SaveCurrentAlbumToLocalStorage());
                                       },
                                       leading: (song.thumbnail != null)
                                           ? SizedBox(

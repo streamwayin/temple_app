@@ -79,11 +79,11 @@ class UpdateSelectedAlbumIndex extends PlayAudioEvent {
   const UpdateSelectedAlbumIndex({required this.index});
 }
 
-class ChangeOnPlayAudioSreenOrNot extends PlayAudioEvent {
-  final bool onPlayAudioScreen;
+// class ChangeOnPlayAudioSreenOrNot extends PlayAudioEvent {
+//   final bool onPlayAudioScreen;
 
-  const ChangeOnPlayAudioSreenOrNot({required this.onPlayAudioScreen});
-}
+//   const ChangeOnPlayAudioSreenOrNot({required this.onPlayAudioScreen});
+// }
 
 class ChangeShowBottomMusicController extends PlayAudioEvent {
   final bool changeShowBottomMusicController;
@@ -92,7 +92,8 @@ class ChangeShowBottomMusicController extends PlayAudioEvent {
       {required this.changeShowBottomMusicController});
 }
 
-class SaveCurrentAlbumToLocalStorage extends PlayAudioEvent {}
-class LoadSavedTrackInPlayerEvent extends PlayAudioEvent{
-  
+class SaveCurrentAlbumToLocalStorage extends PlayAudioEvent {
+  const SaveCurrentAlbumToLocalStorage();
 }
+
+class LoadSavedTrackInPlayerEvent extends PlayAudioEvent {}

@@ -12,10 +12,10 @@ class PlayAudioState extends Equatable {
   final bool? isTracksAvailable;
   final bool albumsPageLoading;
   final bool tracksPageLoading;
-  final int? currentAlbumIndex;
+  final String? currentAlbumId;
   final bool showBottomMusicController;
   final bool onPlayAudioScreen;
-  final bool isPreviouslyTracksSaved;
+  final bool? isPreviouslyTracksSaved;
   final List<TrackModel>? previouslySavedTracks;
   const PlayAudioState({
     this.albums = const [],
@@ -29,7 +29,7 @@ class PlayAudioState extends Equatable {
     this.isTracksAvailable,
     this.albumsPageLoading = true,
     this.tracksPageLoading = true,
-    this.currentAlbumIndex,
+    this.currentAlbumId,
     this.showBottomMusicController = false,
     this.onPlayAudioScreen = false,
     this.isPreviouslyTracksSaved = false,
@@ -48,7 +48,7 @@ class PlayAudioState extends Equatable {
         isTracksAvailable,
         albumsPageLoading,
         tracksPageLoading,
-        currentAlbumIndex,
+        currentAlbumId,
         showBottomMusicController,
         onPlayAudioScreen,
         isPreviouslyTracksSaved,
@@ -67,7 +67,7 @@ class PlayAudioState extends Equatable {
     bool? isTracksAvailable,
     bool? albumsPageLoading,
     bool? tracksPageLoading,
-    int? currentAlbumIndex,
+    String? currentAlbumId,
     bool? showBottomMusicController,
     bool? onPlayAudioScreen,
     bool? isPreviouslyTracksSaved,
@@ -86,12 +86,11 @@ class PlayAudioState extends Equatable {
       isTracksAvailable: isTracksAvailable,
       albumsPageLoading: albumsPageLoading ?? this.albumsPageLoading,
       tracksPageLoading: tracksPageLoading ?? this.tracksPageLoading,
-      currentAlbumIndex: currentAlbumIndex ?? this.currentAlbumIndex,
+      currentAlbumId: currentAlbumId ?? this.currentAlbumId,
       showBottomMusicController:
           showBottomMusicController ?? this.showBottomMusicController,
       onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
-      isPreviouslyTracksSaved:
-          isPreviouslyTracksSaved ?? this.isPreviouslyTracksSaved,
+      isPreviouslyTracksSaved: isPreviouslyTracksSaved,
       previouslySavedTracks:
           previouslySavedTracks ?? this.previouslySavedTracks,
     );

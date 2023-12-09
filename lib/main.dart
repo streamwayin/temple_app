@@ -9,6 +9,7 @@ import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/ebook/search/bloc/search_book_bloc.dart';
+import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/onboarding/bloc/splash_bloc.dart';
 import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
 import 'package:temple_app/firebase_options.dart';
@@ -77,6 +78,7 @@ class MyApp extends StatelessWidget {
               BlocProvider(create: (context) => EpubViewerBloc()),
               BlocProvider(create: (context) => SplashBloc()),
               BlocProvider(create: (context) => SearchBookBloc()),
+              BlocProvider(create: (context) => HomeBloc()),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,

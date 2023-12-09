@@ -4,7 +4,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'dart:io';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,7 +35,6 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<FetchSongsOfAlbum>(onFetchSongsOfAlbum);
     on<PlaySinglesongEvent>(onPlaySinglesongEvent);
     on<UpdateSelectedAlbumIndex>(onUpdateSelectedAlbumIndex);
-    on<ChangeOnPlayAudioSreenOrNot>(onChangeOnPlayAudioSreenOrNot);
     on<ChangeShowBottomMusicController>(onChangeShowBottomMusicController);
     on<SaveCurrentAlbumToLocalStorage>(onSaveCurrentAlbumToLocalStorage);
     on<LoadSavedTrackInPlayerEvent>(onLoadSavedTrackInPlayerEvent);
@@ -57,23 +55,34 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       }
       String? currentlyPlayingAlbum =
           prefs.getString(CURRENTLY_PLAYING_ALBUM_MAP);
-      Map<String, dynamic> savedMap = jsonDecode(currentlyPlayingAlbum!);
-      String tracksDataJson = savedMap["tracksData"];
-      List<dynamic> tracksMapList = jsonDecode(tracksDataJson);
-      List<TrackModel> trackList2 =
-          tracksMapList.map((map) => TrackModel.fromJson(map)).toList();
-      bool isTracksListempty = trackList2.length == 0 ? false : true;
-      print('before ');
-      print(isTracksListempty);
-      emit(
-        state.copyWith(
-          albums: list,
-          downloadedSongsMap: downloadedSongsMap,
-          albumsPageLoading: false,
-          isPreviouslyTracksSaved: isTracksListempty,
-          previouslySavedTracks: trackList2,
-        ),
-      );
+      if (currentlyPlayingAlbum != null) {
+        Map<String, dynamic> savedMap = jsonDecode(currentlyPlayingAlbum);
+        String tracksDataJson = savedMap["tracksData"];
+        String albumDataJson = savedMap["albumData"];
+        AlbumModel albumModel = AlbumModel.fromJson(jsonDecode(albumDataJson));
+        List<dynamic> tracksMapList = jsonDecode(tracksDataJson);
+        List<TrackModel> trackList2 =
+            tracksMapList.map((map) => TrackModel.fromJson(map)).toList();
+        bool isTracksListempty = trackList2.isEmpty ? false : true;
+        emit(
+          state.copyWith(
+              albums: list,
+              downloadedSongsMap: downloadedSongsMap,
+              albumsPageLoading: false,
+              isPreviouslyTracksSaved: isTracksListempty,
+              previouslySavedTracks: trackList2,
+              currentAlbumId: albumModel.albumId,
+              onPlayAudioScreen: false),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            albums: list,
+            downloadedSongsMap: downloadedSongsMap,
+            albumsPageLoading: false,
+          ),
+        );
+      }
     }
   }
 
@@ -256,12 +265,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
   FutureOr<void> onUpdateSelectedAlbumIndex(
       UpdateSelectedAlbumIndex event, Emitter<PlayAudioState> emit) {
-    emit(state.copyWith(currentAlbumIndex: event.index));
-  }
-
-  FutureOr<void> onChangeOnPlayAudioSreenOrNot(
-      ChangeOnPlayAudioSreenOrNot event, Emitter<PlayAudioState> emit) {
-    emit(state.copyWith(onPlayAudioScreen: event.onPlayAudioScreen));
+    emit(state.copyWith(currentAlbumId: state.albums[event.index].albumId));
   }
 
   FutureOr<void> onChangeShowBottomMusicController(
@@ -274,7 +278,9 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       SaveCurrentAlbumToLocalStorage event,
       Emitter<PlayAudioState> emit) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var albumData = state.albums[state.currentAlbumIndex!];
+    var localAlbums = state.albums;
+    var albumData = localAlbums
+        .firstWhere((album) => album.albumId == state.currentAlbumId);
     var trackList = state.tracks;
     var tracksMapList = [];
     for (var a in trackList!) {

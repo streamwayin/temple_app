@@ -9,6 +9,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/widgets/utils.dart';
 
+import '../../home/bloc/home_bloc.dart';
 import '../widgets/common.dart';
 import '../widgets/controller_buttons.dart';
 
@@ -28,9 +29,9 @@ class MyAppState extends State<PlayAudioScreen> {
     Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
-        context.read<PlayAudioBloc>().add(
-              const ChangeOnPlayAudioSreenOrNot(onPlayAudioScreen: false),
-            );
+        context
+            .read<HomeBloc>()
+            .add(const ChangeOnPlayAudioSreenOrNot(onPlayAudioScreen: false));
         return true;
       },
       child: Scaffold(
