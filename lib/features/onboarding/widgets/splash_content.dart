@@ -5,8 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../constants.dart';
-import '../../auth/widgets/custom_text_field.dart';
-import '../../home/onboarding/home_screen.dart';
+
+import '../../home/screens/home_screen.dart';
 import '../bloc/splash_bloc.dart';
 
 class SplashContent extends StatelessWidget {

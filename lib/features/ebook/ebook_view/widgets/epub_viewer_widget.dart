@@ -30,7 +30,9 @@ class EpubViewerWidget extends StatelessWidget {
                   width: size.width,
                   color: Theme.of(context).colorScheme.tertiaryContainer,
                   child: Text(
-                    'Chapter ${chapterValue!.chapter!.Title ?? ''}',
+                    chapterValue?.chapter == null
+                        ? ''
+                        : 'Chapter ${chapterValue?.chapter?.Title ?? ''}',
                     maxLines: 1,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
@@ -52,20 +54,18 @@ class EpubViewerWidget extends StatelessWidget {
                   builders: EpubViewBuilders<DefaultBuilderOptions>(
                     options: DefaultBuilderOptions(
                       textStyle: TextStyle(
-                          color: (state.backgroundColor == 0xff464646 ||
-                                  state.backgroundColor == 0xff000000)
-                              ? Colors.white
-                              : null,
-                          fontSize: state.fontSize,
-                          fontFamily: 'KRDEV020'),
+                        color: (state.backgroundColor == 0xff464646 ||
+                                state.backgroundColor == 0xff000000)
+                            ? Colors.white
+                            : null,
+                        fontSize: state.fontSize,
+                        fontFamily: 'KRDEV020',
+                      ),
                     ),
                     chapterDividerBuilder: (_) => const Divider(),
                   ),
                   controller: state.epubReaderController!,
-                  onDocumentLoaded: (document) {
-                    print(document.Content);
-                    print(document.Chapters);
-                  },
+                  onDocumentLoaded: (document) {},
                   onChapterChanged: (chapter) {},
                   onDocumentError: (error) {},
                 ),

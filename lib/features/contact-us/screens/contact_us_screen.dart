@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:maps_launcher/maps_launcher.dart';
 import 'package:temple_app/features/auth/widgets/custom_text_field.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -18,8 +19,8 @@ class ContactUsScreen extends StatelessWidget {
         "imagePath": "assets/images/call.png",
       },
       {
-        "name": "Email Us",
-        "imagePath": "assets/images/mail-colored.png",
+        "name": "Location",
+        "imagePath": "assets/images/map.png",
       },
       {
         "name": "Chat Us",
@@ -28,13 +29,23 @@ class ContactUsScreen extends StatelessWidget {
     ];
     List<Function()> functionsList = [
       () async {
-        final Uri url = Uri(scheme: 'tel', path: '+918386853447');
+        final Uri url = Uri(scheme: 'tel', path: '+912912780574');
         if (await canLaunchUrl(url)) {
           launchUrl(url);
         }
       },
-      () {},
-      () {}
+      () async {
+        MapsLauncher.launchCoordinates(26.311008738763295, 73.01100694232782);
+      },
+      () async {
+        Uri link = Uri.parse('http://wa.me/919256862779?text=hi');
+        if (await canLaunchUrl(link)) {
+          launchUrl(Uri.parse('http://wa.me/919829444550'),
+              mode: LaunchMode.externalApplication);
+        } else {
+          print('failed to launch whatsapp');
+        }
+      }
     ];
     return Scaffold(
       resizeToAvoidBottomInset: false,

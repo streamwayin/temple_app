@@ -186,6 +186,32 @@ class AudioRepository {
     }
   }
 
+  Future<void> uploadAcharayasDataToFirebase() async {
+    try {
+      final docRef = FirebaseFirestore.instance.collection("acharayas").doc();
+      String name = 'shree mohanadaasajee ma.';
+      String tag = 'videh';
+      // String janm = '';
+      // String deeksha = '1862';
+      String peethaaroodh = '2059';
+      String nirvaan = 'vartamaan';
+      int index = 9;
+      final data = {
+        "achariyaId": docRef.id,
+        'name': name,
+        'tag': tag,
+        'peethaaroodh': peethaaroodh,
+        // 'janm': janm,
+        // 'deeksha': deeksha,
+        'nirvaan': nirvaan,
+        "index": index
+      };
+      await docRef.set(data);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<void> uploadTracksDataToFirebase() async {
     List<Map<String, String>> trackslist = [
       {

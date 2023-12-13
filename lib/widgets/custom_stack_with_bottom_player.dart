@@ -13,7 +13,7 @@ class CustomStackWithBottomPlayer extends StatelessWidget {
         children: [
           SizedBox(height: size.height, width: size.width, child: child),
           const Positioned(
-            bottom: 0,
+            bottom: 50,
             left: 0,
             right: 0,
             // child: Text('data'),

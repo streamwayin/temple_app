@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:temple_app/features/about-us/bloc/about_us_bloc.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
@@ -12,6 +13,7 @@ import 'package:temple_app/features/ebook/search/bloc/search_book_bloc.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/onboarding/bloc/splash_bloc.dart';
 import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
+import 'package:temple_app/features/sightseen/bloc/sightseen_bloc.dart';
 import 'package:temple_app/firebase_options.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
@@ -79,6 +81,12 @@ class MyApp extends StatelessWidget {
               BlocProvider(create: (context) => SplashBloc()),
               BlocProvider(create: (context) => SearchBookBloc()),
               BlocProvider(create: (context) => HomeBloc()),
+              BlocProvider(
+                  create: (context) =>
+                      AboutUsBloc()..add(AboutUsInitialEvent())),
+              BlocProvider(
+                  create: (context) =>
+                      SightseenBloc()..add(SightseenEventInitial())),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
@@ -96,7 +104,7 @@ class MyApp extends StatelessWidget {
               localizationsDelegates: context.localizationDelegates,
               supportedLocales: context.supportedLocales,
               locale: context.locale,
-              // home: const MyHomePage(),
+              // home: const MyHomePage(),`
             ),
           ),
         );

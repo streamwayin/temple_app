@@ -15,8 +15,10 @@ import 'package:temple_app/modals/track_model.dart';
 import '../../../constants.dart';
 import '../../../modals/ebook_model.dart';
 import '../../../widgets/common_background_component.dart';
+import '../../about-us/screens/about_us_bottom_nav_bar.dart';
 import '../../about-us/screens/about_us_screen.dart';
 import '../../contact-us/screens/contact_us_screen.dart';
+import '../../sightseen/screens/sightseen_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -54,12 +56,17 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         "name": "aboutUs",
         "imagePath": "assets/images/personal-information.png",
-        "routeName": AboutUsScreen.routeName
+        "routeName": AboutUsBottomNavBar.routeName
       },
       {
         "name": "contactUs",
         "imagePath": "assets/images/operator.png",
         "routeName": ContactUsScreen.routeName
+      },
+      {
+        "name": "Sightseen",
+        "imagePath": "assets/images/operator.png",
+        "routeName": SigntseenScreen.routeName
       },
     ];
     return Scaffold(

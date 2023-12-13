@@ -16,6 +16,7 @@ class SongPlayingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int iconSize = 35;
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<HomeBloc, HomeState>(
       listener: (context, homeState) {},
@@ -44,159 +45,144 @@ class SongPlayingIndicator extends StatelessWidget {
                 },
                 child: sequenceState == null
                     ? const SizedBox()
-                    : Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        height: 60.0,
-                        width: size.width,
-                        decoration: BoxDecoration(
-                          // color: Colors.orange[600],
-                          color: const Color.fromARGB(237, 56, 48, 59),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          children: [
-                            // image container
-                            Container(
-                              height: 40.h,
-                              width: 40.w,
-                              decoration: BoxDecoration(
-                                  color: Colors.orange[600],
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: CachedNetworkImage(
-                                imageUrl: sequenceState.artUri.toString(),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                                fit: BoxFit.cover,
-                              ),
+                    : Stack(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.only(left: 8),
+                            height: 60.0,
+                            width: size.width,
+                            decoration: BoxDecoration(
+                              // color: Colors.orange[600],
+                              color: const Color.fromARGB(237, 56, 48, 59),
+                              borderRadius: BorderRadius.circular(10),
                             ),
-                            _gap(10),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 4.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      sequenceState.title,
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Text(
-                                      // sequenceState.artist!,
-                                      "${state.onPlayAudioScreen}",
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style:
-                                          const TextStyle(color: Colors.white),
-                                    ),
-                                  ],
+                            child: Row(
+                              children: [
+                                // image container
+                                Container(
+                                  height: 40.h,
+                                  width: 40.w,
+                                  decoration: BoxDecoration(
+                                      color: Colors.orange[600],
+                                      borderRadius: BorderRadius.circular(10)),
+                                  child: CachedNetworkImage(
+                                    imageUrl: sequenceState.artUri.toString(),
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: size.width * .43,
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    iconSize: 35.r,
-                                    onPressed: () {
-                                      context.read<PlayAudioBloc>().add(
-                                          const ChangeSongEvent(
-                                              previous: true));
-                                    },
-                                    icon: Icon(
-                                      Icons.skip_previous_rounded,
-                                      color: Colors.orange[600],
+                                _gap(10),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 4.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          sequenceState.title,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                        Text(
+                                          sequenceState.artist!,
+                                          // "${state.onPlayAudioScreen}",
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
                                     ),
                                   ),
-                                  BlocConsumer<PlayAudioBloc, PlayAudioState>(
-                                    listener: (context, state) {},
-                                    builder: (context, state) {
-                                      PlayerState? playerState = state
-                                          .musicPlayerDataModel?.playerState;
+                                ),
+                                SizedBox(
+                                  width: size.width * .42,
+                                  child: Row(
+                                    children: [
+                                      CustomIconButton(
+                                        icon: Icons.skip_previous_rounded,
+                                        onTap: () {
+                                          context.read<PlayAudioBloc>().add(
+                                              const ChangeSongEvent(
+                                                  previous: true));
+                                        },
+                                      ),
+                                      BlocConsumer<PlayAudioBloc,
+                                          PlayAudioState>(
+                                        listener: (context, state) {},
+                                        builder: (context, state) {
+                                          PlayerState? playerState = state
+                                              .musicPlayerDataModel
+                                              ?.playerState;
 
-                                      final processingState =
-                                          playerState?.processingState;
-                                      final playing = playerState?.playing;
-                                      if (processingState ==
-                                              ProcessingState.loading ||
-                                          processingState ==
-                                              ProcessingState.buffering) {
-                                        return Container(
-                                          margin: const EdgeInsets.all(8.0),
-                                          width: 35.0.w,
-                                          height: 30.0.h,
-                                          child: SizedBox(
-                                            width: 30.w,
-                                            height: 30.h,
-                                            child: const AspectRatio(
-                                                aspectRatio: 1 / 1,
-                                                child:
-                                                    CircularProgressIndicator()),
-                                          ),
-                                        );
-                                      } else if (playing != true) {
-                                        return IconButton(
-                                          icon: Icon(
-                                            Icons.play_arrow,
-                                            color: Colors.orange[600],
-                                          ),
-                                          iconSize: 35.r,
-                                          onPressed: () {
+                                          final processingState =
+                                              playerState?.processingState;
+                                          final playing = playerState?.playing;
+                                          if (processingState ==
+                                                  ProcessingState.loading ||
+                                              processingState ==
+                                                  ProcessingState.buffering) {
+                                            return CustomIconButton(
+                                                icon: Icons.pause,
+                                                color: const Color.fromARGB(
+                                                    255, 238, 179, 108),
+                                                onTap: () {});
+                                          } else if (playing != true) {
+                                            return CustomIconButton(
+                                                icon: Icons.play_arrow,
+                                                onTap: () {
+                                                  context.read<PlayAudioBloc>().add(
+                                                      const PlayOrPauseSongEvent(
+                                                          play: true));
+                                                });
+                                          } else if (processingState !=
+                                              ProcessingState.completed) {
+                                            return CustomIconButton(
+                                                icon: Icons.pause,
+                                                onTap: () {
+                                                  context.read<PlayAudioBloc>().add(
+                                                      const PlayOrPauseSongEvent(
+                                                          play: false));
+                                                });
+                                          } else {
+                                            return CustomIconButton(
+                                                icon: Icons.replay,
+                                                onTap: () {
+                                                  // player.seek(Duration.zero)
+                                                });
+                                          }
+                                        },
+                                      ),
+                                      CustomIconButton(
+                                          icon: Icons.skip_next_rounded,
+                                          onTap: () {
                                             context.read<PlayAudioBloc>().add(
-                                                const PlayOrPauseSongEvent(
-                                                    play: true));
-                                          },
-                                        );
-                                      } else if (processingState !=
-                                          ProcessingState.completed) {
-                                        return IconButton(
-                                          icon: Icon(
-                                            Icons.pause,
-                                            color: Colors.orange[600],
-                                          ),
-                                          iconSize: 35.r,
-                                          onPressed: () {
+                                                const ChangeSongEvent(
+                                                    next: true));
+                                          }),
+                                      _gap(5),
+                                      CustomIconButton(
+                                          icon: Icons.close,
+                                          onTap: () {
                                             context.read<PlayAudioBloc>().add(
-                                                const PlayOrPauseSongEvent(
-                                                    play: false));
-                                          },
-                                        );
-                                      } else {
-                                        return IconButton(
-                                          icon: Icon(
-                                            Icons.replay,
-                                            color: Colors.orange[600],
-                                          ),
-                                          iconSize: 35.r,
-                                          onPressed: () {
-                                            // player.seek(Duration.zero)
-                                          },
-                                        );
-                                      }
-                                    },
+                                                const ChangeShowBottomMusicController(
+                                                    changeShowBottomMusicController:
+                                                        false));
+                                          }),
+                                    ],
                                   ),
-                                  IconButton(
-                                    iconSize: 35.r,
-                                    onPressed: () {
-                                      context.read<PlayAudioBloc>().add(
-                                          const ChangeSongEvent(next: true));
-                                    },
-                                    icon: Icon(
-                                      Icons.skip_next_rounded,
-                                      color: Colors.orange[600],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
               );
             } else {
@@ -211,6 +197,35 @@ class SongPlayingIndicator extends StatelessWidget {
   SizedBox _gap(int width) {
     return SizedBox(
       width: width.w,
+    );
+  }
+}
+
+class CustomIconButton extends StatelessWidget {
+  const CustomIconButton({
+    super.key,
+    required this.icon,
+    required this.onTap,
+    this.color = const Color.fromARGB(255, 253, 140, 2),
+  });
+
+  final IconData icon;
+  final Function() onTap;
+  final Color color;
+  @override
+  Widget build(BuildContext context) {
+    int iconSize = 35;
+    return SizedBox(
+      height: 40.h,
+      width: 35.h,
+      child: InkWell(
+        onTap: onTap,
+        child: Icon(
+          icon,
+          color: color,
+          size: iconSize.r,
+        ),
+      ),
     );
   }
 }
