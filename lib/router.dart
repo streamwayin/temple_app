@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:temple_app/features/about-us/screens/about_us_bottom_nav_bar.dart';
 import 'package:temple_app/features/about-us/screens/about_us_screen.dart';
-import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
+import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
 import 'package:temple_app/features/auth/screens/auth_screen.dart';
 import 'package:temple_app/features/contact-us/screens/contact_us_screen.dart';
@@ -40,9 +40,10 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const WallpaperScreen(),
       );
     case AudioScreen.routeName:
+      var index = routeSettings.arguments as int;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const AudioScreen(),
+        builder: (_) => AudioScreen(albumIndex: index),
       );
     case PlayAudioScreen.routeName:
       // int index = routeSettings.arguments as int;
@@ -56,10 +57,9 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => const VideoScreen(),
       );
     case AlbumScreen.routeName:
-      var index = routeSettings.arguments as int;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => AlbumScreen(albumIndex: index),
+        builder: (_) => const AlbumScreen(),
       );
     case EbookScreen.routeName:
       return MaterialPageRoute(

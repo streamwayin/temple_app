@@ -2,190 +2,165 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
-import 'package:temple_app/features/home/bloc/home_bloc.dart';
-import 'package:temple_app/modals/track_model.dart';
+import 'package:temple_app/features/audio/screens/audio_screen.dart';
+import 'package:temple_app/widgets/utils.dart';
 
-import '../../../widgets/utils.dart';
 import '../bloc/play_audio_bloc.dart';
 
 class AlbumScreen extends StatelessWidget {
-  const AlbumScreen({super.key, required this.albumIndex});
-  final int albumIndex;
-  static const String routeName = '/album-screen';
+  const AlbumScreen({super.key});
+  static const String routeName = '/audio-screen';
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    onReorder(oldIndex, newIndex) {
-      context.read<PlayAudioBloc>().add(SongIndexChanged(
-          newIndex: newIndex, oldIndex: oldIndex, albumIndex: albumIndex));
-    }
 
-    return Scaffold(
-      body: SafeArea(
-        child: BlocBuilder<PlayAudioBloc, PlayAudioState>(
-          builder: (context, state) {
-            List<TrackModel>? songList = state.tracks;
-            return Stack(
+    return BlocConsumer<PlayAudioBloc, PlayAudioState>(
+      listener: (context, state) {
+        if (state.isTracksAvailable != null) {
+          context.read<PlayAudioBloc>().add(const LoadCurrentPlaylistEvent());
+        }
+      },
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: const Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0)
-                      .copyWith(top: 8),
+                Text('Albums'),
+              ],
+            ),
+          ),
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 2),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 8.0.w),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Icon(Icons.arrow_back),
-                          ),
-                          SizedBox(width: 10.w),
-                          SizedBox(
-                            width: size.width - 150.w,
-                            child: Text(
-                              state.albums[albumIndex].name,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                          const Spacer(),
-                          InkWell(
-                            onTap: () {
-                              context
-                                  .read<PlayAudioBloc>()
-                                  .add(const PlayOrPauseSongEvent(play: true));
-                              Navigator.pushNamed(
-                                  context, PlayAudioScreen.routeName);
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 25.h,
-                              width: 70.w,
-                              decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: const Text("Play All"),
-                            ),
-                          )
-                        ],
+                      DropdownMenu(
+                        width: (size.width - 55).w,
+                        enableFilter: true,
+                        label: const Text('Select artist'),
+                        inputDecorationTheme: const InputDecorationTheme(
+                          filled: true,
+                          contentPadding: EdgeInsets.symmetric(
+                              vertical: 5.0, horizontal: 24),
+                        ),
+                        onSelected: (value) {
+                          print(value);
+                        },
+                        dropdownMenuEntries: getMenuItems(state, context),
                       ),
-                      SizedBox(
-                        height: size.height * .89,
-                        child: songList == null
-                            ? (state.tracksPageLoading == true)
-                                ? const SizedBox()
-                                : const Center(
-                                    child: Text("Unable to fetch data"),
-                                  )
-                            : ReorderableListView.builder(
-                                itemBuilder: (context, ind) {
-                                  TrackModel song = songList[ind];
-                                  return Padding(
-                                    key: Key(ind.toString()),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4.0),
-                                    child: ListTile(
-                                      onTap: () {
-                                        context.read<PlayAudioBloc>().add(
-                                            const PlayOrPauseSongEvent(
-                                                play: true));
-                                        // context.read<PlayAudioBloc>().add(
-                                        //       const ChangeOnPlayAudioSreenOrNot(
-                                        //           onPlayAudioScreen: true),
-                                        //     );
-                                        context.read<HomeBloc>().add(
-                                            const ChangeOnPlayAudioSreenOrNot(
-                                                onPlayAudioScreen: true));
-                                        context.read<PlayAudioBloc>().add(
-                                              const ChangeShowBottomMusicController(
-                                                  changeShowBottomMusicController:
-                                                      true),
-                                            );
-                                        Navigator.pushNamed(
-                                            context, PlayAudioScreen.routeName);
-                                        context.read<PlayAudioBloc>().add(
-                                            PlaySinglesongEvent(index: ind));
-                                        context.read<PlayAudioBloc>().add(
-                                            const SaveCurrentAlbumToLocalStorage());
-                                      },
-                                      leading: (song.thumbnail != null)
-                                          ? SizedBox(
-                                              width: 55.w,
-                                              height: 55.h,
-                                              child: Stack(
-                                                children: [
-                                                  ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: CachedNetworkImage(
-                                                      imageUrl: song.thumbnail!,
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          Image.asset(
-                                                              'assets/images/sound-waves.png'),
-                                                      fit: BoxFit.cover,
-                                                    ),
+                      Expanded(
+                        child: ReorderableListView.builder(
+                          itemCount: state.albums.length,
+                          onReorder: (oldIndex, newIndex) {
+                            context.read<PlayAudioBloc>().add(AlbumIndexChanged(
+                                newIndex: newIndex, oldIndex: oldIndex));
+                          },
+                          itemBuilder: (context, index) {
+                            var album = state.albums[index];
+                            return GestureDetector(
+                              key: Key('$index'),
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, AudioScreen.routeName,
+                                    arguments: index);
+                                context.read<PlayAudioBloc>().add(
+                                    UpdateSelectedAlbumIndex(index: index));
+                                context.read<PlayAudioBloc>().add(
+                                    FetchSongsOfAlbum(albumId: album.albumId));
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  children: [
+                                    Stack(
+                                      children: [
+                                        Container(
+                                          height: 45.h,
+                                          width: 50.w,
+                                          decoration: BoxDecoration(
+                                            color: const Color.fromARGB(
+                                                    255, 233, 232, 232)
+                                                .withOpacity(0.5),
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                          child: (album.thumbnail != null)
+                                              ? ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: album.thumbnail!,
+                                                    fit: BoxFit.cover,
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        const Icon(Icons.error),
                                                   ),
-                                                  state.singleSongIndex ==
-                                                              ind &&
-                                                          state.showBottomMusicController ==
-                                                              true
-                                                      ? Positioned(
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                            ),
-                                                            height: 55.h,
-                                                            width: 55.w,
-                                                            child: SizedBox(
-                                                              height: 10.h,
-                                                              width: 10.w,
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/images/music.gif',
-                                                                // fit: BoxFit
-                                                                //     .contain,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        )
-                                                      : const SizedBox(),
-                                                ],
-                                              ),
-                                            )
-                                          : const SizedBox(),
-                                      title: Text(
-                                        song.title,
+                                                )
+                                              : ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  child: Image.asset(
+                                                      'assets/images/sound-waves.png'),
+                                                ),
+                                        ),
+                                        state.currentAlbumId != null &&
+                                                state.currentAlbumId ==
+                                                    state.albums[index].albumId
+                                            ? SizedBox(
+                                                height: 45.h,
+                                                width: 50.w,
+                                                child: Image.asset(
+                                                  'assets/images/music.gif',
+                                                  fit: BoxFit.contain,
+                                                ),
+                                              )
+                                            : const SizedBox(),
+                                      ],
+                                    ),
+                                    SizedBox(width: 5.w),
+                                    SizedBox(
+                                      width: size.width - 110.w,
+                                      child: Text(
+                                        album.name,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                itemCount: songList.length,
-                                onReorder: onReorder,
+                                    )
+                                  ],
+                                ),
                               ),
-                      )
+                            );
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                (state.tracksPageLoading == true)
-                    ? Utils.showLoadingOnSceeen()
-                    : const SizedBox()
-              ],
-            );
-          },
-        ),
-      ),
+              ),
+              (state.albumsPageLoading == true)
+                  ? Utils.showLoadingOnSceeen()
+                  : const SizedBox()
+            ],
+          ),
+        );
+      },
     );
+  }
+
+  List<DropdownMenuEntry> getMenuItems(
+      PlayAudioState state, BuildContext context) {
+    List<DropdownMenuEntry> list = [];
+    for (var a in state.artistList) {
+      list.add(DropdownMenuEntry(value: a.index, label: a.name));
+    }
+    return list;
   }
 }

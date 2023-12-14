@@ -18,6 +18,7 @@ import 'package:temple_app/repositories/audo_repository.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 import '../../../constants.dart';
+import '../../../modals/aritst_model.dart';
 
 part 'play_audio_event.dart';
 part 'play_audio_state.dart';
@@ -43,6 +44,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   FutureOr<void> onPlayAudioEventInitial(
       PlayAudioEventInitial event, Emitter<PlayAudioState> emit) async {
     final list = await audioRepository.getAlbumListFromDb();
+    final artistsList = await audioRepository.getAritstsListFromDb();
     Map<String, String> downloadedSongsMap = {};
     if (list != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -66,13 +68,15 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
         bool isTracksListempty = trackList2.isEmpty ? false : true;
         emit(
           state.copyWith(
-              albums: list,
-              downloadedSongsMap: downloadedSongsMap,
-              albumsPageLoading: false,
-              isPreviouslyTracksSaved: isTracksListempty,
-              previouslySavedTracks: trackList2,
-              currentAlbumId: albumModel.albumId,
-              onPlayAudioScreen: false),
+            albums: list,
+            downloadedSongsMap: downloadedSongsMap,
+            albumsPageLoading: false,
+            isPreviouslyTracksSaved: isTracksListempty,
+            previouslySavedTracks: trackList2,
+            currentAlbumId: albumModel.albumId,
+            onPlayAudioScreen: false,
+            artistList: artistsList,
+          ),
         );
       } else {
         emit(
@@ -80,6 +84,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
             albums: list,
             downloadedSongsMap: downloadedSongsMap,
             albumsPageLoading: false,
+            artistList: artistsList,
           ),
         );
       }

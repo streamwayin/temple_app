@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:temple_app/features/audio/screens/audio_screen.dart';
+import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
@@ -41,7 +41,7 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         "name": "audio",
         "imagePath": "assets/images/volume.png",
-        "routeName": AudioScreen.routeName
+        "routeName": AlbumScreen.routeName
       },
       {
         "name": "video",

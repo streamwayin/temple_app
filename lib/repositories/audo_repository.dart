@@ -14,6 +14,7 @@ import 'package:temple_app/modals/track_model.dart';
 
 import '../constants.dart';
 import '../features/audio/widgets/common.dart';
+import '../modals/aritst_model.dart';
 import '../modals/music_player_data_model.dart';
 
 class AudioRepository {
@@ -86,6 +87,27 @@ class AudioRepository {
       for (var b in a) {
         if (b.exists) {
           albumModel.add(AlbumModel.fromJson(b.data()));
+        }
+      }
+      return albumModel;
+    } catch (e) {
+      log('$e');
+      // print(e);
+      return null;
+    }
+  }
+
+  Future<List<ArtistModel>?> getAritstsListFromDb() async {
+    try {
+      List<ArtistModel> albumModel = [];
+      final data = await FirebaseFirestore.instance.collection('artists').get(
+            const GetOptions(source: Source.serverAndCache),
+          );
+      // final dataa = await FirebaseFirestore.instance.collection('tracks').where(album).get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> a = data.docs;
+      for (var b in a) {
+        if (b.exists) {
+          albumModel.add(ArtistModel.fromJson(b.data()));
         }
       }
       return albumModel;

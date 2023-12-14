@@ -17,6 +17,7 @@ class PlayAudioState extends Equatable {
   final bool onPlayAudioScreen;
   final bool? isPreviouslyTracksSaved;
   final List<TrackModel>? previouslySavedTracks;
+  final List<ArtistModel> artistList;
   const PlayAudioState({
     this.albums = const [],
     this.concatenatingAudioSource,
@@ -34,6 +35,7 @@ class PlayAudioState extends Equatable {
     this.onPlayAudioScreen = false,
     this.isPreviouslyTracksSaved = false,
     this.previouslySavedTracks,
+    this.artistList = const [],
   });
   @override
   List<Object?> get props => [
@@ -52,7 +54,8 @@ class PlayAudioState extends Equatable {
         showBottomMusicController,
         onPlayAudioScreen,
         isPreviouslyTracksSaved,
-        previouslySavedTracks
+        previouslySavedTracks,
+        artistList
       ];
 
   PlayAudioState copyWith({
@@ -72,6 +75,7 @@ class PlayAudioState extends Equatable {
     bool? onPlayAudioScreen,
     bool? isPreviouslyTracksSaved,
     List<TrackModel>? previouslySavedTracks,
+    List<ArtistModel>? artistList,
   }) {
     return PlayAudioState(
       albums: albums ?? this.albums,
@@ -93,6 +97,7 @@ class PlayAudioState extends Equatable {
       isPreviouslyTracksSaved: isPreviouslyTracksSaved,
       previouslySavedTracks:
           previouslySavedTracks ?? this.previouslySavedTracks,
+      artistList: artistList ?? this.artistList,
     );
   }
 }
