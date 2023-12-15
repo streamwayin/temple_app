@@ -97,3 +97,9 @@ class SaveCurrentAlbumToLocalStorage extends PlayAudioEvent {
 }
 
 class LoadSavedTrackInPlayerEvent extends PlayAudioEvent {}
+
+class GetAlbumsByArtistEvent extends PlayAudioEvent {
+  final int index;
+
+  const GetAlbumsByArtistEvent({required this.index});
+}

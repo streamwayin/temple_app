@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
+import 'package:temple_app/repositories/audo_repository.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 import '../bloc/play_audio_bloc.dart';
@@ -42,14 +43,15 @@ class AlbumScreen extends StatelessWidget {
                       DropdownMenu(
                         width: (size.width - 55).w,
                         enableFilter: true,
-                        label: const Text('Select artist'),
+                        // label: const Text('Select artist'),
                         inputDecorationTheme: const InputDecorationTheme(
                           filled: true,
                           contentPadding: EdgeInsets.symmetric(
                               vertical: 5.0, horizontal: 24),
                         ),
                         onSelected: (value) {
-                          print(value);
+                          context.read<PlayAudioBloc>().add(
+                              GetAlbumsByArtistEvent(index: int.parse(value)));
                         },
                         dropdownMenuEntries: getMenuItems(state, context),
                       ),
@@ -147,7 +149,7 @@ class AlbumScreen extends StatelessWidget {
               ),
               (state.albumsPageLoading == true)
                   ? Utils.showLoadingOnSceeen()
-                  : const SizedBox()
+                  : const SizedBox(),
             ],
           ),
         );

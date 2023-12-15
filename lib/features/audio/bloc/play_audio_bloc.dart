@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'dart:io';
 import 'package:equatable/equatable.dart';
@@ -39,6 +40,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<ChangeShowBottomMusicController>(onChangeShowBottomMusicController);
     on<SaveCurrentAlbumToLocalStorage>(onSaveCurrentAlbumToLocalStorage);
     on<LoadSavedTrackInPlayerEvent>(onLoadSavedTrackInPlayerEvent);
+    on<GetAlbumsByArtistEvent>(onGetAlbumsByArtistEvent);
   }
   AudioRepository audioRepository = AudioRepository();
   FutureOr<void> onPlayAudioEventInitial(
@@ -347,5 +349,17 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
         );
       },
     );
+  }
+
+  FutureOr<void> onGetAlbumsByArtistEvent(
+      GetAlbumsByArtistEvent event, Emitter<PlayAudioState> emit) async {
+    emit(state.copyWith(
+      albumsPageLoading: true,
+    ));
+    String artistIdToFind = state.artistList[event.index].artistId;
+    List<AlbumModel>? tracks =
+        await audioRepository.getAlbumByArtist(artistIdToFind);
+    log(tracks.toString());
+    emit(state.copyWith(albumsPageLoading: false, albums: tracks));
   }
 }

@@ -74,7 +74,7 @@ class AudioRepository {
   void playSingleSong(int index) async {
     await _player.seek(Duration.zero, index: index);
   }
-  // get albums from fire base
+  // get all albums from web
 
   Future<List<AlbumModel>?> getAlbumListFromDb() async {
     try {
@@ -96,7 +96,33 @@ class AudioRepository {
       return null;
     }
   }
+  // get all albums from web of a artist
 
+  Future<List<AlbumModel>?> getAlbumByArtist(String albumId) async {
+    try {
+      List<AlbumModel> albumModel = [];
+      final data = await FirebaseFirestore.instance
+          .collection('albums')
+          .where("artistID", isEqualTo: albumId)
+          .get(
+            const GetOptions(source: Source.serverAndCache),
+          );
+      // final dataa = await FirebaseFirestore.instance.collection('tracks').where(album).get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> a = data.docs;
+      for (var b in a) {
+        if (b.exists) {
+          albumModel.add(AlbumModel.fromJson(b.data()));
+        }
+      }
+      return albumModel;
+    } catch (e) {
+      log('$e');
+      // print(e);
+      return null;
+    }
+  }
+
+// get all artist from web
   Future<List<ArtistModel>?> getAritstsListFromDb() async {
     try {
       List<ArtistModel> albumModel = [];
@@ -118,6 +144,7 @@ class AudioRepository {
     }
   }
 
+// get tracks of a specific album
   Future<List<TrackModel>?> getTracksListFromDb(String albumId) async {
     try {
       List<TrackModel> trackModelList = [];
@@ -305,6 +332,41 @@ class AudioRepository {
       return musicPath;
     } else {
       return null;
+    }
+  }
+
+  Future<void> addIndexToAlbumsFromTracks(List<AlbumModel> albumList) async {
+    int done = 0;
+    for (AlbumModel a in albumList) {
+      print("$done/${albumList.length}");
+      done++;
+      print('==========================');
+      print(a.albumId);
+      final data = await FirebaseFirestore.instance
+          .collection('tracks')
+          .where("albumId", isEqualTo: a.albumId)
+          .get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> ab = data.docs;
+      TrackModel model;
+      if (ab.length != 0) {
+        if (ab[0].exists) {
+          model = TrackModel.fromJson(ab[0].data());
+
+          try {
+            final CollectionReference usersCollection =
+                FirebaseFirestore.instance.collection('albums');
+            await usersCollection.doc(a.albumId).update({
+              'artistID': model.artistId,
+            });
+            print('Document updated successfully!');
+          } catch (e) {
+            print('Error updating document: $e');
+          }
+        }
+      } else {
+        print(
+            "problem with ${a.albumId}xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+      }
     }
   }
 }
