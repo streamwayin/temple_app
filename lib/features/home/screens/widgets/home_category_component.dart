@@ -3,21 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeCategoryComponent extends StatelessWidget {
-  const HomeCategoryComponent({
-    super.key,
-    required this.routeName,
-    required this.imagePath,
-    required this.name,
-  });
-  final String routeName;
+  const HomeCategoryComponent(
+      {super.key,
+      required this.imagePath,
+      required this.name,
+      required this.onTap});
+
   final String imagePath;
   final String name;
+  final Function() onTap;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, routeName);
-      },
+      onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temple_app/widgets/song_playing_indicator.dart';
+
+import '../features/audio/bloc/play_audio_bloc.dart';
 
 class CustomStackWithBottomPlayer extends StatelessWidget {
   final Widget child;
@@ -12,12 +15,15 @@ class CustomStackWithBottomPlayer extends StatelessWidget {
       body: Stack(
         children: [
           SizedBox(height: size.height, width: size.width, child: child),
-          const Positioned(
-            bottom: 50,
-            left: 0,
-            right: 0,
-            // child: Text('data'),
-            child: SongPlayingIndicator(),
+          BlocBuilder<PlayAudioBloc, PlayAudioState>(
+            builder: (context, state) {
+              return Positioned(
+                bottom: state.onAboutUsNavBar ? 57 : 0,
+                left: 0,
+                right: 0,
+                child: const SongPlayingIndicator(),
+              );
+            },
           ),
         ],
       ),

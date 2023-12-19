@@ -13,11 +13,14 @@ class PlayAudioState extends Equatable {
   final bool albumsPageLoading;
   final bool tracksPageLoading;
   final String? currentAlbumId;
+  final String? currentPlaylistAlbumId;
   final bool showBottomMusicController;
   final bool onPlayAudioScreen;
+  final bool onAboutUsNavBar;
   final bool? isPreviouslyTracksSaved;
   final List<TrackModel>? previouslySavedTracks;
   final List<ArtistModel> artistList;
+  final List<TrackModel>? currentPlaylistTracks;
   const PlayAudioState({
     this.albums = const [],
     this.concatenatingAudioSource,
@@ -31,11 +34,14 @@ class PlayAudioState extends Equatable {
     this.albumsPageLoading = true,
     this.tracksPageLoading = true,
     this.currentAlbumId,
+    this.currentPlaylistAlbumId,
     this.showBottomMusicController = false,
     this.onPlayAudioScreen = false,
+    this.onAboutUsNavBar = false,
     this.isPreviouslyTracksSaved = false,
     this.previouslySavedTracks,
     this.artistList = const [],
+    this.currentPlaylistTracks,
   });
   @override
   List<Object?> get props => [
@@ -51,11 +57,14 @@ class PlayAudioState extends Equatable {
         albumsPageLoading,
         tracksPageLoading,
         currentAlbumId,
+        currentPlaylistAlbumId,
         showBottomMusicController,
         onPlayAudioScreen,
         isPreviouslyTracksSaved,
         previouslySavedTracks,
-        artistList
+        artistList,
+        onAboutUsNavBar,
+        currentPlaylistTracks
       ];
 
   PlayAudioState copyWith({
@@ -71,34 +80,41 @@ class PlayAudioState extends Equatable {
     bool? albumsPageLoading,
     bool? tracksPageLoading,
     String? currentAlbumId,
+    String? currentPlaylistAlbumId,
     bool? showBottomMusicController,
     bool? onPlayAudioScreen,
+    bool? onAboutUsNavBar,
     bool? isPreviouslyTracksSaved,
     List<TrackModel>? previouslySavedTracks,
     List<ArtistModel>? artistList,
+    List<TrackModel>? currentPlaylistTracks,
   }) {
     return PlayAudioState(
-      albums: albums ?? this.albums,
-      concatenatingAudioSource:
-          concatenatingAudioSource ?? this.concatenatingAudioSource,
-      singleSongIndex: singleSongIndex ?? this.singleSongIndex,
-      snackbarMessage: snackbarMessage,
-      isSongDownloading: isSongDownloading ?? this.isSongDownloading,
-      downloadedSongsMap: downloadedSongsMap ?? this.downloadedSongsMap,
-      musicPlayerDataModel: musicPlayerDataModel ?? this.musicPlayerDataModel,
-      tracks: tracks ?? this.tracks,
-      isTracksAvailable: isTracksAvailable,
-      albumsPageLoading: albumsPageLoading ?? this.albumsPageLoading,
-      tracksPageLoading: tracksPageLoading ?? this.tracksPageLoading,
-      currentAlbumId: currentAlbumId ?? this.currentAlbumId,
-      showBottomMusicController:
-          showBottomMusicController ?? this.showBottomMusicController,
-      onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
-      isPreviouslyTracksSaved: isPreviouslyTracksSaved,
-      previouslySavedTracks:
-          previouslySavedTracks ?? this.previouslySavedTracks,
-      artistList: artistList ?? this.artistList,
-    );
+        albums: albums ?? this.albums,
+        concatenatingAudioSource:
+            concatenatingAudioSource ?? this.concatenatingAudioSource,
+        singleSongIndex: singleSongIndex ?? this.singleSongIndex,
+        snackbarMessage: snackbarMessage,
+        isSongDownloading: isSongDownloading ?? this.isSongDownloading,
+        downloadedSongsMap: downloadedSongsMap ?? this.downloadedSongsMap,
+        musicPlayerDataModel: musicPlayerDataModel ?? this.musicPlayerDataModel,
+        tracks: tracks ?? this.tracks,
+        isTracksAvailable: isTracksAvailable,
+        albumsPageLoading: albumsPageLoading ?? this.albumsPageLoading,
+        tracksPageLoading: tracksPageLoading ?? this.tracksPageLoading,
+        currentAlbumId: currentAlbumId ?? this.currentAlbumId,
+        currentPlaylistAlbumId:
+            currentPlaylistAlbumId ?? this.currentPlaylistAlbumId,
+        showBottomMusicController:
+            showBottomMusicController ?? this.showBottomMusicController,
+        onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
+        onAboutUsNavBar: onAboutUsNavBar ?? this.onAboutUsNavBar,
+        isPreviouslyTracksSaved: isPreviouslyTracksSaved,
+        previouslySavedTracks:
+            previouslySavedTracks ?? this.previouslySavedTracks,
+        artistList: artistList ?? this.artistList,
+        currentPlaylistTracks:
+            currentPlaylistTracks ?? this.currentPlaylistTracks);
   }
 }
 

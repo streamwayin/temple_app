@@ -18,7 +18,7 @@ class AlbumScreen extends StatelessWidget {
     return BlocConsumer<PlayAudioBloc, PlayAudioState>(
       listener: (context, state) {
         if (state.isTracksAvailable != null) {
-          context.read<PlayAudioBloc>().add(const LoadCurrentPlaylistEvent());
+          // context.read<PlayAudioBloc>().add(const LoadCurrentPlaylistEvent());
         }
       },
       builder: (context, state) {
@@ -43,7 +43,7 @@ class AlbumScreen extends StatelessWidget {
                       DropdownMenu(
                         width: (size.width - 55).w,
                         enableFilter: true,
-                        // label: const Text('Select artist'),
+                        label: const Text('Filter by artist'),
                         inputDecorationTheme: const InputDecorationTheme(
                           filled: true,
                           contentPadding: EdgeInsets.symmetric(
@@ -110,8 +110,8 @@ class AlbumScreen extends StatelessWidget {
                                                       'assets/images/sound-waves.png'),
                                                 ),
                                         ),
-                                        state.currentAlbumId != null &&
-                                                state.currentAlbumId ==
+                                        state.currentPlaylistAlbumId != null &&
+                                                state.currentPlaylistAlbumId ==
                                                     state.albums[index].albumId
                                             ? SizedBox(
                                                 height: 45.h,
@@ -150,6 +150,8 @@ class AlbumScreen extends StatelessWidget {
               (state.albumsPageLoading == true)
                   ? Utils.showLoadingOnSceeen()
                   : const SizedBox(),
+              Positioned(
+                  bottom: 100, child: Text('${state.artistList.toString()}'))
             ],
           ),
         );

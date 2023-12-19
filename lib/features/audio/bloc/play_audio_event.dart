@@ -33,7 +33,8 @@ class SongIndexChanged extends PlayAudioEvent {
 }
 
 class LoadCurrentPlaylistEvent extends PlayAudioEvent {
-  const LoadCurrentPlaylistEvent();
+  final int initialIndex;
+  const LoadCurrentPlaylistEvent({required this.initialIndex});
 }
 
 class PlaySinglesongEvent extends PlayAudioEvent {
@@ -103,3 +104,13 @@ class GetAlbumsByArtistEvent extends PlayAudioEvent {
 
   const GetAlbumsByArtistEvent({required this.index});
 }
+
+class ChangeOnAboutUsNavBar extends PlayAudioEvent {
+  final bool onAboutUsNavBar;
+
+  const ChangeOnAboutUsNavBar({required this.onAboutUsNavBar});
+}
+
+class ChangeCurrentPlaylistAlbumId extends PlayAudioEvent {}
+
+class SavePlayingTracksEvent extends PlayAudioEvent {}

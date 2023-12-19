@@ -41,6 +41,9 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<SaveCurrentAlbumToLocalStorage>(onSaveCurrentAlbumToLocalStorage);
     on<LoadSavedTrackInPlayerEvent>(onLoadSavedTrackInPlayerEvent);
     on<GetAlbumsByArtistEvent>(onGetAlbumsByArtistEvent);
+    on<ChangeOnAboutUsNavBar>(onChangeOnAboutUsNavBar);
+    on<ChangeCurrentPlaylistAlbumId>(onChangeCurrentPlaylistAlbumId);
+    on<SavePlayingTracksEvent>(onSavePlayingTracksEvent);
   }
   AudioRepository audioRepository = AudioRepository();
   FutureOr<void> onPlayAudioEventInitial(
@@ -63,11 +66,13 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
         Map<String, dynamic> savedMap = jsonDecode(currentlyPlayingAlbum);
         String tracksDataJson = savedMap["tracksData"];
         String albumDataJson = savedMap["albumData"];
+        // int index = int.parse(savedMap['songIndex']);
         AlbumModel albumModel = AlbumModel.fromJson(jsonDecode(albumDataJson));
         List<dynamic> tracksMapList = jsonDecode(tracksDataJson);
         List<TrackModel> trackList2 =
             tracksMapList.map((map) => TrackModel.fromJson(map)).toList();
         bool isTracksListempty = trackList2.isEmpty ? false : true;
+        audioRepository.playSingleSong(1);
         emit(
           state.copyWith(
             albums: list,
@@ -153,10 +158,10 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       useLazyPreparation: true,
       // Customise the shuffle algorithm
       shuffleOrder: DefaultShuffleOrder(),
-
       children: audioSourceList,
     );
-    audioRepository.addPlaylist(playlist);
+    audioRepository.addPlaylist(
+        playList: playlist, initialIndex: event.initialIndex);
     await emit.forEach(
       audioRepository.musicPlayerDataStream,
       onData: (data) {
@@ -293,11 +298,12 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     for (var a in trackList!) {
       tracksMapList.add(a.toJson());
     }
-
+    int? index = audioRepository.currentSongIndex();
     if (trackList != null) {
       Map<String, String> map = {
         "albumData": jsonEncode(albumData.toJson()),
         "tracksData": jsonEncode(tracksMapList),
+        "songIndex": "$index"
       };
       prefs.setString(CURRENTLY_PLAYING_ALBUM_MAP, jsonEncode(map));
     }
@@ -335,7 +341,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
       children: audioSourceList,
     );
-    audioRepository.addPlaylist(playlist);
+    audioRepository.addPlaylist(playList: playlist);
     await emit.forEach(
       audioRepository.musicPlayerDataStream,
       onData: (data) {
@@ -361,5 +367,21 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
         await audioRepository.getAlbumByArtist(artistIdToFind);
     log(tracks.toString());
     emit(state.copyWith(albumsPageLoading: false, albums: tracks));
+  }
+
+  FutureOr<void> onChangeOnAboutUsNavBar(
+      ChangeOnAboutUsNavBar event, Emitter<PlayAudioState> emit) {
+    emit(state.copyWith(onAboutUsNavBar: event.onAboutUsNavBar));
+  }
+
+  FutureOr<void> onChangeCurrentPlaylistAlbumId(
+      ChangeCurrentPlaylistAlbumId event, Emitter<PlayAudioState> emit) {
+    emit(state.copyWith(currentPlaylistAlbumId: state.currentAlbumId));
+  }
+
+  FutureOr<void> onSavePlayingTracksEvent(
+      SavePlayingTracksEvent event, Emitter<PlayAudioState> emit) {
+    final tracks = state.tracks;
+    emit(state.copyWith(currentPlaylistTracks: tracks));
   }
 }

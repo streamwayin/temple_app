@@ -91,13 +91,21 @@ class AudioScreen extends StatelessWidget {
                                         vertical: 4.0),
                                     child: ListTile(
                                       onTap: () {
+                                        if (state.currentAlbumId !=
+                                            state.currentPlaylistAlbumId) {
+                                          context.read<PlayAudioBloc>().add(
+                                              LoadCurrentPlaylistEvent(
+                                                  initialIndex: ind));
+                                          context.read<PlayAudioBloc>().add(
+                                              ChangeCurrentPlaylistAlbumId());
+                                        } else {
+                                          context.read<PlayAudioBloc>().add(
+                                              PlaySinglesongEvent(index: ind));
+                                        }
+
                                         context.read<PlayAudioBloc>().add(
                                             const PlayOrPauseSongEvent(
                                                 play: true));
-                                        // context.read<PlayAudioBloc>().add(
-                                        //       const ChangeOnPlayAudioSreenOrNot(
-                                        //           onPlayAudioScreen: true),
-                                        //     );
                                         context.read<HomeBloc>().add(
                                             const ChangeOnPlayAudioSreenOrNot(
                                                 onPlayAudioScreen: true));
@@ -108,10 +116,12 @@ class AudioScreen extends StatelessWidget {
                                             );
                                         Navigator.pushNamed(
                                             context, PlayAudioScreen.routeName);
-                                        context.read<PlayAudioBloc>().add(
-                                            PlaySinglesongEvent(index: ind));
+
                                         context.read<PlayAudioBloc>().add(
                                             const SaveCurrentAlbumToLocalStorage());
+                                        context
+                                            .read<PlayAudioBloc>()
+                                            .add(SavePlayingTracksEvent());
                                       },
                                       leading: (song.thumbnail != null)
                                           ? SizedBox(
@@ -132,8 +142,16 @@ class AudioScreen extends StatelessWidget {
                                                       fit: BoxFit.cover,
                                                     ),
                                                   ),
-                                                  state.singleSongIndex ==
-                                                              ind &&
+                                                  state.currentPlaylistTracks != null &&
+                                                          state.singleSongIndex !=
+                                                              null &&
+                                                          state
+                                                                  .currentPlaylistTracks![
+                                                                      state
+                                                                          .singleSongIndex!]
+                                                                  .trackId ==
+                                                              state.tracks![ind]
+                                                                  .trackId &&
                                                           state.showBottomMusicController ==
                                                               true
                                                       ? Positioned(

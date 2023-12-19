@@ -25,14 +25,14 @@ class SaintsScreen extends StatelessWidget {
                   : Column(
                       children: [
                         SizedBox(
-                          height: 410.h,
+                          height: 510.h,
                           child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: 2,
                             itemBuilder: (context, index) {
                               final sant = state.santList[index];
                               return Container(
-                                margin: const EdgeInsets.all(24),
+                                margin: const EdgeInsets.all(16),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
@@ -48,55 +48,12 @@ class SaintsScreen extends StatelessWidget {
                                                     "assets/images/babaji_image.png"),
                                               ),
                                             ),
-                                            Positioned(
-                                              right: 0,
-                                              bottom: 35,
-                                              top: 35,
-                                              child: Column(
-                                                children: [
-                                                  sant.callNo != null
-                                                      ? InkWell(
-                                                          onTap: () async {
-                                                            final Uri url = Uri(
-                                                                scheme: 'tel',
-                                                                path:
-                                                                    '+912912780574');
-                                                            if (await canLaunchUrl(
-                                                                url)) {
-                                                              launchUrl(url);
-                                                            }
-                                                          },
-                                                          child: const AboutUsContactButton(
-                                                              logoPath:
-                                                                  "assets/images/call1.png"),
-                                                        )
-                                                      : const SizedBox(),
-                                                  SizedBox(
-                                                    height: 10.h,
-                                                  ),
-                                                  sant.whatsappNo != null
-                                                      ? InkWell(
-                                                          onTap: () async {
-                                                            Uri link = Uri.parse(
-                                                                'http://wa.me/919829444550?text=hi');
-                                                            if (await canLaunchUrl(
-                                                                link)) {
-                                                              launchUrl(link,
-                                                                  mode: LaunchMode
-                                                                      .externalApplication);
-                                                            } else {
-                                                              print(
-                                                                  'failed to launch whatsapp');
-                                                            }
-                                                          },
-                                                          child: const AboutUsContactButton(
-                                                              logoPath:
-                                                                  "assets/images/whatsapp.png"),
-                                                        )
-                                                      : const SizedBox(),
-                                                ],
-                                              ),
-                                            )
+                                            // Positioned(
+                                            //   right: 0,
+                                            //   bottom: 35,
+                                            //   top: 35,
+                                            //   child:
+                                            // )
                                           ],
                                         ),
                                       ),
@@ -108,6 +65,58 @@ class SaintsScreen extends StatelessWidget {
                                         wordSpacing: 1.5,
                                         letterSpacing: 1,
                                       ),
+                                    ),
+                                    Text(
+                                      "Some description",
+                                      style: TextStyle(
+                                        fontSize: 16.sp,
+                                        wordSpacing: 1.5,
+                                        letterSpacing: 1,
+                                      ),
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        sant.callNo != null
+                                            ? InkWell(
+                                                onTap: () async {
+                                                  final Uri url = Uri(
+                                                      scheme: 'tel',
+                                                      path: '+912912780574');
+                                                  if (await canLaunchUrl(url)) {
+                                                    launchUrl(url);
+                                                  }
+                                                },
+                                                child: const AboutUsContactButton(
+                                                    logoPath:
+                                                        "assets/images/call1.png"),
+                                              )
+                                            : const SizedBox(),
+                                        SizedBox(
+                                          width: 20.h,
+                                        ),
+                                        sant.whatsappNo != null
+                                            ? InkWell(
+                                                onTap: () async {
+                                                  Uri link = Uri.parse(
+                                                      'http://wa.me/919829444550?text=hi');
+                                                  if (await canLaunchUrl(
+                                                      link)) {
+                                                    launchUrl(link,
+                                                        mode: LaunchMode
+                                                            .externalApplication);
+                                                  } else {
+                                                    print(
+                                                        'failed to launch whatsapp');
+                                                  }
+                                                },
+                                                child: const AboutUsContactButton(
+                                                    logoPath:
+                                                        "assets/images/whatsapp.png"),
+                                              )
+                                            : const SizedBox(),
+                                      ],
                                     ),
                                   ],
                                 ),

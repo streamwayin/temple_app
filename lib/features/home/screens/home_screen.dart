@@ -3,8 +3,10 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
@@ -32,41 +34,62 @@ class _HomeScreenState extends State<HomeScreen> {
   bool isControlBarExpanded = false;
   @override
   Widget build(BuildContext context) {
-    List<Map<String, String>> homeComponentList = [
+    List<Map<String, dynamic>> homeComponentList = [
       {
         "name": "wallpaper",
         "imagePath": "assets/images/images.png",
-        "routeName": WallpaperScreen.routeName
+        "routeName": WallpaperScreen.routeName,
+        "onTap": () {
+          Navigator.pushNamed(context, WallpaperScreen.routeName);
+        }
       },
       {
         "name": "audio",
         "imagePath": "assets/images/volume.png",
-        "routeName": AlbumScreen.routeName
+        "routeName": AlbumScreen.routeName,
+        "onTap": () {
+          Navigator.pushNamed(context, AlbumScreen.routeName);
+        }
       },
       {
         "name": "video",
         "imagePath": "assets/images/series.png",
-        "routeName": VideoScreen.routeName
+        "routeName": VideoScreen.routeName,
+        "onTap": () {
+          Navigator.pushNamed(context, VideoScreen.routeName);
+        }
       },
       {
         "name": "ebook",
         "imagePath": "assets/images/ebook.png",
-        "routeName": EbookScreen.routeName
+        "routeName": EbookScreen.routeName,
+        "onTap": () {
+          Navigator.pushNamed(context, EbookScreen.routeName);
+        }
       },
       {
         "name": "aboutUs",
         "imagePath": "assets/images/personal-information.png",
-        "routeName": AboutUsBottomNavBar.routeName
+        "onTap": () {
+          context
+              .read<PlayAudioBloc>()
+              .add(const ChangeOnAboutUsNavBar(onAboutUsNavBar: true));
+          Navigator.pushNamed(context, AboutUsBottomNavBar.routeName);
+        }
       },
       {
         "name": "contactUs",
         "imagePath": "assets/images/operator.png",
-        "routeName": ContactUsScreen.routeName
+        "onTap": () {
+          Navigator.pushNamed(context, ContactUsScreen.routeName);
+        }
       },
       {
         "name": "Sightseen",
         "imagePath": "assets/images/operator.png",
-        "routeName": SigntseenScreen.routeName
+        "onTap": () {
+          Navigator.pushNamed(context, SigntseenScreen.routeName);
+        }
       },
     ];
     return Scaffold(
@@ -101,11 +124,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisCount: 3,
                 ),
                 itemBuilder: (context, index) {
-                  Map<String, String> category = homeComponentList[index];
+                  Map<String, dynamic> category = homeComponentList[index];
                   return HomeCategoryComponent(
                     imagePath: category["imagePath"]!,
                     name: category["name"]!,
-                    routeName: category['routeName']!,
+                    // routeName: category['routeName']!,
+                    onTap: category["onTap"],
                   );
                 },
               ),
