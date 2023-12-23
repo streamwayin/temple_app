@@ -16,7 +16,6 @@ class SongPlayingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int iconSize = 35;
     Size size = MediaQuery.of(context).size;
     return BlocConsumer<HomeBloc, HomeState>(
       listener: (context, homeState) {},

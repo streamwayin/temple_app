@@ -178,13 +178,13 @@ class SearchBookScreen extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            book.name,
+                                            book.title,
                                             style:
                                                 const TextStyle(fontSize: 18),
                                           ),
-                                          book.autherName != null
+                                          book.author != null
                                               ? Text(
-                                                  book.autherName!,
+                                                  book.author!,
                                                   style: const TextStyle(
                                                       fontSize: 16),
                                                 )

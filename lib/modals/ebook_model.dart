@@ -1,32 +1,50 @@
 class EbookModel {
-  final String name;
-  final String bookId;
+  final String id;
+  final String title;
+  final String? titleHi;
+  final String? description;
+  final String? author;
+  final String? authorId;
+  final String url;
   final String thumbnailUrl;
-  final String bookUrl;
-  final String? autherName;
-  EbookModel(
-      {required this.name,
-      required this.bookId,
-      required this.thumbnailUrl,
-      required this.bookUrl,
-      this.autherName});
+  final String fileType;
+  EbookModel({
+    required this.id,
+    required this.title,
+    this.titleHi,
+    this.description,
+    this.author,
+    this.authorId,
+    required this.url,
+    required this.thumbnailUrl,
+    required this.fileType,
+  });
 
   Map<String, dynamic> toJson() {
     return {
-      'title': name,
-      'bookId': bookId,
-      'thumbnailUrl': thumbnailUrl,
-      'url': bookUrl,
-      'autherName': autherName
+      'id': id,
+      'title': title,
+      'title_hi': titleHi,
+      'description': description,
+      'author': author,
+      'author_id': authorId,
+      'url': url,
+      'thumbnail_url': thumbnailUrl,
+      'file_type': fileType,
     };
   }
 
   factory EbookModel.fromJson(Map<String, dynamic> map) {
     return EbookModel(
-        name: map['name'],
-        bookId: map['bookId'],
-        thumbnailUrl: map['thumbnailUrl'],
-        bookUrl: map['bookUrl'],
-        autherName: map['autherName']);
+      id: map['id'],
+      title: map['title'],
+      titleHi: map['title_hi'],
+      description: map['description'],
+      author: map['author'],
+      authorId: map['author_id'],
+      url: map['url'],
+      thumbnailUrl: map['thumbnail_url'],
+      fileType: map['file_type'],
+    );
   }
 }

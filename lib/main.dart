@@ -85,8 +85,9 @@ class MyApp extends StatelessWidget {
                   create: (context) =>
                       AboutUsBloc()..add(AboutUsInitialEvent())),
               BlocProvider(
-                  create: (context) =>
-                      SightseenBloc()..add(SightseenEventInitial())),
+                create: (context) =>
+                    SightseenBloc()..add(SightseenEventInitial()),
+              ),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,

@@ -7,6 +7,7 @@ class TrackModel {
   String? thumbnail;
   String trackId;
   int? index;
+  Translated translated;
 
   TrackModel({
     required this.albumId,
@@ -17,6 +18,7 @@ class TrackModel {
     required this.thumbnail,
     required this.trackId,
     this.index,
+    required this.translated,
   });
 
   Map<String, dynamic> toJson() {
@@ -29,6 +31,7 @@ class TrackModel {
       'thumbnail': thumbnail,
       'trackId': trackId,
       'index': index,
+      "translated": translated.toJson(),
     };
   }
 
@@ -42,6 +45,50 @@ class TrackModel {
       thumbnail: map['thumbnail'] ?? '',
       trackId: map['trackId'] ?? '',
       index: (map['index'] != null) ? int.parse(map['index'].toString()) : null,
+      translated: Translated.fromJson(map["translated"]),
+    );
+  }
+}
+
+class Translated {
+  String bn;
+  String en;
+  String gu;
+  String hi;
+  String kn;
+  String ta;
+  String te;
+  Translated({
+    required this.bn,
+    required this.en,
+    required this.gu,
+    required this.hi,
+    required this.kn,
+    required this.ta,
+    required this.te,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'bn': bn,
+      'en': en,
+      'gu': gu,
+      'hi': hi,
+      'kn': kn,
+      'ta': ta,
+      'te': te,
+    };
+  }
+
+  factory Translated.fromJson(Map<String, dynamic> map) {
+    return Translated(
+      bn: map['bn'] ?? '',
+      en: map['en'] ?? '',
+      gu: map['gu'] ?? '',
+      hi: map['hi'] ?? '',
+      kn: map['kn'] ?? '',
+      ta: map['ta'] ?? '',
+      te: map['te'] ?? '',
     );
   }
 }

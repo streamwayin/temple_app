@@ -69,7 +69,7 @@ class EpubViwerScreen extends StatelessWidget {
                   SizedBox(width: 5.w),
                   Expanded(
                     child: Text(
-                      state.book!.name,
+                      state.book!.title,
                       maxLines: 1,
                       style: TextStyle(
                           color: (state.backgroundColor == 0xff464646 ||

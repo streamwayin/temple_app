@@ -67,6 +67,7 @@ class AlbumScreen extends StatelessWidget {
                             return GestureDetector(
                               key: Key('$index'),
                               onTap: () {
+                                print(state.albums[index].albumId);
                                 Navigator.pushNamed(
                                     context, AudioScreen.routeName,
                                     arguments: index);
@@ -150,8 +151,6 @@ class AlbumScreen extends StatelessWidget {
               (state.albumsPageLoading == true)
                   ? Utils.showLoadingOnSceeen()
                   : const SizedBox(),
-              Positioned(
-                  bottom: 100, child: Text('${state.artistList.toString()}'))
             ],
           ),
         );

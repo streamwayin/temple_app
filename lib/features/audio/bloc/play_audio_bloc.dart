@@ -83,6 +83,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
             currentAlbumId: albumModel.albumId,
             onPlayAudioScreen: false,
             artistList: artistsList,
+            currentPlaylistTracks: trackList2,
           ),
         );
       } else {
@@ -251,6 +252,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
   FutureOr<void> onFetchSongsOfAlbum(
       FetchSongsOfAlbum event, Emitter<PlayAudioState> emit) async {
+    emit(state.copyWith(tracksPageLoading: true));
     List<TrackModel>? tracks =
         await audioRepository.getTracksListFromDb(event.albumId);
     // List<TrackModel> shortedList = [];

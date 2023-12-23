@@ -27,7 +27,7 @@ class SearchBookBloc extends Bloc<SearchBookEvent, SearchBookState> {
     List<EbookModel> _filteredBooks = [];
     _filteredBooks = books
         .where((book) =>
-            book.name.toLowerCase().contains(event.keyWord.toLowerCase()))
+            book.title.toLowerCase().contains(event.keyWord.toLowerCase()))
         .toList();
     print(_filteredBooks);
     emit(state.copyWith(filteredBooks: _filteredBooks));
@@ -55,8 +55,8 @@ class SearchBookBloc extends Bloc<SearchBookEvent, SearchBookState> {
       EbookModel epubBook = event.book;
       String? downloadedPath;
       var map = {...state.downloadEbookMap};
-      if (map.containsKey(epubBook.bookId)) {
-        final path = map[epubBook.bookId];
+      if (map.containsKey(epubBook.id)) {
+        final path = map[epubBook.id];
         emit(state.copyWith(
             pathString: path, loading: false, selectedBook: epubBook));
         return;
@@ -65,7 +65,7 @@ class SearchBookBloc extends Bloc<SearchBookEvent, SearchBookState> {
         final PermissionStatus status = await Permission.storage.request();
         if (status == PermissionStatus.granted) {
           Map<String, dynamic> map =
-              await startDownload(epubBook.bookUrl, epubBook.name);
+              await startDownload(epubBook.id, epubBook.id);
           if (map['success'] == true) {
             downloadedPath = map['path'];
           }
@@ -73,7 +73,7 @@ class SearchBookBloc extends Bloc<SearchBookEvent, SearchBookState> {
           await Permission.storage.request();
         }
       } else if (Platform.isAndroid) {
-        final map = await startDownload(epubBook.bookUrl, epubBook.name);
+        final map = await startDownload(epubBook.url, epubBook.title);
         if (map['success'] == true) {
           downloadedPath = map['path'];
         }
@@ -84,7 +84,7 @@ class SearchBookBloc extends Bloc<SearchBookEvent, SearchBookState> {
         return;
       }
 
-      map[epubBook.bookId] = downloadedPath;
+      map[epubBook.id] = downloadedPath;
       var encodedData = jsonEncode(map);
       prefs.setString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY, encodedData);
       emit(state.copyWith(

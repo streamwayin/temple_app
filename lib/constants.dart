@@ -216,44 +216,75 @@ List<Map<String, dynamic>> album = [
 ];
 List<Map<String, String>> bookLIst = [
   {
-    "name": 'book',
-    "bookId": "1000189dddpd",
-    "thumbnailUrl":
-        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
-    "bookUrl":
-        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Frangbhumi.epub?alt=media&token=b3a93b80-be8a-4ab2-a7bd-79f66ad3cee0"
+    "title": "book",
+    "title_hi": '',
+    "description": '',
+    "author": '',
+    "author_id": '',
+    "url":
+        'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Frangbhumi.epub?alt=media&token=b3a93b80-be8a-4ab2-a7bd-79f66ad3cee0',
+    "file_type": 'ebook',
+    "thumbnail_url":
+        'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64',
   },
   {
-    "name": 'Fasimov genetic effects of radiation',
-    "bookId": "10002",
-    "thumbnailUrl":
+    "title": "Fasimov genetic effects of radiation",
+    "title_hi": '',
+    "description": '',
+    "author": '',
+    "author_id": '',
+    "file_type": 'ebook',
+    "thumbnail_url":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
-    "bookUrl":
+    "url":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fasimov-genetic-effects-of-radiation.epub?alt=media&token=e19b400a-4500-46d0-84c7-87030470c53d"
   },
   {
-    "name": 'Book 2',
-    "bookId": "10003",
-    "thumbnailUrl":
+    "title": 'Book 2',
+    "title_hi": '',
+    "description": '',
+    "author": '',
+    "author_id": '',
+    "file_type": 'ebook',
+    "thumbnail_url":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
-    "bookUrl":
+    "url":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fbook_2.epub?alt=media&token=2f366789-5d6f-40d9-b89f-13de7a85f0fe"
   },
   {
-    "name": 'book3',
-    "bookId": "10004",
-    "thumbnailUrl":
+    "title": 'book3',
+    "title_hi": '',
+    "description": '',
+    "author": '',
+    "author_id": '',
+    "file_type": 'ebook',
+    "thumbnail_url":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
-    "bookUrl":
+    "url":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fbook_3.epub?alt=media&token=e2fbb157-9c43-44cf-8493-662a873ce90b"
   },
   {
-    "name": 'New Findings on Shirdi Sai Baba',
-    "bookId": "10005",
-    "thumbnailUrl":
+    "title": 'New Findings on Shirdi Sai Baba',
+    "title_hi": '',
+    "description": '',
+    "author": '',
+    "author_id": '',
+    "file_type": 'ebook',
+    "thumbnail_url":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
-    "bookUrl":
+    "url":
         "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2FNew-Findings-on-Shirdi-Sai-Baba.epub?alt=media&token=c743b351-5ec3-4b83-bbb8-e05dbb70e39e"
+  },
+  {
+    "title": 'Pdf',
+    "title_hi": '',
+    "description": '',
+    "author": '',
+    "author_id": '',
+    "file_type": 'pdf',
+    "thumbnail_url":
+        "https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/ebooks%2Fthubbnail%2Fbookcover11.png?alt=media&token=70b8017c-63a0-4508-9328-a1a494d6cc64",
+    "url": "https://cdn.syncfusion.com/content/PDFViewer/flutter-succinctly.pdf"
   },
 ];
 List<int> ebookBackgroundColorList = [

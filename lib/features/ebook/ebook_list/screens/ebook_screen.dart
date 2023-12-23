@@ -6,9 +6,11 @@ import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
 import 'package:temple_app/features/auth/screens/auth_screen.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
+import 'package:temple_app/repositories/audo_repository.dart';
 import 'package:temple_app/widgets/common_background_component.dart';
 import 'package:temple_app/widgets/utils.dart';
 
+import '../../pdf_view/pdf_view_screen.dart';
 import '../bloc/ebook_bloc.dart';
 import '../widget/ebook_app_bar.dart';
 
@@ -29,7 +31,10 @@ class EbookScreen extends StatelessWidget {
         if (state.pathString != null) {
           context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
               path: state.pathString!, book: state.selectedBook!));
-          Navigator.pushNamed(context, EpubViwerScreen.routeName);
+          state.selectedBook!.fileType == "ebook"
+              ? Navigator.pushNamed(context, EpubViwerScreen.routeName)
+              : Navigator.pushNamed(context, PdfScreenScreen.routeName,
+                  arguments: state.selectedBook);
 
           // navigate user based on is logged in or not
           // bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
@@ -59,54 +64,54 @@ class EbookScreen extends StatelessWidget {
                 child: Image.asset("assets/images/onbaording1.png"),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0)
+                padding: const EdgeInsets.symmetric(horizontal: 20.0)
                     .copyWith(top: 8),
                 child: SafeArea(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 50.h),
+                      // SizedBox(height: 10.h),
                       EbookAppBar(books: state.booksList),
-                      SizedBox(height: 20.h),
-                      const Text(
-                        'Trending',
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w600),
-                      ),
                       SizedBox(height: 10.h),
-                      SizedBox(
-                        height: 120.h,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: trendingBookList.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Container(
-                                height: 120.h,
-                                width: 90.w,
-                                decoration: BoxDecoration(
-                                  color:
-                                      const Color.fromARGB(255, 192, 192, 192)
-                                          .withOpacity(0.7),
-                                  borderRadius: BorderRadius.circular(30),
-                                  image: DecorationImage(
-                                    image: AssetImage(
-                                      trendingBookList[index],
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 20.h),
+                      // const Text(
+                      //   'Trending',
+                      //   style: TextStyle(
+                      //       fontSize: 24, fontWeight: FontWeight.w600),
+                      // ),
+                      // SizedBox(height: 10.h),
+                      // SizedBox(
+                      //   height: 120.h,
+                      //   child: ListView.builder(
+                      //     scrollDirection: Axis.horizontal,
+                      //     itemCount: trendingBookList.length,
+                      //     itemBuilder: (context, index) {
+                      //       return Padding(
+                      //         padding: const EdgeInsets.all(8.0),
+                      //         child: Container(
+                      //           height: 120.h,
+                      //           width: 90.w,
+                      //           decoration: BoxDecoration(
+                      //             color:
+                      //                 const Color.fromARGB(255, 192, 192, 192)
+                      //                     .withOpacity(0.7),
+                      //             borderRadius: BorderRadius.circular(30),
+                      //             image: DecorationImage(
+                      //               image: AssetImage(
+                      //                 trendingBookList[index],
+                      //               ),
+                      //               fit: BoxFit.cover,
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
+                      // SizedBox(height: 10.h),
                       const Text(
-                        'Featured',
+                        'All books',
                         style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w600),
+                            fontSize: 22, fontWeight: FontWeight.w600),
                       ),
                       SizedBox(height: 10.h),
                       Expanded(
@@ -115,7 +120,7 @@ class EbookScreen extends StatelessWidget {
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 3,
-                                  crossAxisSpacing: 18,
+                                  crossAxisSpacing: 20,
                                   mainAxisSpacing: 10,
                                   mainAxisExtent: 163),
                           itemBuilder: (context, index) {
@@ -125,8 +130,9 @@ class EbookScreen extends StatelessWidget {
                                 border: Border.all(
                                   width: 1,
                                   color:
-                                      const Color.fromARGB(255, 192, 192, 192),
+                                      const Color.fromARGB(255, 212, 212, 212),
                                 ),
+                                color: Colors.white,
                                 borderRadius: BorderRadius.circular(5),
                               ),
                               padding: const EdgeInsets.all(10),
@@ -159,9 +165,11 @@ class EbookScreen extends StatelessWidget {
                                           ),
                                         ),
                                         Text(
-                                          item.name,
+                                          item.title,
                                           maxLines: 2,
+                                          textAlign: TextAlign.center,
                                           style: const TextStyle(
+                                            fontSize: 12,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
@@ -180,7 +188,7 @@ class EbookScreen extends StatelessWidget {
               ),
               (state.loading == true)
                   ? Utils.showLoadingOnSceeen()
-                  : const SizedBox()
+                  : const SizedBox(),
             ],
           ),
         );

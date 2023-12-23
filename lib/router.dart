@@ -8,6 +8,7 @@ import 'package:temple_app/features/auth/screens/auth_screen.dart';
 import 'package:temple_app/features/contact-us/screens/contact_us_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
+import 'package:temple_app/features/ebook/pdf_view/pdf_view_screen.dart';
 import 'package:temple_app/features/ebook/search/screens/search_book_screen.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
 import 'package:temple_app/features/onboarding/screens/onboarding_screen1.dart';
@@ -16,6 +17,7 @@ import 'package:temple_app/features/sightseen/screens/sightseen_screen.dart';
 import 'package:temple_app/features/sightseen/screens/single_sightseen_screen.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
+import 'package:temple_app/modals/ebook_model.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -100,6 +102,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const SigntseenScreen(),
+      );
+    case PdfScreenScreen.routeName:
+      final EbookModel book = routeSettings.arguments as EbookModel;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => PdfScreenScreen(book: book),
       );
     case SingleSightseenScreen.routeName:
       var index = routeSettings.arguments as int;

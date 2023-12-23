@@ -16,6 +16,7 @@ class AudioScreen extends StatelessWidget {
   static const String routeName = '/album-screen';
   @override
   Widget build(BuildContext context) {
+    Locale currentLocale = Localizations.localeOf(context);
     Size size = MediaQuery.of(context).size;
     onReorder(oldIndex, newIndex) {
       context.read<PlayAudioBloc>().add(SongIndexChanged(
@@ -90,39 +91,9 @@ class AudioScreen extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(
                                         vertical: 4.0),
                                     child: ListTile(
-                                      onTap: () {
-                                        if (state.currentAlbumId !=
-                                            state.currentPlaylistAlbumId) {
-                                          context.read<PlayAudioBloc>().add(
-                                              LoadCurrentPlaylistEvent(
-                                                  initialIndex: ind));
-                                          context.read<PlayAudioBloc>().add(
-                                              ChangeCurrentPlaylistAlbumId());
-                                        } else {
-                                          context.read<PlayAudioBloc>().add(
-                                              PlaySinglesongEvent(index: ind));
-                                        }
-
-                                        context.read<PlayAudioBloc>().add(
-                                            const PlayOrPauseSongEvent(
-                                                play: true));
-                                        context.read<HomeBloc>().add(
-                                            const ChangeOnPlayAudioSreenOrNot(
-                                                onPlayAudioScreen: true));
-                                        context.read<PlayAudioBloc>().add(
-                                              const ChangeShowBottomMusicController(
-                                                  changeShowBottomMusicController:
-                                                      true),
-                                            );
-                                        Navigator.pushNamed(
-                                            context, PlayAudioScreen.routeName);
-
-                                        context.read<PlayAudioBloc>().add(
-                                            const SaveCurrentAlbumToLocalStorage());
-                                        context
-                                            .read<PlayAudioBloc>()
-                                            .add(SavePlayingTracksEvent());
-                                      },
+                                      // on tap audio
+                                      onTap: () =>
+                                          tapOnsongTile(context, state, ind),
                                       leading: (song.thumbnail != null)
                                           ? SizedBox(
                                               width: 55.w,
@@ -183,7 +154,9 @@ class AudioScreen extends StatelessWidget {
                                             )
                                           : const SizedBox(),
                                       title: Text(
-                                        song.title,
+                                        currentLocale.languageCode == "hi"
+                                            ? song.translated.hi
+                                            : song.title,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                       ),
@@ -199,12 +172,36 @@ class AudioScreen extends StatelessWidget {
                 ),
                 (state.tracksPageLoading == true)
                     ? Utils.showLoadingOnSceeen()
-                    : const SizedBox()
+                    : const SizedBox(),
               ],
             );
           },
         ),
       ),
     );
+  }
+
+  tapOnsongTile(BuildContext context, PlayAudioState state, int ind) {
+    if (state.currentAlbumId != state.currentPlaylistAlbumId) {
+      context
+          .read<PlayAudioBloc>()
+          .add(LoadCurrentPlaylistEvent(initialIndex: ind));
+      context.read<PlayAudioBloc>().add(ChangeCurrentPlaylistAlbumId());
+    } else {
+      context.read<PlayAudioBloc>().add(PlaySinglesongEvent(index: ind));
+    }
+
+    context.read<PlayAudioBloc>().add(const PlayOrPauseSongEvent(play: true));
+    context
+        .read<HomeBloc>()
+        .add(const ChangeOnPlayAudioSreenOrNot(onPlayAudioScreen: true));
+    context.read<PlayAudioBloc>().add(
+          const ChangeShowBottomMusicController(
+              changeShowBottomMusicController: true),
+        );
+    Navigator.pushNamed(context, PlayAudioScreen.routeName);
+
+    context.read<PlayAudioBloc>().add(const SaveCurrentAlbumToLocalStorage());
+    context.read<PlayAudioBloc>().add(SavePlayingTracksEvent());
   }
 }

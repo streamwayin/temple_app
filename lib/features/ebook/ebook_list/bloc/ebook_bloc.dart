@@ -31,8 +31,8 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
       EbookModel epubBook = event.book;
       String? downloadedPath;
       var map = {...state.downloadEbookMap};
-      if (map.containsKey(epubBook.bookId)) {
-        final path = map[epubBook.bookId];
+      if (map.containsKey(epubBook.id)) {
+        final path = map[epubBook.id];
         emit(state.copyWith(
             pathString: path, loading: false, selectedBook: epubBook));
         return;
@@ -41,7 +41,7 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
         final PermissionStatus status = await Permission.storage.request();
         if (status == PermissionStatus.granted) {
           Map<String, dynamic> map =
-              await startDownload(epubBook.bookUrl, epubBook.name);
+              await startDownload(epubBook.url, epubBook.title);
           if (map['success'] == true) {
             downloadedPath = map['path'];
           }
@@ -49,7 +49,7 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
           await Permission.storage.request();
         }
       } else if (Platform.isAndroid) {
-        final map = await startDownload(epubBook.bookUrl, epubBook.name);
+        final map = await startDownload(epubBook.url, epubBook.title);
         if (map['success'] == true) {
           downloadedPath = map['path'];
         }
@@ -60,7 +60,7 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
         return;
       }
 
-      map[epubBook.bookId] = downloadedPath;
+      map[epubBook.id] = downloadedPath;
       var encodedData = jsonEncode(map);
       prefs.setString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY, encodedData);
       emit(state.copyWith(

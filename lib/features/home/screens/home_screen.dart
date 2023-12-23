@@ -1,24 +1,14 @@
-import 'dart:convert';
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
-import 'package:temple_app/modals/album_model.dart';
-import 'package:temple_app/modals/track_model.dart';
-import '../../../constants.dart';
-import '../../../modals/ebook_model.dart';
 import '../../../widgets/common_background_component.dart';
 import '../../about-us/screens/about_us_bottom_nav_bar.dart';
-import '../../about-us/screens/about_us_screen.dart';
 import '../../contact-us/screens/contact_us_screen.dart';
 import '../../sightseen/screens/sightseen_screen.dart';
 
@@ -93,20 +83,6 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     ];
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Row(
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: [
-      //       Text('Home Page'),
-      //       // IconButton(
-      //       //     onPressed: () {
-      //       //       FirebaseAuth.instance.signOut();
-      //       //     },
-      //       //     icon: const Icon(Icons.logout)),
-      //       SongPlayingIndicator()
-      //     ],
-      //   ),
-      // ),
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
