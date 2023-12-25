@@ -26,6 +26,7 @@ part 'play_audio_state.dart';
 
 class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   PlayAudioBloc() : super(PlayAudioInitial()) {
+    _getPref();
     on<PlayAudioEventInitial>(onPlayAudioEventInitial);
     on<AlbumIndexChanged>(onAlbumIndexChanged);
     on<SongIndexChanged>(onSongIndexChanged);
@@ -46,6 +47,11 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<SavePlayingTracksEvent>(onSavePlayingTracksEvent);
   }
   AudioRepository audioRepository = AudioRepository();
+  late SharedPreferences sharedPreferences;
+  void _getPref() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+  }
+
   FutureOr<void> onPlayAudioEventInitial(
       PlayAudioEventInitial event, Emitter<PlayAudioState> emit) async {
     final list = await audioRepository.getAlbumListFromDb();
@@ -60,30 +66,38 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
           downloadedSongsMap[key] = value.toString();
         });
       }
+
+      // check if song is saved previously or not
       String? currentlyPlayingAlbum =
           prefs.getString(CURRENTLY_PLAYING_ALBUM_MAP);
       if (currentlyPlayingAlbum != null) {
         Map<String, dynamic> savedMap = jsonDecode(currentlyPlayingAlbum);
         String tracksDataJson = savedMap["tracksData"];
         String albumDataJson = savedMap["albumData"];
-        // int index = int.parse(savedMap['songIndex']);
+        int index = 0;
+
+        int? tempIndex = sharedPreferences.getInt(PLAYLIST_CURRENT_SONG_INDEX);
+        if (tempIndex != null) {
+          index = tempIndex;
+        }
         AlbumModel albumModel = AlbumModel.fromJson(jsonDecode(albumDataJson));
         List<dynamic> tracksMapList = jsonDecode(tracksDataJson);
         List<TrackModel> trackList2 =
             tracksMapList.map((map) => TrackModel.fromJson(map)).toList();
         bool isTracksListempty = trackList2.isEmpty ? false : true;
-        audioRepository.playSingleSong(1);
+        audioRepository.playSingleSong(2);
         emit(
           state.copyWith(
             albums: list,
             downloadedSongsMap: downloadedSongsMap,
             albumsPageLoading: false,
+            artistList: artistsList,
             isPreviouslyTracksSaved: isTracksListempty,
             previouslySavedTracks: trackList2,
             currentAlbumId: albumModel.albumId,
             onPlayAudioScreen: false,
-            artistList: artistsList,
             currentPlaylistTracks: trackList2,
+            savedInitialEvent: index,
           ),
         );
       } else {
@@ -139,7 +153,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
                   Uri.parse(e.songUrl),
                   tag: MediaItem(
                     id: '1',
-                    title: e.title,
+                    title: e.translated.hi,
                     artist: e.artistName,
                     artUri: Uri.parse(e.thumbnail!),
                   ),
@@ -148,8 +162,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
                   state.downloadedSongsMap['trackid']!,
                   tag: MediaItem(
                     id: '1',
-                    title: e.title,
-                    artist: '',
+                    title: e.translated.hi,
+                    artist: e.artistName,
                   ),
                 ),
         )
@@ -167,6 +181,11 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       audioRepository.musicPlayerDataStream,
       onData: (data) {
         int? index = audioRepository.currentSongIndex();
+        int duration = data.positionData.position.inSeconds;
+        if (index != null) {
+          sharedPreferences.setInt(PLAYLIST_CURRENT_SONG_INDEX, index);
+          sharedPreferences.setInt(PLAYLIST_CURRENT_SONG_DURATION, duration);
+        }
         return state.copyWith(
             // currentAlbumIndex: event.albumIndex,
             singleSongIndex: index,
@@ -183,41 +202,50 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     // Song saveSong =
     //     state.albums[state.currentAlbumIndex!].songList[event.currentSongIndex];
     int? index = audioRepository.currentSongIndex();
-    TrackModel saveSong = state.tracks![index!];
-    try {
-      File? localImagePath;
-      if (!state.downloadedSongsMap.containsKey(saveSong.trackId)) {
-        localImagePath = await audioRepository.downloadByUrl(
-            saveSong.songUrl, saveSong.title);
-        if (localImagePath == null) {
+    TrackModel? saveSong;
+    List<TrackModel>? saveSongList = state.tracks;
+    List<TrackModel>? saveSongListOffline = state.previouslySavedTracks;
+    if (saveSongList != null) {
+      saveSong = saveSongList[index!];
+    } else if (saveSongListOffline != null) {
+      saveSong = saveSongListOffline[index!];
+    }
+    if (saveSong != null) {
+      try {
+        File? localImagePath;
+        if (!state.downloadedSongsMap.containsKey(saveSong.trackId)) {
+          localImagePath = await audioRepository.downloadByUrl(
+              saveSong.songUrl, saveSong.title);
+          if (localImagePath == null) {
+            Utils.showSnackBar(
+              context: event.context,
+              message: 'Failed to download the video',
+            );
+            emit(state.copyWith(isSongDownloading: false));
+            return;
+          }
+        } else {
           Utils.showSnackBar(
-            context: event.context,
-            message: 'Failed to download the video',
-          );
+              context: event.context, message: 'No need to download the song');
           emit(state.copyWith(isSongDownloading: false));
           return;
         }
-      } else {
-        Utils.showSnackBar(
-            context: event.context, message: 'No need to download the song');
-        emit(state.copyWith(isSongDownloading: false));
-        return;
+
+        Map<String, String> map = state.downloadedSongsMap;
+
+        map[saveSong.trackId] = localImagePath.path;
+        var encodedData = jsonEncode(map);
+
+        prefs.setString(OFFLINE_DOWNLOADED_SONG_LIST_KEY, encodedData);
+        emit(state.copyWith(
+            snackbarMessage: 'Song Downloaded',
+            isSongDownloading: false,
+            downloadedSongsMap: map));
+      } catch (e) {
+        emit(state.copyWith(
+            snackbarMessage: 'Failed to download song',
+            isSongDownloading: false));
       }
-
-      Map<String, String> map = state.downloadedSongsMap;
-
-      map[saveSong.trackId] = localImagePath.path;
-      var encodedData = jsonEncode(map);
-
-      prefs.setString(OFFLINE_DOWNLOADED_SONG_LIST_KEY, encodedData);
-      emit(state.copyWith(
-          snackbarMessage: 'Song Downloaded',
-          isSongDownloading: false,
-          downloadedSongsMap: map));
-    } catch (e) {
-      emit(state.copyWith(
-          snackbarMessage: 'Failed to download song',
-          isSongDownloading: false));
     }
   }
 
@@ -284,6 +312,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
   FutureOr<void> onChangeShowBottomMusicController(
       ChangeShowBottomMusicController event, Emitter<PlayAudioState> emit) {
+    sharedPreferences.setBool(
+        SHOW_BOTTOM_MUSIC_CONTROLLER, event.changeShowBottomMusicController);
     emit(state.copyWith(
         showBottomMusicController: event.changeShowBottomMusicController));
   }
@@ -320,7 +350,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
                   Uri.parse(e.songUrl),
                   tag: MediaItem(
                     id: '1',
-                    title: e.title,
+                    title: e.translated.hi,
                     artist: e.artistName,
                     artUri: Uri.parse(e.thumbnail!),
                   ),
@@ -329,8 +359,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
                   state.downloadedSongsMap['trackid']!,
                   tag: MediaItem(
                     id: '1',
-                    title: e.title,
-                    artist: '',
+                    title: e.translated.hi,
+                    artist: e.artistName,
                   ),
                 ),
         )
@@ -343,13 +373,25 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
       children: audioSourceList,
     );
-    audioRepository.addPlaylist(playList: playlist);
+    int? duration = sharedPreferences.getInt(PLAYLIST_CURRENT_SONG_DURATION);
+    Duration initialPosition = Duration.zero;
+    if (duration != null) {
+      initialPosition = Duration(seconds: duration);
+    }
+    audioRepository.addPlaylist(
+        playList: playlist,
+        initialIndex: state.savedInitialEvent,
+        initialPosition: initialPosition);
     await emit.forEach(
       audioRepository.musicPlayerDataStream,
       onData: (data) {
         int? index = audioRepository.currentSongIndex();
+        int duration = data.positionData.position.inSeconds;
+        if (index != null) {
+          sharedPreferences.setInt(PLAYLIST_CURRENT_SONG_INDEX, index);
+          sharedPreferences.setInt(PLAYLIST_CURRENT_SONG_DURATION, duration);
+        }
         return state.copyWith(
-          // currentAlbumIndex: event.albumIndex,
           singleSongIndex: index,
           musicPlayerDataModel: data,
           onPlayAudioScreen: false,
@@ -367,7 +409,6 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     String artistIdToFind = state.artistList[event.index].artistId;
     List<AlbumModel>? tracks =
         await audioRepository.getAlbumByArtist(artistIdToFind);
-    log(tracks.toString());
     emit(state.copyWith(albumsPageLoading: false, albums: tracks));
   }
 

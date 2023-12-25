@@ -72,12 +72,18 @@ class MyAppState extends State<PlayAudioScreen> {
                       child: SizedBox(
                           height: 30.h,
                           child: (!state.isSongDownloading)
-                              ? IconButton(
-                                  onPressed: () {
-                                    context.read<PlayAudioBloc>().add(
-                                        DownloadSongEvent(context: context));
-                                  },
-                                  icon: const Icon(Icons.download))
+                              ? !state.downloadedSongsMap.containsKey(state
+                                      .currentPlaylistTracks![
+                                          state.singleSongIndex!]
+                                      .trackId)
+                                  ? IconButton(
+                                      onPressed: () {
+                                        context.read<PlayAudioBloc>().add(
+                                            DownloadSongEvent(
+                                                context: context));
+                                      },
+                                      icon: const Icon(Icons.download))
+                                  : const Icon(Icons.check)
                               : LoadingAnimationWidget.prograssiveDots(
                                   color: const Color.fromARGB(255, 75, 74, 74),
                                   size: 40)),

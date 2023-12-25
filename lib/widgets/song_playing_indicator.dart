@@ -25,8 +25,12 @@ class SongPlayingIndicator extends StatelessWidget {
             if (state.isPreviouslyTracksSaved == true) {
               context.read<PlayAudioBloc>().add(LoadSavedTrackInPlayerEvent());
             }
+            // can be removed because saving data in for each insicde play audio bloc
+            if (state.updateSavedDataOfPlayer == true) {}
           },
           builder: (context, state) {
+            Locale currentLocale = Localizations.localeOf(context);
+
             MediaItem? sequenceState;
             if (state.musicPlayerDataModel != null) {
               sequenceState = state.musicPlayerDataModel!.sequenceState

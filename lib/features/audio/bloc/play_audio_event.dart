@@ -114,3 +114,6 @@ class ChangeOnAboutUsNavBar extends PlayAudioEvent {
 class ChangeCurrentPlaylistAlbumId extends PlayAudioEvent {}
 
 class SavePlayingTracksEvent extends PlayAudioEvent {}
+
+
+// class SaveDuration and current index continously even to do

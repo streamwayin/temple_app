@@ -58,9 +58,11 @@ class AudioRepository {
   Stream<SequenceState?> get sequenceStateStream => _player.sequenceStateStream;
   Future<void> addPlaylist(
       {required ConcatenatingAudioSource playList,
-      int initialIndex = 0}) async {
+      int initialIndex = 0,
+      Duration initialPosition = Duration.zero}) async {
     try {
-      await _player.setAudioSource(playList, initialIndex: initialIndex);
+      await _player.setAudioSource(playList,
+          initialIndex: initialIndex, initialPosition: initialPosition);
     } catch (e) {
       log("Error loading audio source: $e");
     }

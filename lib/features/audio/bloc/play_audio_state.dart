@@ -21,6 +21,8 @@ class PlayAudioState extends Equatable {
   final List<TrackModel>? previouslySavedTracks;
   final List<ArtistModel> artistList;
   final List<TrackModel>? currentPlaylistTracks;
+  final int savedInitialEvent;
+  final bool updateSavedDataOfPlayer;
   const PlayAudioState({
     this.albums = const [],
     this.concatenatingAudioSource,
@@ -42,6 +44,8 @@ class PlayAudioState extends Equatable {
     this.previouslySavedTracks,
     this.artistList = const [],
     this.currentPlaylistTracks,
+    this.savedInitialEvent = 0,
+    this.updateSavedDataOfPlayer = false,
   });
   @override
   List<Object?> get props => [
@@ -64,7 +68,9 @@ class PlayAudioState extends Equatable {
         previouslySavedTracks,
         artistList,
         onAboutUsNavBar,
-        currentPlaylistTracks
+        currentPlaylistTracks,
+        savedInitialEvent,
+        updateSavedDataOfPlayer
       ];
 
   PlayAudioState copyWith({
@@ -88,33 +94,39 @@ class PlayAudioState extends Equatable {
     List<TrackModel>? previouslySavedTracks,
     List<ArtistModel>? artistList,
     List<TrackModel>? currentPlaylistTracks,
+    int? savedInitialEvent,
+    bool? updateSavedDataOfPlayer,
   }) {
     return PlayAudioState(
-        albums: albums ?? this.albums,
-        concatenatingAudioSource:
-            concatenatingAudioSource ?? this.concatenatingAudioSource,
-        singleSongIndex: singleSongIndex ?? this.singleSongIndex,
-        snackbarMessage: snackbarMessage,
-        isSongDownloading: isSongDownloading ?? this.isSongDownloading,
-        downloadedSongsMap: downloadedSongsMap ?? this.downloadedSongsMap,
-        musicPlayerDataModel: musicPlayerDataModel ?? this.musicPlayerDataModel,
-        tracks: tracks ?? this.tracks,
-        isTracksAvailable: isTracksAvailable,
-        albumsPageLoading: albumsPageLoading ?? this.albumsPageLoading,
-        tracksPageLoading: tracksPageLoading ?? this.tracksPageLoading,
-        currentAlbumId: currentAlbumId ?? this.currentAlbumId,
-        currentPlaylistAlbumId:
-            currentPlaylistAlbumId ?? this.currentPlaylistAlbumId,
-        showBottomMusicController:
-            showBottomMusicController ?? this.showBottomMusicController,
-        onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
-        onAboutUsNavBar: onAboutUsNavBar ?? this.onAboutUsNavBar,
-        isPreviouslyTracksSaved: isPreviouslyTracksSaved,
-        previouslySavedTracks:
-            previouslySavedTracks ?? this.previouslySavedTracks,
-        artistList: artistList ?? this.artistList,
-        currentPlaylistTracks:
-            currentPlaylistTracks ?? this.currentPlaylistTracks);
+      albums: albums ?? this.albums,
+      concatenatingAudioSource:
+          concatenatingAudioSource ?? this.concatenatingAudioSource,
+      singleSongIndex: singleSongIndex ?? this.singleSongIndex,
+      snackbarMessage: snackbarMessage,
+      isSongDownloading: isSongDownloading ?? this.isSongDownloading,
+      downloadedSongsMap: downloadedSongsMap ?? this.downloadedSongsMap,
+      musicPlayerDataModel: musicPlayerDataModel ?? this.musicPlayerDataModel,
+      tracks: tracks ?? this.tracks,
+      isTracksAvailable: isTracksAvailable,
+      albumsPageLoading: albumsPageLoading ?? this.albumsPageLoading,
+      tracksPageLoading: tracksPageLoading ?? this.tracksPageLoading,
+      currentAlbumId: currentAlbumId ?? this.currentAlbumId,
+      currentPlaylistAlbumId:
+          currentPlaylistAlbumId ?? this.currentPlaylistAlbumId,
+      showBottomMusicController:
+          showBottomMusicController ?? this.showBottomMusicController,
+      onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
+      onAboutUsNavBar: onAboutUsNavBar ?? this.onAboutUsNavBar,
+      isPreviouslyTracksSaved: isPreviouslyTracksSaved,
+      previouslySavedTracks:
+          previouslySavedTracks ?? this.previouslySavedTracks,
+      artistList: artistList ?? this.artistList,
+      currentPlaylistTracks:
+          currentPlaylistTracks ?? this.currentPlaylistTracks,
+      savedInitialEvent: savedInitialEvent ?? this.savedInitialEvent,
+      // insert false if we want to  upadte plater data in index
+      updateSavedDataOfPlayer: updateSavedDataOfPlayer ?? false,
+    );
   }
 }
 
