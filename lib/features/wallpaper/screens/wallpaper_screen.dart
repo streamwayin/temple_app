@@ -1,7 +1,7 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/constants.dart';
-import 'dart:developer' as lgr;
 
 import '../widgets/single_wallpaper_component.dart';
 
@@ -13,7 +13,7 @@ class WallpaperScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Wallpapers'),
+        title: const Text('wallpaper').tr(),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),

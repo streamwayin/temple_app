@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +7,6 @@ import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
 import 'package:temple_app/features/auth/screens/auth_screen.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
-import 'package:temple_app/repositories/audo_repository.dart';
 import 'package:temple_app/widgets/common_background_component.dart';
 import 'package:temple_app/widgets/utils.dart';
 
@@ -29,22 +29,25 @@ class EbookScreen extends StatelessWidget {
     return BlocConsumer<EbookBloc, EbookState>(
       listener: (BuildContext context, EbookState state) {
         if (state.pathString != null) {
-          context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
-              path: state.pathString!, book: state.selectedBook!));
-          state.selectedBook!.fileType == "ebook"
-              ? Navigator.pushNamed(context, EpubViwerScreen.routeName)
-              : Navigator.pushNamed(context, PdfScreenScreen.routeName,
-                  arguments: state.selectedBook);
+          // context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
+          //     path: state.pathString!, book: state.selectedBook!));
+          // state.selectedBook!.fileType == "ebook"
+          //     ? Navigator.pushNamed(context, EpubViwerScreen.routeName)
+          //     : Navigator.pushNamed(context, PdfScreenScreen.routeName,
+          //         arguments: state.selectedBook);
 
           // navigate user based on is logged in or not
-          // bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
-          // if (isUserLoggedIn != null && isUserLoggedIn == true) {
-          //   context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
-          //       path: state.pathString!, book: state.selectedBook!));
-          //   Navigator.pushNamed(context, EpubViwerScreen.routeName);
-          // } else {
-          //   Navigator.pushNamed(context, AuthScreen.routeName);
-          // }
+          bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
+          if (isUserLoggedIn != null && isUserLoggedIn == true) {
+            context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
+                path: state.pathString!, book: state.selectedBook!));
+            state.selectedBook!.fileType == "ebook"
+                ? Navigator.pushNamed(context, EpubViwerScreen.routeName)
+                : Navigator.pushNamed(context, PdfScreenScreen.routeName,
+                    arguments: state.selectedBook);
+          } else {
+            Navigator.pushNamed(context, AuthScreen.routeName);
+          }
         }
       },
       builder: (context, state) {
@@ -109,10 +112,10 @@ class EbookScreen extends StatelessWidget {
                       // ),
                       // SizedBox(height: 10.h),
                       const Text(
-                        'All books',
+                        'allBooks',
                         style: TextStyle(
                             fontSize: 22, fontWeight: FontWeight.w600),
-                      ),
+                      ).tr(),
                       SizedBox(height: 10.h),
                       Expanded(
                         child: GridView.builder(

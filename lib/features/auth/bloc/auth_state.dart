@@ -5,14 +5,14 @@ part of 'auth_bloc.dart';
 class AuthState extends Equatable {
   // final AuthType authType;
   final CountryCode code;
-  final bool? isLoggedIn;
+  final bool isLoggedIn;
   const AuthState({
     // this.authType = AuthType.signinWithEmail,
     this.code = const CountryCode(name: 'India', code: 'IN', dialCode: '+91'),
-    this.isLoggedIn,
+    this.isLoggedIn = false,
   });
   @override
-  List<Object?> get props => [ code, isLoggedIn];
+  List<Object?> get props => [code, isLoggedIn];
 
   AuthState copyWith({
     // AuthType? authType,
@@ -22,7 +22,7 @@ class AuthState extends Equatable {
     return AuthState(
         // authType: authType ?? this.authType,
         code: code ?? this.code,
-        isLoggedIn: isLoggedIn);
+        isLoggedIn: isLoggedIn ?? this.isLoggedIn);
   }
 }
 

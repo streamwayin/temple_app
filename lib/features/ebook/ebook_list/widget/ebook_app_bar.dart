@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -33,10 +34,10 @@ class EbookAppBar extends StatelessWidget {
                 ),
                 SizedBox(width: 10.w),
                 Text(
-                  'My Library',
+                  'myLibrary',
                   style:
                       TextStyle(fontSize: 24.sp, fontWeight: FontWeight.w600),
-                ),
+                ).tr(),
               ],
             ),
             InkWell(

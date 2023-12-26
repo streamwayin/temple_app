@@ -2,7 +2,7 @@
     "steps":"steps",
     "next":"Next",
     "skip":"Skip",
-    "wallpaper":"Wallpaper",
+    "wallpaper":"Wallpapers",
     "audio":"Audio",
     "video":"Video",
     "ebook":"E-book",
@@ -12,5 +12,15 @@
     "add":"Add",
     "cancel":"Cancel",
     "aboutUs":"About Us",
-    "contactUs":"Contact Us"
+    "contactUs":"Contact Us",
+    "sightseen":"Sightseens",
+    "myLibrary":"My Library",
+    "allBooks":"All Books",
+    "setAs":"Set As",
+    "homeScreen":"Home Screen",
+    "lockScreen":"Lock Screen",
+    "homeAndLockScreen":"Home & Lock Screen",
+    "albums":"Albums",
+    "playAll":"Play All",
+    "filterByArtist":"Filter By Artist"
 }

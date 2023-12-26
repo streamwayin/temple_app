@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:maps_launcher/maps_launcher.dart';
@@ -50,7 +51,7 @@ class ContactUsScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Contact Us'),
+        title: const Text('contactUs').tr(),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),

@@ -120,11 +120,11 @@ class _SplashScreenState extends State<SplashScreen> {
     bool? onBoardingVisited =
         sharedPreferences.getBool(HAS_USER_VISITED_ONBOARDING_SCREEN);
     if (onBoardingVisited != null && onBoardingVisited == true) {
-      Future.delayed(const Duration(seconds: 2))
-          .then((value) => Navigator.pushNamed(context, HomeScreen.routeName));
-    } else {
       Future.delayed(const Duration(seconds: 2)).then(
-          (value) => Navigator.pushNamed(context, OnboardingScreen.routeName));
+          (value) => Navigator.popAndPushNamed(context, HomeScreen.routeName));
+    } else {
+      Future.delayed(const Duration(seconds: 2)).then((value) =>
+          Navigator.popAndPushNamed(context, OnboardingScreen.routeName));
     }
   }
 }

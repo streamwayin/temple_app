@@ -72,10 +72,12 @@ class MyAppState extends State<PlayAudioScreen> {
                       child: SizedBox(
                           height: 30.h,
                           child: (!state.isSongDownloading)
-                              ? !state.downloadedSongsMap.containsKey(state
-                                      .currentPlaylistTracks![
-                                          state.singleSongIndex!]
-                                      .trackId)
+                              ? state.singleSongIndex != null &&
+                                      !state.downloadedSongsMap.containsKey(
+                                          state
+                                              .currentPlaylistTracks![
+                                                  state.singleSongIndex!]
+                                              .trackId)
                                   ? IconButton(
                                       onPressed: () {
                                         context.read<PlayAudioBloc>().add(

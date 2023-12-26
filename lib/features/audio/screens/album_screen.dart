@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,10 +24,10 @@ class AlbumScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(
-            title: const Row(
+            title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('Albums'),
+                Text('albums').tr(),
               ],
             ),
           ),
@@ -42,7 +43,7 @@ class AlbumScreen extends StatelessWidget {
                       DropdownMenu(
                         width: (size.width - 55).w,
                         enableFilter: true,
-                        label: const Text('Filter by artist'),
+                        label: const Text('filterByArtist').tr(),
                         inputDecorationTheme: const InputDecorationTheme(
                           filled: true,
                           contentPadding: EdgeInsets.symmetric(

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wallpaper/wallpaper.dart';
@@ -11,7 +12,7 @@ class SetWallpaperAsDialog extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SizedBox(
-          height: 180.h,
+          height: 182.h,
           width: 40.w,
           child: Column(
             children: [
@@ -20,15 +21,15 @@ class SetWallpaperAsDialog extends StatelessWidget {
                   await Wallpaper.homeScreen();
                   Navigator.pop(context);
                 },
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.all(14.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Home Screen',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                        'homeScreen',
+                        style: TextStyle(fontSize: 17.sp),
+                      ).tr(),
                     ],
                   ),
                 ),
@@ -38,15 +39,15 @@ class SetWallpaperAsDialog extends StatelessWidget {
                   await Wallpaper.lockScreen();
                   Navigator.pop(context);
                 },
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'LockScreen',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                        'lockScreen',
+                        style: TextStyle(fontSize: 17.sp),
+                      ).tr(),
                     ],
                   ),
                 ),
@@ -57,15 +58,15 @@ class SetWallpaperAsDialog extends StatelessWidget {
                   Navigator.pop(context);
                   print("Task Done");
                 },
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Home & Lock screens',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                        'homeAndLockScreen',
+                        style: TextStyle(fontSize: 17.sp),
+                      ).tr(),
                     ],
                   ),
                 ),
@@ -73,15 +74,15 @@ class SetWallpaperAsDialog extends StatelessWidget {
               const Divider(),
               InkWell(
                 onTap: () => Navigator.pop(context),
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.all(8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Cancel',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                        'cancel',
+                        style: TextStyle(fontSize: 17.sp),
+                      ).tr(),
                     ],
                   ),
                 ),

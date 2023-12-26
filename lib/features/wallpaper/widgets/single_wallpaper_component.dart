@@ -1,6 +1,7 @@
 import 'dart:developer' as lgr;
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/wallpaper/widgets/set_wallpaper_as_dialog.dart';
@@ -67,10 +68,10 @@ class _SingleWallpaperComponentState extends State<SingleWallpaperComponent> {
                               child: CircularProgressIndicator()),
                         )
                       : const Text(
-                          'Set as ',
+                          'setAs',
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w600),
-                        )),
+                        ).tr()),
             ),
           )
         ],

@@ -1,12 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/modals/track_model.dart';
 
+import '../../../constants.dart';
 import '../../../widgets/utils.dart';
+import '../../auth/bloc/auth_bloc.dart';
+import '../../auth/screens/auth_screen.dart';
 import '../bloc/play_audio_bloc.dart';
 
 //AudioScreen
@@ -23,6 +28,7 @@ class AudioScreen extends StatelessWidget {
           newIndex: newIndex, oldIndex: oldIndex, albumIndex: albumIndex));
     }
 
+    bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
     return Scaffold(
       body: SafeArea(
         child: BlocBuilder<PlayAudioBloc, PlayAudioState>(
@@ -57,11 +63,16 @@ class AudioScreen extends StatelessWidget {
                           const Spacer(),
                           InkWell(
                             onTap: () {
-                              context
-                                  .read<PlayAudioBloc>()
-                                  .add(const PlayOrPauseSongEvent(play: true));
-                              Navigator.pushNamed(
-                                  context, PlayAudioScreen.routeName);
+                              if (isUserLoggedIn != null &&
+                                  isUserLoggedIn == true) {
+                                context.read<PlayAudioBloc>().add(
+                                    const PlayOrPauseSongEvent(play: true));
+                                Navigator.pushNamed(
+                                    context, PlayAudioScreen.routeName);
+                              } else {
+                                Navigator.pushNamed(
+                                    context, AuthScreen.routeName);
+                              }
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -70,7 +81,7 @@ class AudioScreen extends StatelessWidget {
                               decoration: BoxDecoration(
                                   border: Border.all(),
                                   borderRadius: BorderRadius.circular(10)),
-                              child: const Text("Play All"),
+                              child: const Text("playAll").tr(),
                             ),
                           )
                         ],
@@ -181,27 +192,39 @@ class AudioScreen extends StatelessWidget {
     );
   }
 
-  tapOnsongTile(BuildContext context, PlayAudioState state, int ind) {
-    if (state.currentAlbumId != state.currentPlaylistAlbumId) {
+  tapOnsongTile(
+    BuildContext context,
+    PlayAudioState state,
+    int ind,
+  ) async {
+    // bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    bool? isUserLoggedIn = sharedPreferences.getBool(IS_USER_LOGGED_IN);
+
+    if (isUserLoggedIn != null && isUserLoggedIn == true) {
+      if (state.currentAlbumId != state.currentPlaylistAlbumId) {
+        context
+            .read<PlayAudioBloc>()
+            .add(LoadCurrentPlaylistEvent(initialIndex: ind));
+        context.read<PlayAudioBloc>().add(ChangeCurrentPlaylistAlbumId());
+      } else {
+        context.read<PlayAudioBloc>().add(PlaySinglesongEvent(index: ind));
+      }
+
+      context.read<PlayAudioBloc>().add(const PlayOrPauseSongEvent(play: true));
       context
-          .read<PlayAudioBloc>()
-          .add(LoadCurrentPlaylistEvent(initialIndex: ind));
-      context.read<PlayAudioBloc>().add(ChangeCurrentPlaylistAlbumId());
+          .read<HomeBloc>()
+          .add(const ChangeOnPlayAudioSreenOrNot(onPlayAudioScreen: true));
+      context.read<PlayAudioBloc>().add(
+            const ChangeShowBottomMusicController(
+                changeShowBottomMusicController: true),
+          );
+      Navigator.pushNamed(context, PlayAudioScreen.routeName);
+
+      context.read<PlayAudioBloc>().add(const SaveCurrentAlbumToLocalStorage());
+      context.read<PlayAudioBloc>().add(SavePlayingTracksEvent());
     } else {
-      context.read<PlayAudioBloc>().add(PlaySinglesongEvent(index: ind));
+      Navigator.pushNamed(context, AuthScreen.routeName);
     }
-
-    context.read<PlayAudioBloc>().add(const PlayOrPauseSongEvent(play: true));
-    context
-        .read<HomeBloc>()
-        .add(const ChangeOnPlayAudioSreenOrNot(onPlayAudioScreen: true));
-    context.read<PlayAudioBloc>().add(
-          const ChangeShowBottomMusicController(
-              changeShowBottomMusicController: true),
-        );
-    Navigator.pushNamed(context, PlayAudioScreen.routeName);
-
-    context.read<PlayAudioBloc>().add(const SaveCurrentAlbumToLocalStorage());
-    context.read<PlayAudioBloc>().add(SavePlayingTracksEvent());
   }
 }

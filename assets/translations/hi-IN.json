@@ -12,5 +12,15 @@
     "add":"जोड़ें",
     "cancel":"रद्द करें",
     "aboutUs":"हमारे बारे में",
-    "contactUs":"संपर्क करें"
+    "contactUs":"संपर्क करें",
+    "myLibrary":"मेरा पुस्तकालय",
+    "sightseen":"दर्शनीय",
+    "allBooks":"सभी पुस्तकें",
+    "setAs":"सेट करें",
+    "homeScreen":"होम स्क्रीन",
+    "lockScreen":"लॉक स्क्रीन",
+    "homeAndLockScreen":"होम और लॉक स्क्रीन",
+    "albums":"एलबम",
+    "playAll":"सभी चलाए",
+    "filterByArtist":"कलाकार द्वारा फ़िल्टर करें"
 } 
