@@ -7,6 +7,8 @@ class HomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class HomeEventInitial extends HomeEvent {}
+
 class ChangeOnPlayAudioSreenOrNot extends HomeEvent {
   final bool onPlayAudioScreen;
 

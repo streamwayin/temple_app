@@ -1,12 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
+import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
 import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
+import 'package:temple_app/services/notification_service.dart';
+import 'package:temple_app/widgets/update_app_dialog.dart';
+import 'package:temple_app/widgets/update_opacity_component.dart';
 import '../../../widgets/common_background_component.dart';
 import '../../about-us/screens/about_us_bottom_nav_bar.dart';
 import '../../contact-us/screens/contact_us_screen.dart';
@@ -22,6 +29,47 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   bool isControlBarExpanded = false;
+  NotificationService notificationService = NotificationService();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+  @override
+  void initState() {
+    _requestPermissions();
+    notificationService.initiliseNotifications();
+    super.initState();
+  }
+
+  Future<void> _requestPermissions() async {
+    if (Platform.isIOS || Platform.isMacOS) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              MacOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+    } else if (Platform.isAndroid) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+
+      final bool? grantedNotificationPermission =
+          await androidImplementation?.requestNotificationsPermission();
+      // setState(() {
+      //   _notificationsEnabled = grantedNotificationPermission ?? false;
+      // });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<Map<String, dynamic>> homeComponentList = [
@@ -75,55 +123,86 @@ class _HomeScreenState extends State<HomeScreen> {
         }
       },
       {
-        "name": "Sightseen",
+        "name": "sightseen",
         "imagePath": "assets/images/operator.png",
         "onTap": () {
           Navigator.pushNamed(context, SigntseenScreen.routeName);
         }
       },
     ];
-    return Scaffold(
-      body: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: Stack(
-          children: [
-            const CommonBackgroundComponent(),
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: GridView.builder(
-                itemCount: homeComponentList.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisExtent: 100.h,
-                  mainAxisSpacing: 10,
-                  crossAxisSpacing: 10,
-                  crossAxisCount: 3,
-                ),
-                itemBuilder: (context, index) {
-                  Map<String, dynamic> category = homeComponentList[index];
-                  return HomeCategoryComponent(
-                    imagePath: category["imagePath"]!,
-                    name: category["name"]!,
-                    // routeName: category['routeName']!,
-                    onTap: category["onTap"],
-                  );
-                },
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return WillPopScope(
+          onWillPop: () async {
+            exit(0);
+          },
+          child: Scaffold(
+            body: SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: Stack(
+                children: [
+                  const CommonBackgroundComponent(),
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: GridView.builder(
+                      itemCount: homeComponentList.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        mainAxisExtent: 100.h,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        crossAxisCount: 3,
+                      ),
+                      itemBuilder: (context, index) {
+                        Map<String, dynamic> category =
+                            homeComponentList[index];
+                        return HomeCategoryComponent(
+                          imagePath: category["imagePath"]!,
+                          name: category["name"]!,
+                          // routeName: category['routeName']!,
+                          onTap: category["onTap"],
+                        );
+                      },
+                    ),
+                  ),
+
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     print('object');
+                  //     final db = FirebaseFirestore.instance;
+                  //     db.settings = const Settings(
+                  //       persistenceEnabled: true,
+                  //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+                  //     );
+                  //   },
+                  //   child: const Text("enable presistance"),
+                  // ),
+                  // Positioned(
+                  //   bottom: 10,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       notificationService.sendNotification("hello", "hi");
+                  //     },
+                  //     child: const Text("send notification"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       notificationService.showBigPictureNotification();
+                  //     },
+                  //     child: const Text("send notification"),
+                  //   ),
+                  // ),
+                  state.updateMandatory ? UpdateOpacityComponent() : SizedBox(),
+                  state.updateMandatory ? UpdateAppDialog() : SizedBox(),
+                ],
               ),
             ),
-            // ElevatedButton(
-            //   onPressed: () {
-            //     print('object');
-            //     final db = FirebaseFirestore.instance;
-            //     db.settings = const Settings(
-            //       persistenceEnabled: true,
-            //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-            //     );
-            //   },
-            //   child: const Text("enable presistance"),
-            // ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }

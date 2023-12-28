@@ -52,7 +52,7 @@ dependencies:
   cached_network_image: ^3.3.0
   just_audio_background: ^0.0.1-beta.10
   http: ^1.1.0
-  permission_handler: ^11.0.0
+  permission_handler: ^11.0.1
   flutter_downloader: ^1.11.3
   shared_preferences: ^2.2.1
   loading_animation_widget: ^1.2.0+4
@@ -70,6 +70,10 @@ dependencies:
   maps_launcher: ^2.2.0
   persistent_bottom_nav_bar_v2: ^4.2.8
   syncfusion_flutter_pdfviewer:
+  flutter_local_notifications: ^16.2.0
+  package_info_plus: ^4.2.0
+  firebase_messaging:
+    ^14.7.9
 
     # path: packages/flutter-widgets/packages/syncfusion_flutter_pdfviewer
 

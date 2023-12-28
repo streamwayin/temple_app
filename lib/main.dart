@@ -1,9 +1,15 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:temple_app/features/about-us/bloc/about_us_bloc.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
@@ -18,13 +24,21 @@ import 'package:temple_app/firebase_options.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
 import 'package:temple_app/router.dart';
+import 'package:temple_app/services/firebase_notification_service.dart';
 import 'package:temple_app/widgets/custom_stack_with_bottom_player.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+@pragma('vm:entry-point')
+Future<void> _firebaseMessengingBackgroundHandler(
+    RemoteMessage remoteMessage) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseNotificatonService().initNotification();
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessengingBackgroundHandler);
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
     androidNotificationChannelName: 'Audio playback',
@@ -80,7 +94,8 @@ class MyApp extends StatelessWidget {
               BlocProvider(create: (context) => EpubViewerBloc()),
               BlocProvider(create: (context) => SplashBloc()),
               BlocProvider(create: (context) => SearchBookBloc()),
-              BlocProvider(create: (context) => HomeBloc()),
+              BlocProvider(
+                  create: (context) => HomeBloc()..add(HomeEventInitial())),
               BlocProvider(
                   create: (context) =>
                       AboutUsBloc()..add(AboutUsInitialEvent())),

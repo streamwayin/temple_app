@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:temple_app/features/about-us/screens/about_us_bottom_nav_bar.dart';
 import 'package:temple_app/features/about-us/screens/about_us_screen.dart';
@@ -11,6 +12,7 @@ import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
 import 'package:temple_app/features/ebook/pdf_view/pdf_view_screen.dart';
 import 'package:temple_app/features/ebook/search/screens/search_book_screen.dart';
 import 'package:temple_app/features/home/screens/home_screen.dart';
+import 'package:temple_app/features/notification/screens/notification_screen.dart';
 import 'package:temple_app/features/onboarding/screens/onboarding_screen1.dart';
 import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
 import 'package:temple_app/features/sightseen/screens/sightseen_screen.dart';
@@ -115,11 +117,17 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => SingleSightseenScreen(index: index),
       );
+    case NotificationSereen.routeName:
+      var remoteMessage = routeSettings.arguments as RemoteMessage;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => NotificationSereen(remoteMessage: remoteMessage),
+      );
 
     default:
       return MaterialPageRoute(
           builder: (_) => const Center(
-                child: Text('4o4 page not found'),
+                child: Text(''),
               ));
   }
 }
