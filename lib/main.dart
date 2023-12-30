@@ -1,15 +1,13 @@
 import 'dart:async';
-import 'dart:io';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:temple_app/features/about-us/bloc/about_us_bloc.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
@@ -20,6 +18,8 @@ import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/onboarding/bloc/splash_bloc.dart';
 import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
 import 'package:temple_app/features/sightseen/bloc/sightseen_bloc.dart';
+import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.dart';
+import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/firebase_options.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
@@ -61,6 +61,9 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
+  static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
+  static FirebaseAnalyticsObserver observer =
+      FirebaseAnalyticsObserver(analytics: analytics);
 
   @override
   Widget build(BuildContext context) {
@@ -103,10 +106,15 @@ class MyApp extends StatelessWidget {
                 create: (context) =>
                     SightseenBloc()..add(SightseenEventInitial()),
               ),
+              BlocProvider(
+                  create: (context) =>
+                      WallpaperBloc()..add(WallpaperInitialEvent())),
+              BlocProvider(create: (context) => ImageBloc()),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
               navigatorKey: navigatorKey,
+              navigatorObservers: <NavigatorObserver>[observer],
               theme: ThemeData(
                 colorScheme:
                     ColorScheme.fromSeed(seedColor: Colors.yellowAccent),

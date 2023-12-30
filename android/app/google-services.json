@@ -12,7 +12,12 @@
           "package_name": "in.streamway.temple_app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "147635598668-rpgfnsto25bvb8ao8oiqkquhficlp0fn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBOZH5ZmfK9W66b7Bk091scEhydUqMdbeM"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "147635598668-rpgfnsto25bvb8ao8oiqkquhficlp0fn.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "147635598668-46nvs10s8j8s9t6j9g5jjh6tquf5l33v.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "in.streamway.templeApp"
+              }
+            }
+          ]
         }
       }
     }

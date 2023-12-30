@@ -39,12 +39,14 @@ class EbookScreen extends StatelessWidget {
           // navigate user based on is logged in or not
           bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
           if (isUserLoggedIn != null && isUserLoggedIn == true) {
-            context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
-                path: state.pathString!, book: state.selectedBook!));
-            state.selectedBook!.fileType == "ebook"
-                ? Navigator.pushNamed(context, EpubViwerScreen.routeName)
-                : Navigator.pushNamed(context, PdfScreenScreen.routeName,
-                    arguments: state.selectedBook);
+            if (state.selectedBook!.fileType == "ebook") {
+              context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
+                  path: state.pathString!, book: state.selectedBook!));
+              Navigator.pushNamed(context, EpubViwerScreen.routeName);
+            } else {
+              Navigator.pushNamed(context, PdfScreenScreen.routeName,
+                  arguments: state.selectedBook);
+            }
           } else {
             Navigator.pushNamed(context, AuthScreen.routeName);
           }

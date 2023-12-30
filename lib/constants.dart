@@ -13,15 +13,15 @@ String PLAYLIST_CURRENT_SONG_DURATION = "playlist_curent_song_duration";
 String SHOW_BOTTOM_MUSIC_CONTROLLER = "show_bottom_music_controller";
 
 List<String> wallpaperImagesList = [
-  'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/hanuman-with-lord-ram-and-sita-hanuman-lord-ram-sita-bhakti-thumbnail.jpg?alt=media&token=9154a6f0-d6bc-4ece-9e89-37d4c6ee4982',
-  'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/hanuman-bhakti-bajrangi-god-gods-hanuman-jee-jay-shree-ram-lord-pray-ram-thumbnail.jpg?alt=media&token=848120e1-cc50-4bee-b041-afb7398c0faf',
-  'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/dhyan-me-lin-vishnu-bhagwan-vishnu-bhagwan-bhakti-thumbnail.jpg?alt=media&token=6159fb68-ca9b-4fa7-96d8-966c059bf3ad',
-  'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/bhakti-lord-shiva-lord-shiva-mahadev-devotional-thumbnail.jpg?alt=media&token=4425dfec-e52d-4a9a-ab81-580eaae41b74',
-  'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/baba-bholenath-with-cow-baba-bholenath-bhakti-thumbnail.jpg?alt=media&token=88eb4b99-365e-41fe-b89a-3d20a16b7df0',
-  'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/jay-shri-ram-golden-art-work-lord-god-bhakti-thumbnail.jpg?alt=media&token=47109b88-401f-4317-85c3-1fc498254ee8',
-  'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/lord-krishna-statue-lord-krishna-hindu-bhakti-devotional-god-thumbnail.jpg?alt=media&token=d91e0d72-c9a2-49ed-8991-31bf794b8e9a',
-  'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/lord-shiva-mahakal-bhakti-thumbnail.jpg?alt=media&token=cb6d0a5a-b301-49de-b4ff-083d1d4741fd',
-  'https://firebasestorage.googleapis.com/v0/b/temple-app-b30a8.appspot.com/o/shree-ram-lord-rama-face-god-bhakti-thumbnail.jpg?alt=media&token=577e9817-772f-4dd1-b1f5-ebc710ed10bf'
+  'https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/baba-bholenath-with-cow-baba-bholenath-bhakti-thumbnail%20(1).jpg?alt=media&token=f3634454-616a-48ba-a499-f306300d8c3b',
+  "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/bhakti-lord-shiva-lord-shiva-mahadev-devotional-thumbnail%20(1).jpg?alt=media&token=c6df687b-ec09-4d24-9020-e7d973262c00",
+  "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/dhyan-me-lin-vishnu-bhagwan-vishnu-bhagwan-bhakti-thumbnail%20(1).jpg?alt=media&token=d2915c99-18b6-48f0-8783-d839f4a4f51a",
+  "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/hanuman-bhakti-bajrangi-god-gods-hanuman-jee-jay-shree-ram-lord-pray-ram-thumbnail%20(1).jpg?alt=media&token=4a77db89-d649-4b35-9af1-675f02174eb9",
+  "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/hanuman-with-lord-ram-and-sita-hanuman-lord-ram-sita-bhakti-thumbnail%20(1).jpg?alt=media&token=605216fe-3c06-4f7a-be41-c169f5498c4e",
+  "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/jay-shri-ram-golden-art-work-lord-god-bhakti-thumbnail%20(1).jpg?alt=media&token=3a6beef0-203b-462f-bcf4-39752cd24198",
+  "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/lord-krishna-statue-lord-krishna-hindu-bhakti-devotional-god-thumbnail%20(1).jpg?alt=media&token=ff13a2b8-8f78-4de4-b019-72d8c9ae3aa7",
+  "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/lord-shiva-mahakal-bhakti-thumbnail%20(1).jpg?alt=media&token=55e2ccdb-b8bb-495d-8146-f92013342b39",
+  "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/shree-ram-lord-rama-face-god-bhakti-thumbnail%20(1).jpg?alt=media&token=0086f8b4-6585-47a0-9cf0-949bdac568c1",
 ];
 
 List<Map<String, dynamic>> album = [

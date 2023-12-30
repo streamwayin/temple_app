@@ -203,6 +203,43 @@ class AudioRepository {
     }
   }
 
+  Future<void> uploadImageAlbumToFirebase() async {
+    try {
+      final docRef =
+          FirebaseFirestore.instance.collection("image-albums").doc();
+      var finalMap = {
+        "albumId": docRef.id,
+        "title": "hari om",
+        "index": 2,
+        "thumbnail": ""
+      };
+      await docRef.set(finalMap);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> uploadImageToFirebase() async {
+    try {
+      int index = 1;
+      for (var a in wallpaperImagesList) {
+        final docRef = FirebaseFirestore.instance.collection("images").doc();
+        var finalMap = {
+          "imageId": docRef.id,
+          "title": "hari om",
+          "index": index,
+          "thumbnail": a,
+          "albumId": "qnfnv1BakN7HUUIWF54C"
+        };
+
+        await docRef.set(finalMap);
+        index++;
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
   Future<void> uploadAlbumDataToFirebase() async {
     List<Map<String, String>> albumlist = [
       {

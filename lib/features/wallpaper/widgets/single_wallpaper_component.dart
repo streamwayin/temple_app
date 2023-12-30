@@ -3,16 +3,18 @@ import 'dart:developer' as lgr;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/wallpaper/widgets/set_wallpaper_as_dialog.dart';
+import 'package:temple_app/modals/image_model.dart';
 import 'package:wallpaper/wallpaper.dart';
 
 class SingleWallpaperComponent extends StatefulWidget {
-  const SingleWallpaperComponent({
-    super.key,
-    required this.wallpaperUrl,
-  });
+  const SingleWallpaperComponent(
+      {super.key, required this.wallpaperUrl, required this.image});
   final String wallpaperUrl;
+  final ImageModel image;
 
   @override
   State<SingleWallpaperComponent> createState() =>
@@ -54,6 +56,9 @@ class _SingleWallpaperComponentState extends State<SingleWallpaperComponent> {
             child: InkWell(
               onTap: () {
                 lgr.log('started');
+                context
+                    .read<ImageBloc>()
+                    .add(LogImageSetAswallpaperEvent(image: widget.image));
                 dowloadImage(
                   context,
                   widget.wallpaperUrl,

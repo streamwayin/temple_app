@@ -6,6 +6,8 @@ import 'dart:developer';
 
 import 'dart:io';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -48,8 +50,12 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   }
   AudioRepository audioRepository = AudioRepository();
   late SharedPreferences sharedPreferences;
+  FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.instance;
   void _getPref() async {
     sharedPreferences = await SharedPreferences.getInstance();
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
+    firebaseAnalytics.setUserId(id: uid);
   }
 
   FutureOr<void> onPlayAudioEventInitial(
@@ -281,6 +287,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   FutureOr<void> onFetchSongsOfAlbum(
       FetchSongsOfAlbum event, Emitter<PlayAudioState> emit) async {
     emit(state.copyWith(tracksPageLoading: true));
+    firebaseAnalytics
+        .logEvent(name: "get_album", parameters: {"albumId": event.albumId});
     List<TrackModel>? tracks =
         await audioRepository.getTracksListFromDb(event.albumId);
     // List<TrackModel> shortedList = [];
@@ -301,7 +309,9 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   FutureOr<void> onPlaySinglesongEvent(
       PlaySinglesongEvent event, Emitter<PlayAudioState> emit) {
     audioRepository.playSingleSong(event.index);
-
+    String alumId = state.tracks![event.index].albumId;
+    firebaseAnalytics
+        .logEvent(name: "play_track", parameters: {"trackId": alumId});
     emit(state.copyWith(singleSongIndex: event.index));
   }
 

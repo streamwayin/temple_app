@@ -10,7 +10,7 @@ import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
-import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
+import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/services/notification_service.dart';
 import 'package:temple_app/widgets/update_app_dialog.dart';
 import 'package:temple_app/widgets/update_opacity_component.dart';
@@ -36,6 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     _requestPermissions();
     notificationService.initiliseNotifications();
+
     super.initState();
   }
 
@@ -62,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
           flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
               AndroidFlutterLocalNotificationsPlugin>();
 
-      final bool? grantedNotificationPermission =
-          await androidImplementation?.requestNotificationsPermission();
+      // final bool? grantedNotificationPermission =
+      await androidImplementation?.requestNotificationsPermission();
       // setState(() {
       //   _notificationsEnabled = grantedNotificationPermission ?? false;
       // });
@@ -76,9 +77,9 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         "name": "wallpaper",
         "imagePath": "assets/images/images.png",
-        "routeName": WallpaperScreen.routeName,
+        "routeName": ImageAlbumScreen.routeName,
         "onTap": () {
-          Navigator.pushNamed(context, WallpaperScreen.routeName);
+          Navigator.pushNamed(context, ImageAlbumScreen.routeName);
         }
       },
       {
@@ -193,6 +194,16 @@ class _HomeScreenState extends State<HomeScreen> {
                   //       notificationService.showBigPictureNotification();
                   //     },
                   //     child: const Text("send notification"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       AudioRepository audioRepository = AudioRepository();
+                  //       audioRepository.uploadImageToFirebase();
+                  //     },
+                  //     child: const Text("upload imges"),
                   //   ),
                   // ),
                   state.updateMandatory ? UpdateOpacityComponent() : SizedBox(),

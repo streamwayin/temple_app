@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rotation_check/rotation_check.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 

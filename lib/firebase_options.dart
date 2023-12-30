@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '147635598668',
     projectId: 'religiousapp-e15d2',
     storageBucket: 'religiousapp-e15d2.appspot.com',
+    iosClientId: '147635598668-46nvs10s8j8s9t6j9g5jjh6tquf5l33v.apps.googleusercontent.com',
     iosBundleId: 'in.streamway.templeApp',
   );
 }

@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -11,24 +13,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/constants.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 part 'ebook_event.dart';
 part 'ebook_state.dart';
 
 class EbookBloc extends Bloc<EbookEvent, EbookState> {
   final EpubRepository repository;
+  final firebaseAnalytics = FirebaseAnalytics.instance;
+  late SharedPreferences sharedPreferences;
   EbookBloc({required this.repository}) : super(const EbookState()) {
+    init();
     on<FetchEpubListEvent>(onFetchEpubListEvent);
     on<DownloadBookEvent>(onDownloadBookEvent);
+  }
+  void init() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    firebaseAnalytics.setAnalyticsCollectionEnabled(true);
+    firebaseAnalytics.setUserId(id: uid);
   }
 
   FutureOr<void> onDownloadBookEvent(
       DownloadBookEvent event, Emitter<EbookState> emit) async {
     emit(state.copyWith(loading: true));
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    EbookModel epubBook = event.book;
+    firebaseAnalytics.logEvent(
+        name: "book_read",
+        parameters: {"bookId": epubBook.id, "book_name": epubBook.title});
     try {
-      EbookModel epubBook = event.book;
       String? downloadedPath;
       var map = {...state.downloadEbookMap};
       if (map.containsKey(epubBook.id)) {
@@ -62,7 +74,9 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
 
       map[epubBook.id] = downloadedPath;
       var encodedData = jsonEncode(map);
-      prefs.setString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY, encodedData);
+      sharedPreferences.setString(
+          OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY, encodedData);
+
       emit(state.copyWith(
           downloadEbookMap: map,
           pathString: downloadedPath,

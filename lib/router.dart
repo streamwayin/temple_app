@@ -18,7 +18,8 @@ import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
 import 'package:temple_app/features/sightseen/screens/sightseen_screen.dart';
 import 'package:temple_app/features/sightseen/screens/single_sightseen_screen.dart';
 import 'package:temple_app/features/video/screens/video_screen.dart';
-import 'package:temple_app/features/wallpaper/screens/wallpaper_screen.dart';
+import 'package:temple_app/features/wallpaper/image/image_screen.dart';
+import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -38,10 +39,15 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const HomeScreen(),
       );
-    case WallpaperScreen.routeName:
+    case ImageAlbumScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const WallpaperScreen(),
+        builder: (_) => const ImageAlbumScreen(),
+      );
+    case ImageScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const ImageScreen(),
       );
     case AudioScreen.routeName:
       var index = routeSettings.arguments as int;
