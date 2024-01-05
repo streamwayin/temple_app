@@ -9,7 +9,8 @@ import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
-import 'package:temple_app/features/video/screens/video_screen.dart';
+import 'package:temple_app/features/video/video-list/screens/video_list_screen.dart';
+import 'package:temple_app/features/video/video-screen/video_screen.dart';
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/services/notification_service.dart';
 import 'package:temple_app/widgets/update_app_dialog.dart';
@@ -93,9 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
       {
         "name": "video",
         "imagePath": "assets/images/series.png",
-        "routeName": VideoScreen.routeName,
+        "routeName": VideoListScreen.routeName,
         "onTap": () {
-          Navigator.pushNamed(context, VideoScreen.routeName);
+          Navigator.pushNamed(context, VideoListScreen.routeName);
         }
       },
       {

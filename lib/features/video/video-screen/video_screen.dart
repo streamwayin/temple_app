@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rotation_check/rotation_check.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-import '../widgets/video_list.dart';
+import 'video_playlist.dart';
 
 // class VideoScreen extends StatelessWidget {
 //   const VideoScreen({super.key});
@@ -49,21 +50,30 @@ class MyHomePageState extends State<VideoScreen> {
   RotationCheck rotationCheck = RotationCheck();
   bool isRoationEnabled = false;
 
-  final List<String> _ids = [
-    'nPt8bK2gbaU',
-    'gQDByCdjUXw',
-    'iLnmTe5Q2Qw',
-    '_WoCV4c6XOE',
-    'KmzdUe0RSJo',
-    '6jZDSSZZxjQ',
-    'p2lYr3vM_1w',
-    '7QUtEmBT_-w',
-    '34_PXCzGw1M',
-  ];
+  // explode api
+  var yt = YoutubeExplode();
 
-  @override
-  void initState() {
-    super.initState();
+  List<String> _ids = [];
+  // final List<String> _ids = [
+  //   '7Pz2uFEBA8Q',
+  //   'gQDByCdjUXw',
+  //   'iLnmTe5Q2Qw',
+  //   '_WoCV4c6XOE',
+  //   'KmzdUe0RSJo',
+  //   '6jZDSSZZxjQ',
+  //   'p2lYr3vM_1w',
+  //   '7QUtEmBT_-w',
+  //   '34_PXCzGw1M',
+  // ];
+  initial() async {
+    // ytlist = yt.playlists.getVideos("PLosaC3gb0kGC1jJXceKOVZ29Rq0Mfj4wK");
+    await for (var video
+        in yt.playlists.getVideos("PLosaC3gb0kGC1jJXceKOVZ29Rq0Mfj4wK")) {
+      _ids.add(video.id.value);
+      setState(() {});
+      // var videoTitle = video.id;
+      // var videoAuthor = video.author;
+    }
     _controller = YoutubePlayerController(
       initialVideoId: _ids.first,
       flags: const YoutubePlayerFlags(
@@ -80,6 +90,12 @@ class MyHomePageState extends State<VideoScreen> {
     _seekToController = TextEditingController();
     _videoMetaData = const YoutubeMetaData();
     _playerState = PlayerState.unknown;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initial();
   }
 
   void rotationCheckk() async {
@@ -127,6 +143,7 @@ class MyHomePageState extends State<VideoScreen> {
                 [DeviceOrientation.portraitUp]);
       },
       player: YoutubePlayer(
+        aspectRatio: 9 / 16,
         controller: _controller,
         showVideoProgressIndicator: true,
         progressIndicatorColor: Colors.blueAccent,
@@ -175,7 +192,7 @@ class MyHomePageState extends State<VideoScreen> {
               onPressed: () => Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => VideoList(),
+                  builder: (context) => VideoList(controllers: _ids),
                 ),
               ),
             ),

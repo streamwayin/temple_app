@@ -17,7 +17,8 @@ import 'package:temple_app/features/onboarding/screens/onboarding_screen1.dart';
 import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
 import 'package:temple_app/features/sightseen/screens/sightseen_screen.dart';
 import 'package:temple_app/features/sightseen/screens/single_sightseen_screen.dart';
-import 'package:temple_app/features/video/screens/video_screen.dart';
+import 'package:temple_app/features/video/video-list/screens/video_list_screen.dart';
+import 'package:temple_app/features/video/video-screen/video_screen.dart';
 import 'package:temple_app/features/wallpaper/image/image_screen.dart';
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/modals/ebook_model.dart';
@@ -128,6 +129,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => NotificationSereen(remoteMessage: remoteMessage),
+      );
+    case VideoListScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => VideoListScreen(),
       );
 
     default:

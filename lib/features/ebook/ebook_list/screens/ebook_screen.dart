@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
 import 'package:temple_app/features/auth/screens/auth_screen.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
@@ -10,6 +11,7 @@ import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
 import 'package:temple_app/widgets/common_background_component.dart';
 import 'package:temple_app/widgets/utils.dart';
 
+import '../../../../constants.dart';
 import '../../pdf_view/pdf_view_screen.dart';
 import '../bloc/ebook_bloc.dart';
 import '../widget/ebook_app_bar.dart';
@@ -27,7 +29,7 @@ class EbookScreen extends StatelessWidget {
     ];
     EbookBloc ebookBloc = context.read<EbookBloc>();
     return BlocConsumer<EbookBloc, EbookState>(
-      listener: (BuildContext context, EbookState state) {
+      listener: (BuildContext context, EbookState state) async {
         if (state.pathString != null) {
           // context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
           //     path: state.pathString!, book: state.selectedBook!));
@@ -37,7 +39,11 @@ class EbookScreen extends StatelessWidget {
           //         arguments: state.selectedBook);
 
           // navigate user based on is logged in or not
-          bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
+          // bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
+          SharedPreferences sharedPreferences =
+              await SharedPreferences.getInstance();
+          bool? isUserLoggedIn = sharedPreferences.getBool(IS_USER_LOGGED_IN);
+
           if (isUserLoggedIn != null && isUserLoggedIn == true) {
             if (state.selectedBook!.fileType == "ebook") {
               context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(

@@ -3,12 +3,15 @@ import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 /// Creates list of video players
 class VideoList extends StatefulWidget {
+  const VideoList({super.key, required this.controllers});
+
   @override
   _VideoListState createState() => _VideoListState();
+  final List<String> controllers;
 }
 
 class _VideoListState extends State<VideoList> {
-  final List<YoutubePlayerController> _controllers = [
+  List<YoutubePlayerController> _controllers = [
     'gQDByCdjUXw',
     'iLnmTe5Q2Qw',
     '_WoCV4c6XOE',
@@ -27,6 +30,20 @@ class _VideoListState extends State<VideoList> {
         ),
       )
       .toList();
+  @override
+  void initState() {
+    _controllers = widget.controllers
+        .map<YoutubePlayerController>(
+          (videoId) => YoutubePlayerController(
+            initialVideoId: videoId,
+            flags: const YoutubePlayerFlags(
+              autoPlay: false,
+            ),
+          ),
+        )
+        .toList();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

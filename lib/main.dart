@@ -18,6 +18,7 @@ import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/onboarding/bloc/splash_bloc.dart';
 import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
 import 'package:temple_app/features/sightseen/bloc/sightseen_bloc.dart';
+import 'package:temple_app/features/video/video-list/bloc/video_list_bloc.dart';
 import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/firebase_options.dart';
@@ -110,6 +111,9 @@ class MyApp extends StatelessWidget {
                   create: (context) =>
                       WallpaperBloc()..add(WallpaperInitialEvent())),
               BlocProvider(create: (context) => ImageBloc()),
+              BlocProvider(
+                  create: (context) =>
+                      VideoListBloc()..add(VideoListInitialEvent())),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
