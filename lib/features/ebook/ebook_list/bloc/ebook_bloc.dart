@@ -23,7 +23,7 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
   late SharedPreferences sharedPreferences;
   EbookBloc({required this.repository}) : super(const EbookState()) {
     init();
-    on<FetchEpubListEvent>(onFetchEpubListEvent);
+    // on<FetchEpubListEvent>(onFetchEpubListEvent);
     on<DownloadBookEvent>(onDownloadBookEvent);
   }
   void init() async {
@@ -109,19 +109,19 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
     return map;
   }
 
-  FutureOr<void> onFetchEpubListEvent(
-      FetchEpubListEvent event, Emitter<EbookState> emit) async {
-    final list = await repository.getEpubListFromWeb();
-    Map<String, String> downloadedEbookMap = {};
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? offlineBooks =
-        prefs.getString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY);
-    if (offlineBooks != null) {
-      final decodedMap = json.decode(offlineBooks);
-      decodedMap.forEach((key, value) {
-        downloadedEbookMap[key] = value.toString();
-      });
-    }
-    emit(state.copyWith(booksList: list, downloadEbookMap: downloadedEbookMap));
-  }
+  // FutureOr<void> onFetchEpubListEvent(
+  //     FetchEpubListEvent event, Emitter<EbookState> emit) async {
+  //   final list = await repository.getEpubListFromWeb();
+  //   Map<String, String> downloadedEbookMap = {};
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? offlineBooks =
+  //       prefs.getString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY);
+  //   if (offlineBooks != null) {
+  //     final decodedMap = json.decode(offlineBooks);
+  //     decodedMap.forEach((key, value) {
+  //       downloadedEbookMap[key] = value.toString();
+  //     });
+  //   }
+  //   emit(state.copyWith(booksList: list, downloadEbookMap: downloadedEbookMap));
+  // }
 }

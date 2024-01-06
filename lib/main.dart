@@ -11,6 +11,7 @@ import 'package:just_audio_background/just_audio_background.dart';
 import 'package:temple_app/features/about-us/bloc/about_us_bloc.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
+import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/ebook/search/bloc/search_book_bloc.dart';
@@ -92,8 +93,7 @@ class MyApp extends StatelessWidget {
                     PlayAudioBloc()..add(PlayAudioEventInitial()),
               ),
               BlocProvider(
-                create: (context) => EbookBloc(repository: EpubRepository())
-                  ..add(FetchEpubListEvent()),
+                create: (context) => EbookBloc(repository: EpubRepository()),
               ),
               BlocProvider(create: (context) => EpubViewerBloc()),
               BlocProvider(create: (context) => SplashBloc()),
@@ -114,6 +114,7 @@ class MyApp extends StatelessWidget {
               BlocProvider(
                   create: (context) =>
                       VideoListBloc()..add(VideoListInitialEvent())),
+              BlocProvider(create: (context) => BottomBarBloc())
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,

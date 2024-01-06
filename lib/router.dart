@@ -22,6 +22,7 @@ import 'package:temple_app/features/video/video-screen/video_screen.dart';
 import 'package:temple_app/features/wallpaper/image/image_screen.dart';
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/modals/ebook_model.dart';
+import 'package:temple_app/features/bottom_bar/bottom_bar.dart';
 
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
   switch (routeSettings.name) {
@@ -134,6 +135,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => VideoListScreen(),
+      );
+    case BottomBar.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => BottomBar(),
       );
 
     default:

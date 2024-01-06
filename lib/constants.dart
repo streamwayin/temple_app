@@ -1,5 +1,9 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:flutter/material.dart';
+import 'package:temple_app/features/audio/screens/audio_screen.dart';
+import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
+
 String OFFLINE_DOWNLOADED_SONG_LIST_KEY = 'offline_downloaded_songs';
 String OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY = 'offline_downloaded_ebooks';
 String DOWNLOADED_TRACK_JSON = 'downloaded_track_json';
@@ -12,6 +16,19 @@ String PLAYLIST_CURRENT_SONG_INDEX = "playlist_curent_song_index";
 String PLAYLIST_CURRENT_SONG_DURATION = "playlist_curent_song_duration";
 String SHOW_BOTTOM_MUSIC_CONTROLLER = "show_bottom_music_controller";
 
+const Color scaffoldBackground = Color(0xfffff1e5);
+const Color indicatorColor = Color(0xffff8f33);
+
+const appBarGradient = LinearGradient(
+  begin: Alignment.bottomLeft,
+  end: Alignment.bottomRight,
+  colors: [
+    Color(0xffff963f),
+    Color(0xffff6316),
+  ],
+  // stops: [0.5, 1.0],
+);
+
 List<String> wallpaperImagesList = [
   'https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/baba-bholenath-with-cow-baba-bholenath-bhakti-thumbnail%20(1).jpg?alt=media&token=f3634454-616a-48ba-a499-f306300d8c3b',
   "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/bhakti-lord-shiva-lord-shiva-mahadev-devotional-thumbnail%20(1).jpg?alt=media&token=c6df687b-ec09-4d24-9020-e7d973262c00",
@@ -23,7 +40,38 @@ List<String> wallpaperImagesList = [
   "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/lord-shiva-mahakal-bhakti-thumbnail%20(1).jpg?alt=media&token=55e2ccdb-b8bb-495d-8146-f92013342b39",
   "https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/shree-ram-lord-rama-face-god-bhakti-thumbnail%20(1).jpg?alt=media&token=0086f8b4-6585-47a0-9cf0-949bdac568c1",
 ];
-
+const List<Map<String, String>> categoryImages = [
+  {
+    'title': 'यात्रा',
+    'image': 'assets/figma/yatra_logo.png',
+    "routeName": "",
+  },
+  {
+    'title': 'गुरु वाणी',
+    'image': 'assets/figma/guruvani_logo.png',
+    "routeName": AudioScreen.routeName,
+  },
+  {
+    'title': 'पुस्तकें',
+    'image': 'assets/figma/pustak_logo.png',
+    "routeName": EbookScreen.routeName,
+  },
+  {
+    'title': 'पंचांग',
+    'image': 'assets/figma/panchag_logo.png',
+    "routeName": "",
+  },
+  {
+    'title': 'कार्यक्रम ',
+    'image': 'assets/figma/karyakram_logo.png',
+    "routeName": "",
+  },
+  {
+    'title': 'कलेंडर',
+    'image': 'assets/figma/calander_logo.png',
+    "routeName": "",
+  },
+];
 List<Map<String, dynamic>> album = [
   {
     "name": "Shree ganesha",

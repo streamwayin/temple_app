@@ -1,13 +1,17 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
+import 'package:temple_app/features/home/screens/widgets/carousel_image.dart';
+import 'package:temple_app/features/home/screens/widgets/category_component.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
 import 'package:temple_app/features/video/video-list/screens/video_list_screen.dart';
 import 'package:temple_app/features/video/video-screen/video_screen.dart';
@@ -15,6 +19,7 @@ import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dar
 import 'package:temple_app/services/notification_service.dart';
 import 'package:temple_app/widgets/update_app_dialog.dart';
 import 'package:temple_app/widgets/update_opacity_component.dart';
+import '../../../constants.dart';
 import '../../../widgets/common_background_component.dart';
 import '../../about-us/screens/about_us_bottom_nav_bar.dart';
 import '../../contact-us/screens/contact_us_screen.dart';
@@ -74,6 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     List<Map<String, dynamic>> homeComponentList = [
       {
         "name": "wallpaper",
@@ -139,77 +145,178 @@ class _HomeScreenState extends State<HomeScreen> {
             exit(0);
           },
           child: Scaffold(
-            body: SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-              child: Stack(
-                children: [
-                  const CommonBackgroundComponent(),
-                  Padding(
-                    padding: const EdgeInsets.all(24.0),
-                    child: GridView.builder(
-                      itemCount: homeComponentList.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        mainAxisExtent: 100.h,
-                        mainAxisSpacing: 10,
-                        crossAxisSpacing: 10,
-                        crossAxisCount: 3,
-                      ),
-                      itemBuilder: (context, index) {
-                        Map<String, dynamic> category =
-                            homeComponentList[index];
-                        return HomeCategoryComponent(
-                          imagePath: category["imagePath"]!,
-                          name: category["name"]!,
-                          // routeName: category['routeName']!,
-                          onTap: category["onTap"],
-                        );
-                      },
+            backgroundColor: scaffoldBackground,
+            body: SingleChildScrollView(
+              child: SizedBox(
+                width: size.width.w,
+                height: size.height.h,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      bottom: 0,
+                      right: 0,
+                      left: 0,
+                      child: Image.asset("assets/figma/bottom_temple.png"),
                     ),
-                  ),
+                    Column(
+                      children: [
+                        CarouselImage(cauraselIndex: state.cauraselPageIndex),
+                        _gap(10),
+                        CatagoryComponent(),
+                        _gap(10),
+                        _booksSeeAllText(),
+                        // _gap(10),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 14.0),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 170.h,
+                                width: size.width,
+                                child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: state.booksList.length,
+                                  itemBuilder: (context, index) {
+                                    var item = state.booksList[index];
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          width: 1,
+                                          color: const Color.fromARGB(
+                                              255, 212, 212, 212),
+                                        ),
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      padding: const EdgeInsets.all(10),
+                                      margin: const EdgeInsets.all(10),
+                                      child: Center(
+                                        child: InkWell(
+                                          onTap: () {
+                                            // ebookBloc
+                                            //     .add(DownloadBookEvent(book: item));
+                                          },
+                                          child: SizedBox(
+                                            height: 160.h,
+                                            width: 80.w,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                SizedBox(
+                                                  height: 100.h,
+                                                  width: 80.w,
+                                                  child: CachedNetworkImage(
+                                                    imageUrl: item.thumbnailUrl,
+                                                    fit: BoxFit.cover,
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        const Center(
+                                                            child:
+                                                                CircularProgressIndicator()),
+                                                    errorWidget: (context, url,
+                                                            error) =>
+                                                        const Icon(Icons.error),
+                                                  ),
+                                                ),
+                                                Text(
+                                                  item.title,
+                                                  maxLines: 2,
+                                                  textAlign: TextAlign.center,
+                                                  style: const TextStyle(
+                                                    fontSize: 12,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24.0)
+                              .copyWith(top: 8),
+                          child: SizedBox(
+                            height: 400.h,
+                            child: GridView.builder(
+                              itemCount: homeComponentList.length,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                mainAxisExtent: 100.h,
+                                mainAxisSpacing: 10,
+                                crossAxisSpacing: 10,
+                                crossAxisCount: 3,
+                              ),
+                              itemBuilder: (context, index) {
+                                Map<String, dynamic> category =
+                                    homeComponentList[index];
+                                return HomeCategoryComponent(
+                                  imagePath: category["imagePath"]!,
+                                  name: category["name"]!,
+                                  // routeName: category['routeName']!,
+                                  onTap: category["onTap"],
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
 
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     print('object');
-                  //     final db = FirebaseFirestore.instance;
-                  //     db.settings = const Settings(
-                  //       persistenceEnabled: true,
-                  //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-                  //     );
-                  //   },
-                  //   child: const Text("enable presistance"),
-                  // ),
-                  // Positioned(
-                  //   bottom: 10,
-                  //   child: ElevatedButton(
-                  //     onPressed: () {
-                  //       notificationService.sendNotification("hello", "hi");
-                  //     },
-                  //     child: const Text("send notification"),
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   bottom: 50,
-                  //   child: ElevatedButton(
-                  //     onPressed: () {
-                  //       notificationService.showBigPictureNotification();
-                  //     },
-                  //     child: const Text("send notification"),
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   bottom: 50,
-                  //   child: ElevatedButton(
-                  //     onPressed: () {
-                  //       AudioRepository audioRepository = AudioRepository();
-                  //       audioRepository.uploadImageToFirebase();
-                  //     },
-                  //     child: const Text("upload imges"),
-                  //   ),
-                  // ),
-                  state.updateMandatory ? UpdateOpacityComponent() : SizedBox(),
-                  state.updateMandatory ? UpdateAppDialog() : SizedBox(),
-                ],
+                    // ElevatedButton(
+                    //   onPressed: () {
+                    //     print('object');
+                    //     final db = FirebaseFirestore.instance;
+                    //     db.settings = const Settings(
+                    //       persistenceEnabled: true,
+                    //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+                    //     );
+                    //   },
+                    //   child: const Text("enable presistance"),
+                    // ),
+                    // Positioned(
+                    //   bottom: 10,
+                    //   child: ElevatedButton(
+                    //     onPressed: () {
+                    //       notificationService.sendNotification("hello", "hi");
+                    //     },
+                    //     child: const Text("send notification"),
+                    //   ),
+                    // ),
+                    // Positioned(
+                    //   bottom: 50,
+                    //   child: ElevatedButton(
+                    //     onPressed: () {
+                    //       notificationService.showBigPictureNotification();
+                    //     },
+                    //     child: const Text("send notification"),
+                    //   ),
+                    // ),
+                    // Positioned(
+                    //   bottom: 50,
+                    //   child: ElevatedButton(
+                    //     onPressed: () {
+                    //       AudioRepository audioRepository = AudioRepository();
+                    //       audioRepository.uploadImageToFirebase();
+                    //     },
+                    //     child: const Text("upload imges"),
+                    //   ),
+                    // ),
+                    state.updateMandatory
+                        ? UpdateOpacityComponent()
+                        : SizedBox(),
+                    state.updateMandatory ? UpdateAppDialog() : SizedBox(),
+                  ],
+                ),
               ),
             ),
           ),
@@ -217,4 +324,34 @@ class _HomeScreenState extends State<HomeScreen> {
       },
     );
   }
+
+  Padding _booksSeeAllText() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Books",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          ),
+          Row(
+            children: [
+              Text(
+                "See all",
+                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 15,
+                color: Color(0xffc5bab1),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  SizedBox _gap(int height) => SizedBox(height: height.h);
 }

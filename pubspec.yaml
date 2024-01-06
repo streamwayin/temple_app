@@ -61,7 +61,7 @@ dependencies:
   dio: ^5.3.3
   epub_view:
     path: packages/epub_view-3.2.0
-  flutter_svg: ^2.0.7
+  flutter_svg: ^2.0.9
   intl: ^0.18.1
   flutter_localization: ^0.1.14
   easy_localization: ^3.0.3
@@ -74,7 +74,11 @@ dependencies:
   package_info_plus: ^4.2.0
   firebase_messaging: ^14.7.9
   firebase_analytics: ^10.7.4
-  youtube_explode_dart: ^2.0.2
+  youtube_explode_dart:
+    ^2.0.2
+  carousel_slider: ^4.2.1
+  smooth_page_indicator: ^1.1.0
+  dots_indicator: ^3.0.0
 
     # path: packages/flutter-widgets/packages/syncfusion_flutter_pdfviewer
 
@@ -121,6 +125,7 @@ flutter:
     - assets/ebooks/
     - assets/svg/
     - assets/translations/
+    - assets/figma/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

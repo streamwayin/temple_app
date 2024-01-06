@@ -7,7 +7,7 @@ class EbookEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class FetchEpubListEvent extends EbookEvent {}
+// class FetchEpubListEvent extends EbookEvent {}
 
 class DownloadBookEvent extends EbookEvent {
   // final int index;

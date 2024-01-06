@@ -14,3 +14,11 @@ class ChangeOnPlayAudioSreenOrNot extends HomeEvent {
 
   const ChangeOnPlayAudioSreenOrNot({required this.onPlayAudioScreen});
 }
+
+class CarouselPageIndexChanged extends HomeEvent {
+  final int newIndex;
+
+  CarouselPageIndexChanged({required this.newIndex});
+}
+
+class FetchEpubListEvent extends HomeEvent {}
