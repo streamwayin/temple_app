@@ -78,8 +78,8 @@ class AudioRepository {
   void playSingleSong(int index) async {
     await _player.seek(Duration.zero, index: index);
   }
-  // get all albums from web
 
+  // get all albums from web
   Future<List<AlbumModel>?> getAlbumListFromDb() async {
     try {
       List<AlbumModel> albumModel = [];

@@ -3,6 +3,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:temple_app/constants.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/widgets/utils.dart';
 
@@ -23,16 +24,10 @@ class AlbumScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('albums').tr(),
-              ],
-            ),
-          ),
+          appBar: _buildAppBar(),
           body: Stack(
             children: [
+              _templeBackground(),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 2),
                 child: Padding(
@@ -56,21 +51,21 @@ class AlbumScreen extends StatelessWidget {
                         dropdownMenuEntries: getMenuItems(state, context),
                       ),
                       Expanded(
-                        child: ReorderableListView.builder(
+                        child: ListView.builder(
                           itemCount: state.albums.length,
-                          onReorder: (oldIndex, newIndex) {
-                            context.read<PlayAudioBloc>().add(AlbumIndexChanged(
-                                newIndex: newIndex, oldIndex: oldIndex));
-                          },
                           itemBuilder: (context, index) {
                             var album = state.albums[index];
                             return GestureDetector(
                               key: Key('$index'),
                               onTap: () {
                                 print(state.albums[index].albumId);
-                                Navigator.pushNamed(
-                                    context, AudioScreen.routeName,
-                                    arguments: index);
+                                // Navigator.pushNamed(
+                                //     context, AudioScreen.routeName,
+                                //     arguments: index);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AudioScreen()));
                                 context.read<PlayAudioBloc>().add(
                                     UpdateSelectedAlbumIndex(index: index));
                                 context.read<PlayAudioBloc>().add(
@@ -165,5 +160,51 @@ class AlbumScreen extends StatelessWidget {
       list.add(DropdownMenuEntry(value: a.index, label: a.name));
     }
     return list;
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: BackButton(color: Colors.white),
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: appBarGradient,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
+        ),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 55.h,
+            child: Image.asset(
+              "assets/figma/shree_bada_ramdwara.png",
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            // height: 42,
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Badge(
+              child: const Icon(Icons.notifications_sharp,
+                  color: Colors.black, size: 35),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Positioned _templeBackground() {
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      left: 0,
+      child: Image.asset("assets/figma/bottom_temple.png"),
+    );
   }
 }

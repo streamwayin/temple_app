@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 
@@ -42,19 +43,19 @@ List<String> wallpaperImagesList = [
 ];
 const List<Map<String, String>> categoryImages = [
   {
-    'title': 'यात्रा',
-    'image': 'assets/figma/yatra_logo.png',
-    "routeName": "",
-  },
-  {
     'title': 'गुरु वाणी',
     'image': 'assets/figma/guruvani_logo.png',
-    "routeName": AudioScreen.routeName,
+    "routeName": AlbumScreen.routeName,
   },
   {
     'title': 'पुस्तकें',
     'image': 'assets/figma/pustak_logo.png',
     "routeName": EbookScreen.routeName,
+  },
+  {
+    'title': 'यात्रा',
+    'image': 'assets/figma/yatra_logo.png',
+    "routeName": "",
   },
   {
     'title': 'पंचांग',

@@ -16,85 +16,84 @@ import '../bloc/play_audio_bloc.dart';
 
 //AudioScreen
 class AudioScreen extends StatelessWidget {
-  const AudioScreen({super.key, required this.albumIndex});
-  final int albumIndex;
+  const AudioScreen({
+    super.key,
+  });
+  // final int albumIndex;
   static const String routeName = '/album-screen';
   @override
   Widget build(BuildContext context) {
     Locale currentLocale = Localizations.localeOf(context);
     Size size = MediaQuery.of(context).size;
-    onReorder(oldIndex, newIndex) {
-      context.read<PlayAudioBloc>().add(SongIndexChanged(
-          newIndex: newIndex, oldIndex: oldIndex, albumIndex: albumIndex));
-    }
+    // onReorder(oldIndex, newIndex) {
+    //   context.read<PlayAudioBloc>().add(SongIndexChanged(
+    //       newIndex: newIndex, oldIndex: oldIndex, albumIndex: albumIndex));
+    // }
 
     bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
     return Scaffold(
+      appBar: _buildAppBar(),
       body: SafeArea(
         child: BlocBuilder<PlayAudioBloc, PlayAudioState>(
           builder: (context, state) {
             List<TrackModel>? songList = state.tracks;
             return Stack(
               children: [
+                _templeBackground(),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0)
-                      .copyWith(top: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        children: [
-                          InkWell(
-                            onTap: () {
-                              Navigator.pop(context);
-                            },
-                            child: const Icon(Icons.arrow_back),
-                          ),
-                          SizedBox(width: 10.w),
-                          SizedBox(
-                            width: size.width - 150.w,
-                            child: Text(
-                              state.albums[albumIndex].name,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontSize: 24, fontWeight: FontWeight.w500),
-                            ),
-                          ),
-                          const Spacer(),
-                          InkWell(
-                            onTap: () {
-                              if (isUserLoggedIn != null &&
-                                  isUserLoggedIn == true) {
-                                context.read<PlayAudioBloc>().add(
-                                    const PlayOrPauseSongEvent(play: true));
-                                Navigator.pushNamed(
-                                    context, PlayAudioScreen.routeName);
-                              } else {
-                                Navigator.pushNamed(
-                                    context, AuthScreen.routeName);
-                              }
-                            },
-                            child: Container(
-                              alignment: Alignment.center,
-                              height: 25.h,
-                              width: 70.w,
-                              decoration: BoxDecoration(
-                                  border: Border.all(),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: const Text("playAll").tr(),
-                            ),
-                          )
-                        ],
-                      ),
+                      // Row(
+                      //   children: [
+                      //     SizedBox(width: 10.w),
+                      //     SizedBox(
+                      //       width: size.width - 150.w,
+                      //       child: Text(
+                      //         '',
+                      //         // state.c
+                      //         overflow: TextOverflow.ellipsis,
+                      //         style: const TextStyle(
+                      //             fontSize: 24, fontWeight: FontWeight.w500),
+                      //       ),
+                      //     ),
+                      //     const Spacer(),
+                      //     InkWell(
+                      //       onTap: () {
+                      //         if (isUserLoggedIn != null &&
+                      //             isUserLoggedIn == true) {
+                      //           context.read<PlayAudioBloc>().add(
+                      //               const PlayOrPauseSongEvent(play: true));
+                      //           Navigator.pushNamed(
+                      //               context, PlayAudioScreen.routeName);
+                      //         } else {
+                      //           Navigator.pushNamed(
+                      //               context, AuthScreen.routeName);
+                      //         }
+                      //       },
+                      //       child: Container(
+                      //         alignment: Alignment.center,
+                      //         height: 25.h,
+                      //         width: 70.w,
+                      //         decoration: BoxDecoration(
+                      //             border: Border.all(),
+                      //             borderRadius: BorderRadius.circular(10)),
+                      //         child: const Text("playAll").tr(),
+                      //       ),
+                      //     )
+                      //   ],
+                      // ),
                       SizedBox(
-                        height: size.height * .89,
+                        // height: size.height * .84,
+                        height: 568.h,
                         child: songList == null
                             ? (state.tracksPageLoading == true)
                                 ? const SizedBox()
                                 : const Center(
                                     child: Text("Unable to fetch data"),
                                   )
-                            : ReorderableListView.builder(
+                            : ListView.builder(
                                 itemBuilder: (context, ind) {
                                   TrackModel song = songList[ind];
                                   return Padding(
@@ -175,7 +174,6 @@ class AudioScreen extends StatelessWidget {
                                   );
                                 },
                                 itemCount: songList.length,
-                                onReorder: onReorder,
                               ),
                       )
                     ],
@@ -219,12 +217,60 @@ class AudioScreen extends StatelessWidget {
             const ChangeShowBottomMusicController(
                 changeShowBottomMusicController: true),
           );
-      Navigator.pushNamed(context, PlayAudioScreen.routeName);
+      // Navigator.pushNamed(context, PlayAudioScreen.routeName);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => PlayAudioScreen()));
 
       context.read<PlayAudioBloc>().add(const SaveCurrentAlbumToLocalStorage());
       context.read<PlayAudioBloc>().add(SavePlayingTracksEvent());
     } else {
       Navigator.pushNamed(context, AuthScreen.routeName);
     }
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: BackButton(color: Colors.white),
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: appBarGradient,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
+        ),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 55.h,
+            child: Image.asset(
+              "assets/figma/shree_bada_ramdwara.png",
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            // height: 42,
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Badge(
+              child: const Icon(Icons.notifications_sharp,
+                  color: Colors.black, size: 35),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Positioned _templeBackground() {
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      left: 0,
+      child: Image.asset("assets/figma/bottom_temple.png"),
+    );
   }
 }

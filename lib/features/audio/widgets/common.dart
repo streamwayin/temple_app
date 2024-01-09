@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../bloc/play_audio_bloc.dart';
 
@@ -36,19 +37,47 @@ class SeekBarState extends State<SeekBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        SliderTheme(
-          data: _sliderThemeData.copyWith(
-            thumbShape: HiddenThumbComponentShape(),
-            activeTrackColor: Colors.blue.shade100,
-            inactiveTrackColor: Colors.grey.shade300,
+    return SizedBox(
+      height: 60.h,
+      child: Stack(
+        children: [
+          SliderTheme(
+            data: _sliderThemeData.copyWith(
+              thumbShape: HiddenThumbComponentShape(),
+              activeTrackColor: Colors.blue.shade100,
+              inactiveTrackColor: Colors.grey.shade300,
+            ),
+            child: ExcludeSemantics(
+              child: Slider(
+                min: 0.0,
+                max: widget.duration.inMilliseconds.toDouble(),
+                value: min(widget.bufferedPosition.inMilliseconds.toDouble(),
+                    widget.duration.inMilliseconds.toDouble()),
+                onChanged: (value) {
+                  setState(() {
+                    _dragValue = value;
+                  });
+                  context.read<PlayAudioBloc>().add(SetSeekDurationEvent(
+                      duration: Duration(milliseconds: value.round())));
+                },
+                onChangeEnd: (value) {
+                  context.read<PlayAudioBloc>().add(SetSeekDurationEvent(
+                      duration: Duration(milliseconds: value.round())));
+                  _dragValue = null;
+                },
+              ),
+            ),
           ),
-          child: ExcludeSemantics(
+          SliderTheme(
+            data: _sliderThemeData.copyWith(
+              inactiveTrackColor: Colors.transparent,
+            ),
             child: Slider(
+              activeColor: const Color.fromARGB(183, 244, 67, 54),
               min: 0.0,
               max: widget.duration.inMilliseconds.toDouble(),
-              value: min(widget.bufferedPosition.inMilliseconds.toDouble(),
+              value: min(
+                  _dragValue ?? widget.position.inMilliseconds.toDouble(),
                   widget.duration.inMilliseconds.toDouble()),
               onChanged: (value) {
                 setState(() {
@@ -64,42 +93,29 @@ class SeekBarState extends State<SeekBar> {
               },
             ),
           ),
-        ),
-        SliderTheme(
-          data: _sliderThemeData.copyWith(
-            inactiveTrackColor: Colors.transparent,
+          Positioned(
+            right: 25.0,
+            bottom: 0.0,
+            child: Text(
+                RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
+                        .firstMatch("$_remaining")
+                        ?.group(1) ??
+                    '$_remaining',
+                style: Theme.of(context).textTheme.bodySmall),
           ),
-          child: Slider(
-            activeColor: const Color.fromARGB(183, 244, 67, 54),
-            min: 0.0,
-            max: widget.duration.inMilliseconds.toDouble(),
-            value: min(_dragValue ?? widget.position.inMilliseconds.toDouble(),
-                widget.duration.inMilliseconds.toDouble()),
-            onChanged: (value) {
-              setState(() {
-                _dragValue = value;
-              });
-              context.read<PlayAudioBloc>().add(SetSeekDurationEvent(
-                  duration: Duration(milliseconds: value.round())));
-            },
-            onChangeEnd: (value) {
-              context.read<PlayAudioBloc>().add(SetSeekDurationEvent(
-                  duration: Duration(milliseconds: value.round())));
-              _dragValue = null;
-            },
-          ),
-        ),
-        Positioned(
-          right: 16.0,
-          bottom: 0.0,
-          child: Text(
+          Positioned(
+            left: 25.0,
+            bottom: 0.0,
+            child: Text(
               RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
-                      .firstMatch("$_remaining")
+                      .firstMatch("${widget.position}")
                       ?.group(1) ??
-                  '$_remaining',
-              style: Theme.of(context).textTheme.bodySmall),
-        ),
-      ],
+                  '${widget.position}',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

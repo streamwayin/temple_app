@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
@@ -14,13 +13,11 @@ import 'package:temple_app/features/home/screens/widgets/carousel_image.dart';
 import 'package:temple_app/features/home/screens/widgets/category_component.dart';
 import 'package:temple_app/features/home/screens/widgets/home_category_component.dart';
 import 'package:temple_app/features/video/video-list/screens/video_list_screen.dart';
-import 'package:temple_app/features/video/video-screen/video_screen.dart';
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/services/notification_service.dart';
 import 'package:temple_app/widgets/update_app_dialog.dart';
 import 'package:temple_app/widgets/update_opacity_component.dart';
 import '../../../constants.dart';
-import '../../../widgets/common_background_component.dart';
 import '../../about-us/screens/about_us_bottom_nav_bar.dart';
 import '../../contact-us/screens/contact_us_screen.dart';
 import '../../sightseen/screens/sightseen_screen.dart';
@@ -145,6 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
             exit(0);
           },
           child: Scaffold(
+            appBar: _buildAppBar(),
             backgroundColor: scaffoldBackground,
             body: SingleChildScrollView(
               child: SizedBox(
@@ -152,12 +150,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 height: size.height.h,
                 child: Stack(
                   children: [
-                    Positioned(
-                      bottom: 0,
-                      right: 0,
-                      left: 0,
-                      child: Image.asset("assets/figma/bottom_temple.png"),
-                    ),
+                    _templeBackground(),
                     Column(
                       children: [
                         CarouselImage(cauraselIndex: state.cauraselPageIndex),
@@ -165,110 +158,34 @@ class _HomeScreenState extends State<HomeScreen> {
                         CatagoryComponent(),
                         _gap(10),
                         _booksSeeAllText(),
-                        // _gap(10),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 14.0),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 170.h,
-                                width: size.width,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: state.booksList.length,
-                                  itemBuilder: (context, index) {
-                                    var item = state.booksList[index];
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          width: 1,
-                                          color: const Color.fromARGB(
-                                              255, 212, 212, 212),
-                                        ),
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      padding: const EdgeInsets.all(10),
-                                      margin: const EdgeInsets.all(10),
-                                      child: Center(
-                                        child: InkWell(
-                                          onTap: () {
-                                            // ebookBloc
-                                            //     .add(DownloadBookEvent(book: item));
-                                          },
-                                          child: SizedBox(
-                                            height: 160.h,
-                                            width: 80.w,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                SizedBox(
-                                                  height: 100.h,
-                                                  width: 80.w,
-                                                  child: CachedNetworkImage(
-                                                    imageUrl: item.thumbnailUrl,
-                                                    fit: BoxFit.cover,
-                                                    placeholder: (context,
-                                                            url) =>
-                                                        const Center(
-                                                            child:
-                                                                CircularProgressIndicator()),
-                                                    errorWidget: (context, url,
-                                                            error) =>
-                                                        const Icon(Icons.error),
-                                                  ),
-                                                ),
-                                                Text(
-                                                  item.title,
-                                                  maxLines: 2,
-                                                  textAlign: TextAlign.center,
-                                                  style: const TextStyle(
-                                                    fontSize: 12,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0)
-                              .copyWith(top: 8),
-                          child: SizedBox(
-                            height: 400.h,
-                            child: GridView.builder(
-                              itemCount: homeComponentList.length,
-                              gridDelegate:
-                                  SliverGridDelegateWithFixedCrossAxisCount(
-                                mainAxisExtent: 100.h,
-                                mainAxisSpacing: 10,
-                                crossAxisSpacing: 10,
-                                crossAxisCount: 3,
-                              ),
-                              itemBuilder: (context, index) {
-                                Map<String, dynamic> category =
-                                    homeComponentList[index];
-                                return HomeCategoryComponent(
-                                  imagePath: category["imagePath"]!,
-                                  name: category["name"]!,
-                                  // routeName: category['routeName']!,
-                                  onTap: category["onTap"],
-                                );
-                              },
-                            ),
-                          ),
-                        ),
+                        _bookListHomeComponent(size, state),
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 24.0)
+                        //       .copyWith(top: 8),
+                        //   child: SizedBox(
+                        //     height: 400.h,
+                        //     child: GridView.builder(
+                        //       itemCount: homeComponentList.length,
+                        //       gridDelegate:
+                        //           SliverGridDelegateWithFixedCrossAxisCount(
+                        //         mainAxisExtent: 100.h,
+                        //         mainAxisSpacing: 10,
+                        //         crossAxisSpacing: 10,
+                        //         crossAxisCount: 3,
+                        //       ),
+                        //       itemBuilder: (context, index) {
+                        //         Map<String, dynamic> category =
+                        //             homeComponentList[index];
+                        //         return HomeCategoryComponent(
+                        //           imagePath: category["imagePath"]!,
+                        //           name: category["name"]!,
+                        //           // routeName: category['routeName']!,
+                        //           onTap: category["onTap"],
+                        //         );
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
 
@@ -322,6 +239,125 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         );
       },
+    );
+  }
+
+  // the temple background behind the stack
+  Positioned _templeBackground() {
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      left: 0,
+      child: Image.asset("assets/figma/bottom_temple.png"),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: BackButton(color: Colors.white),
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: appBarGradient,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
+        ),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 55.h,
+            child: Image.asset(
+              "assets/figma/shree_bada_ramdwara.png",
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            // height: 42,
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Badge(
+              child: const Icon(Icons.notifications_sharp,
+                  color: Colors.black, size: 35),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding _bookListHomeComponent(Size size, HomeState state) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 14.0),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 170.h,
+            width: size.width,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: state.booksList.length,
+              itemBuilder: (context, index) {
+                var item = state.booksList[index];
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: const Color.fromARGB(255, 212, 212, 212),
+                    ),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.all(10),
+                  child: Center(
+                    child: InkWell(
+                      onTap: () {
+                        // ebookBloc
+                        //     .add(DownloadBookEvent(book: item));
+                      },
+                      child: SizedBox(
+                        height: 160.h,
+                        width: 80.w,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              height: 100.h,
+                              width: 80.w,
+                              child: CachedNetworkImage(
+                                imageUrl: item.thumbnailUrl,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
+                            ),
+                            Text(
+                              item.title,
+                              maxLines: 2,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 12,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 

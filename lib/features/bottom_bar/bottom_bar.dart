@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 
 import '../../../../constants.dart';
@@ -15,6 +16,7 @@ class BottomBar extends StatelessWidget {
   static const String routeName = '/bottom-bar';
   @override
   Widget build(BuildContext context) {
+    final _controller = PersistentTabController(initialIndex: 0);
     List<Widget> pages = [
       const HomeScreen(),
       Center(child: Text("videoPage")),
@@ -22,28 +24,116 @@ class BottomBar extends StatelessWidget {
       Center(child: Text("book page ")),
       Center(child: Text("more page ")),
     ];
+    screens() {
+      return [
+        const HomeScreen(),
+        Center(child: Text("videoPage")),
+        Center(child: Text("audio page")),
+        Center(child: Text("book page ")),
+        Center(child: Text("more page ")),
+      ];
+    }
 
-    return WillPopScope(
-      onWillPop: () async {
-        exit(0);
-      },
-      child: BlocBuilder<BottomBarBloc, BottomBarState>(
-        builder: (context, state) {
-          return Scaffold(
-              appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(60),
-                child: _buildAppBar(),
-              ),
-              backgroundColor: scaffoldBackground,
-              bottomNavigationBar:
-                  _buildBottomNavBar(state.currentPageIndex, context),
-              body: IndexedStack(
-                children: pages,
-                index: state.currentPageIndex,
-              ));
-        },
-      ),
+    List<PersistentBottomNavBarItem> navBarItems() {
+      return [
+        PersistentBottomNavBarItem(
+          icon: SvgPicture.asset(
+            "assets/svg/home_svg.svg",
+            colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
+          ),
+          title: "Home",
+          activeColorPrimary: Colors.orange,
+          inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
+        ),
+        PersistentBottomNavBarItem(
+          icon: SvgPicture.asset(
+            "assets/svg/video-favourite.svg",
+            colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
+          ),
+          title: "Home",
+          activeColorPrimary: Colors.orange,
+          inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
+        ),
+        PersistentBottomNavBarItem(
+          icon: SvgPicture.asset(
+            "assets/svg/playlist.svg",
+            colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
+          ),
+          title: "Home",
+          activeColorPrimary: Colors.orange,
+          inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
+        ),
+        PersistentBottomNavBarItem(
+          icon: SvgPicture.asset(
+            "assets/svg/book_svg.svg",
+            colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
+          ),
+          title: "Home",
+          activeColorPrimary: Colors.orange,
+          inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
+        ),
+        PersistentBottomNavBarItem(
+          icon: SvgPicture.asset(
+            "assets/svg/more_svg.svg",
+            colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
+          ),
+          title: "Home",
+          activeColorPrimary: Colors.orange,
+          inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
+        ),
+        // PersistentBottomNavBarItem(
+        //   icon: Icon(Icons.settings),
+        //   title: "Settings",
+        //   activeColorPrimary: Colors.blue,
+        //   inactiveColorPrimary: Colors.grey,
+        // ),
+        // PersistentBottomNavBarItem(
+        //   icon: Icon(Icons.person),
+        //   title: "Profile",
+        //   activeColorPrimary: Colors.blue,
+        //   inactiveColorPrimary: Colors.grey,
+        // ),
+        // PersistentBottomNavBarItem(
+        //   icon: Icon(Icons.person),
+        //   title: "Profile",
+        //   activeColorPrimary: Colors.blue,
+        //   inactiveColorPrimary: Colors.grey,
+        // ),
+        // PersistentBottomNavBarItem(
+        //   icon: Icon(Icons.person),
+        //   title: "Profile",
+        //   activeColorPrimary: Colors.blue,
+        //   inactiveColorPrimary: Colors.grey,
+        // ),
+      ];
+    }
+
+    return PersistentTabView(
+      context,
+      screens: screens(),
+      items: navBarItems(),
+      controller: _controller,
+      navBarStyle: NavBarStyle.style12,
+      popAllScreensOnTapOfSelectedTab: true,
     );
+
+    // BlocBuilder<BottomBarBloc, BottomBarState>(
+    //   builder: (context, state) {
+    //     final _controller = PersistentTabController(initialIndex: 0);
+    //     return Scaffold(
+    //         appBar: PreferredSize(
+    //           preferredSize: const Size.fromHeight(60),
+    //           child: _buildAppBar(),
+    //         ),
+    //         backgroundColor: scaffoldBackground,
+    //         bottomNavigationBar:
+    //             _buildBottomNavBar(state.currentPageIndex, context),
+    //         body: IndexedStack(
+    //           children: pages,
+    //           index: state.currentPageIndex,
+    //         ));
+    //   },
+    // );
   }
 
   AppBar _buildAppBar() {
@@ -51,6 +141,10 @@ class BottomBar extends StatelessWidget {
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           gradient: appBarGradient,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
         ),
       ),
       title: Row(

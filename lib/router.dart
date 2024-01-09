@@ -55,7 +55,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       var index = routeSettings.arguments as int;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => AudioScreen(albumIndex: index),
+        builder: (_) => AudioScreen(),
       );
     case PlayAudioScreen.routeName:
       // int index = routeSettings.arguments as int;

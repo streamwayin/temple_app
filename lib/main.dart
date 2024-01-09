@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio_background/just_audio_background.dart';
+import 'package:temple_app/constants.dart';
 import 'package:temple_app/features/about-us/bloc/about_us_bloc.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
@@ -121,10 +122,11 @@ class MyApp extends StatelessWidget {
               navigatorKey: navigatorKey,
               navigatorObservers: <NavigatorObserver>[observer],
               theme: ThemeData(
-                colorScheme:
-                    ColorScheme.fromSeed(seedColor: Colors.yellowAccent),
-                useMaterial3: true,
-              ),
+                  colorScheme:
+                      ColorScheme.fromSeed(seedColor: Colors.yellowAccent),
+                  useMaterial3: true,
+                  scaffoldBackgroundColor: scaffoldBackground),
+
               builder: (context, child) =>
                   CustomStackWithBottomPlayer(child: child!),
               // builder: (context, child) => Text('data'),
