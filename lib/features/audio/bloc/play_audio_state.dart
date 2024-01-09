@@ -23,6 +23,8 @@ class PlayAudioState extends Equatable {
   final List<TrackModel>? currentPlaylistTracks;
   final int savedInitialEvent;
   final bool updateSavedDataOfPlayer;
+  final bool isLooping;
+  final bool isSuffling;
   const PlayAudioState({
     this.albums = const [],
     this.concatenatingAudioSource,
@@ -46,6 +48,8 @@ class PlayAudioState extends Equatable {
     this.currentPlaylistTracks,
     this.savedInitialEvent = 0,
     this.updateSavedDataOfPlayer = false,
+    this.isLooping = false,
+    this.isSuffling = false,
   });
   @override
   List<Object?> get props => [
@@ -70,7 +74,9 @@ class PlayAudioState extends Equatable {
         onAboutUsNavBar,
         currentPlaylistTracks,
         savedInitialEvent,
-        updateSavedDataOfPlayer
+        updateSavedDataOfPlayer,
+        isLooping,
+        isSuffling,
       ];
 
   PlayAudioState copyWith({
@@ -96,6 +102,8 @@ class PlayAudioState extends Equatable {
     List<TrackModel>? currentPlaylistTracks,
     int? savedInitialEvent,
     bool? updateSavedDataOfPlayer,
+    bool? isLooping,
+    bool? isSuffling,
   }) {
     return PlayAudioState(
       albums: albums ?? this.albums,
@@ -126,6 +134,8 @@ class PlayAudioState extends Equatable {
       savedInitialEvent: savedInitialEvent ?? this.savedInitialEvent,
       // insert false if we want to  upadte plater data in index
       updateSavedDataOfPlayer: updateSavedDataOfPlayer ?? false,
+      isLooping: isLooping ?? false,
+      isSuffling: isSuffling ?? false,
     );
   }
 }

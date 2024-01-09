@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -75,10 +76,42 @@ class MyAppState extends State<PlayAudioScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Row(
                       children: [
-                        Icon(Icons.volume_down),
+                        SvgPicture.asset('assets/svg/volume.svg'),
                         Spacer(),
-                        Icon(Icons.loop),
-                        Icon(Icons.shuffle),
+                        InkWell(
+                            onTap: () {
+                              print('object');
+                              context.read<PlayAudioBloc>().add(
+                                  ToggleLoopMode(loopmode: !state.isLooping));
+                            },
+                            child: Stack(
+                              children: [
+                                SvgPicture.asset('assets/svg/loop.svg'),
+                                state.isLooping
+                                    ? Text(
+                                        " 1",
+                                        style: TextStyle(
+                                            color: Color(0xff8996b8),
+                                            fontSize: 16),
+                                      )
+                                    : SizedBox()
+                              ],
+                            )),
+                        SizedBox(width: 5.w),
+                        InkWell(
+                          onTap: () {
+                            context.read<PlayAudioBloc>().add(
+                                ToggleSuffleMode(suffle: !state.isSuffling));
+                          },
+                          child: state.isSuffling
+                              ? Icon(
+                                  Icons.shuffle_on_outlined,
+                                  // color: Color(0xff8996b8),
+                                )
+                              : SvgPicture.asset(
+                                  'assets/svg/shuffle-outline.svg'),
+                          // Icon(Icons.shuffle_on, color: Color(0xff8996b8)),
+                        ),
                       ],
                     ),
                   ),

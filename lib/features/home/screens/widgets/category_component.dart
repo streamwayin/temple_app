@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
+import 'package:temple_app/features/yatara/yatara_screen.dart';
 
 import '../../../../constants.dart';
 
@@ -22,6 +23,11 @@ class CatagoryComponent extends StatelessWidget {
           {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => EbookScreen()));
+          }
+        case YataraScreen.routeName:
+          {
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => YataraScreen()));
           }
       }
     }

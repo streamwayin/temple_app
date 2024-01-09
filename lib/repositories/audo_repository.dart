@@ -79,6 +79,16 @@ class AudioRepository {
     await _player.seek(Duration.zero, index: index);
   }
 
+  Future<void> suffle(bool suffle) async =>
+      await _player.setShuffleModeEnabled(suffle);
+
+  Future<void> loopMode(bool loop) async {
+    if (loop) {
+      await _player.setLoopMode(LoopMode.one);
+    } else
+      await _player.setLoopMode(LoopMode.off);
+  }
+
   // get all albums from web
   Future<List<AlbumModel>?> getAlbumListFromDb() async {
     try {

@@ -47,6 +47,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<ChangeOnAboutUsNavBar>(onChangeOnAboutUsNavBar);
     on<ChangeCurrentPlaylistAlbumId>(onChangeCurrentPlaylistAlbumId);
     on<SavePlayingTracksEvent>(onSavePlayingTracksEvent);
+    on<ToggleLoopMode>(onToggleLoopMode);
+    on<ToggleSuffleMode>(onToggleSuffleMode);
   }
   AudioRepository audioRepository = AudioRepository();
   late SharedPreferences sharedPreferences;
@@ -436,5 +438,18 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       SavePlayingTracksEvent event, Emitter<PlayAudioState> emit) {
     final tracks = state.tracks;
     emit(state.copyWith(currentPlaylistTracks: tracks));
+  }
+
+  FutureOr<void> onToggleLoopMode(
+      ToggleLoopMode event, Emitter<PlayAudioState> emit) async {
+    print('oooooooooooooooooooooooo');
+    await audioRepository.loopMode(event.loopmode);
+    emit(state.copyWith(isLooping: event.loopmode));
+  }
+
+  FutureOr<void> onToggleSuffleMode(
+      ToggleSuffleMode event, Emitter<PlayAudioState> emit) async {
+    await audioRepository.suffle(event.suffle);
+    emit(state.copyWith(isSuffling: event.suffle));
   }
 }

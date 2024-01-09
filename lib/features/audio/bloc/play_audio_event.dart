@@ -115,4 +115,16 @@ class ChangeCurrentPlaylistAlbumId extends PlayAudioEvent {}
 
 class SavePlayingTracksEvent extends PlayAudioEvent {}
 
+class ToggleLoopMode extends PlayAudioEvent {
+  final bool loopmode;
+
+  ToggleLoopMode({required this.loopmode});
+}
+
+class ToggleSuffleMode extends PlayAudioEvent {
+  final bool suffle;
+
+  ToggleSuffleMode({required this.suffle});
+}
+
 // class SaveDuration and current index continously even to do

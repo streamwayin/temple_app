@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
+import 'package:temple_app/features/yatara/yatara_screen.dart';
 
 String OFFLINE_DOWNLOADED_SONG_LIST_KEY = 'offline_downloaded_songs';
 String OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY = 'offline_downloaded_ebooks';
@@ -55,7 +56,7 @@ const List<Map<String, String>> categoryImages = [
   {
     'title': 'यात्रा',
     'image': 'assets/figma/yatra_logo.png',
-    "routeName": "",
+    "routeName": YataraScreen.routeName,
   },
   {
     'title': 'पंचांग',

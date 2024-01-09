@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
@@ -26,9 +27,7 @@ class ControlButtons extends StatelessWidget {
                     .read<PlayAudioBloc>()
                     .add(const ChangeSongEvent(previous: true));
               },
-              icon: const Icon(
-                Icons.skip_previous_rounded,
-              ),
+              icon: SvgPicture.asset('assets/svg/previous.svg'),
             ),
             BlocConsumer<PlayAudioBloc, PlayAudioState>(
               listener: (context, state) {},
@@ -58,7 +57,7 @@ class ControlButtons extends StatelessWidget {
                   );
                 } else if (processingState != ProcessingState.completed) {
                   return IconButton(
-                    icon: const Icon(Icons.pause),
+                    icon: SvgPicture.asset('assets/svg/pause.svg'),
                     iconSize: 60.0,
                     onPressed: () {
                       context
@@ -84,9 +83,7 @@ class ControlButtons extends StatelessWidget {
                     .read<PlayAudioBloc>()
                     .add(const ChangeSongEvent(next: true));
               },
-              icon: const Icon(
-                Icons.skip_next_rounded,
-              ),
+              icon: SvgPicture.asset('assets/svg/next.svg'),
             ),
             Icon(Icons.more_horiz)
           ],
