@@ -23,6 +23,7 @@ import 'package:temple_app/features/sightseen/bloc/sightseen_bloc.dart';
 import 'package:temple_app/features/video/video-list/bloc/video_list_bloc.dart';
 import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
+import 'package:temple_app/features/yatara/bloc/yatara_bloc.dart';
 import 'package:temple_app/firebase_options.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
@@ -93,9 +94,7 @@ class MyApp extends StatelessWidget {
                 create: (context) =>
                     PlayAudioBloc()..add(PlayAudioEventInitial()),
               ),
-              BlocProvider(
-                create: (context) => EbookBloc(repository: EpubRepository()),
-              ),
+              // BlocProvider(create: (context) => EbookBloc()),
               BlocProvider(create: (context) => EpubViewerBloc()),
               BlocProvider(create: (context) => SplashBloc()),
               BlocProvider(create: (context) => SearchBookBloc()),
@@ -115,7 +114,12 @@ class MyApp extends StatelessWidget {
               BlocProvider(
                   create: (context) =>
                       VideoListBloc()..add(VideoListInitialEvent())),
-              BlocProvider(create: (context) => BottomBarBloc())
+              BlocProvider(create: (context) => BottomBarBloc()),
+              BlocProvider(
+                  create: (context) => YataraBloc()..add(YataraInitialEvent())),
+              BlocProvider(
+                  create: (context) =>
+                      EbookBloc()..add(FetchEpubListFromWebEvent()))
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,

@@ -18,12 +18,12 @@ part 'ebook_event.dart';
 part 'ebook_state.dart';
 
 class EbookBloc extends Bloc<EbookEvent, EbookState> {
-  final EpubRepository repository;
+  late EpubRepository repository;
   final firebaseAnalytics = FirebaseAnalytics.instance;
   late SharedPreferences sharedPreferences;
-  EbookBloc({required this.repository}) : super(const EbookState()) {
+  EbookBloc() : super(const EbookState()) {
     init();
-    // on<FetchEpubListEvent>(onFetchEpubListEvent);
+    on<FetchEpubListFromWebEvent>(onFetchEpubListEvent);
     on<DownloadBookEvent>(onDownloadBookEvent);
   }
   void init() async {
@@ -31,6 +31,7 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     firebaseAnalytics.setAnalyticsCollectionEnabled(true);
     firebaseAnalytics.setUserId(id: uid);
+    repository = EpubRepository();
   }
 
   FutureOr<void> onDownloadBookEvent(
@@ -124,4 +125,22 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
   //   }
   //   emit(state.copyWith(booksList: list, downloadEbookMap: downloadedEbookMap));
   // }
+
+  FutureOr<void> onFetchEpubListEvent(
+      FetchEpubListFromWebEvent event, Emitter<EbookState> emit) async {
+    emit(state.copyWith(loading: true));
+    final list = await repository.getEpubListFromWeb();
+    Map<String, String> downloadedEbookMap = {};
+
+    String? offlineBooks =
+        sharedPreferences.getString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY);
+    if (offlineBooks != null) {
+      final decodedMap = json.decode(offlineBooks);
+      decodedMap.forEach((key, value) {
+        downloadedEbookMap[key] = value.toString();
+      });
+    }
+    emit(state.copyWith(
+        booksList: list, downloadEbookMap: downloadedEbookMap, loading: false));
+  }
 }

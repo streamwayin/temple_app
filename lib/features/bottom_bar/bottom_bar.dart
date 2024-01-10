@@ -6,7 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
+import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 
 import '../../../../constants.dart';
 import '../home/screens/home_screen.dart';
@@ -28,8 +30,8 @@ class BottomBar extends StatelessWidget {
       return [
         const HomeScreen(),
         Center(child: Text("videoPage")),
-        Center(child: Text("audio page")),
-        Center(child: Text("book page ")),
+        AlbumScreen(),
+        EbookScreen(),
         Center(child: Text("more page ")),
       ];
     }

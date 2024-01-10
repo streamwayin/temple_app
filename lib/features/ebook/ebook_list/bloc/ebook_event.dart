@@ -8,6 +8,7 @@ class EbookEvent extends Equatable {
 }
 
 // class FetchEpubListEvent extends EbookEvent {}
+class FetchEpubListFromWebEvent extends EbookEvent {}
 
 class DownloadBookEvent extends EbookEvent {
   // final int index;

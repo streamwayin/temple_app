@@ -1,29 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/constants.dart';
+import 'package:temple_app/features/yatara/bloc/yatara_bloc.dart';
+import 'package:temple_app/features/yatara/widget/card_widget.dart';
 
 class YataraScreen extends StatelessWidget {
   const YataraScreen({super.key});
   static const String routeName = '/yatara-screen';
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: _buildAppBar(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Column(
-            children: [
-              _gap(5),
-              buildCard(),
-              _gap(10),
-              buildCard(),
-              _gap(10),
-              buildCard(),
-            ],
-          ),
-        ),
-      ),
+    Size size = MediaQuery.of(context).size;
+    return BlocBuilder<YataraBloc, YataraState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: _buildAppBar(),
+          body: state.isLoading
+              ? Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: SizedBox(
+                      height: size.height,
+                      width: size.width,
+                      child: CardWidget(state: state),
+                    ),
+                  ),
+                ),
+        );
+      },
     );
   }
 
@@ -67,57 +72,4 @@ class YataraScreen extends StatelessWidget {
       ),
     );
   }
-}
-
-Card buildCard() {
-  var cardImage = Stack(
-    children: [
-      SizedBox(
-        height: 200,
-        width: double.infinity,
-        child: Image.asset(
-          "assets/images/back.jpg",
-          fit: BoxFit.cover,
-        ),
-      ),
-      Container(
-        height: 200,
-        width: double.infinity,
-        decoration: BoxDecoration(color: Color.fromARGB(54, 236, 158, 80)),
-      )
-    ],
-  );
-  var supportingText =
-      'Beautiful home to rent, recently refurbished with modern appliances...';
-  return Card(
-    color: Color.fromARGB(255, 248, 193, 148),
-    elevation: 4.0,
-    child: Column(
-      children: [
-        Container(
-          color: Colors.green,
-          height: 200.0,
-          width: double.infinity,
-          child: cardImage,
-        ),
-        Container(
-          padding: EdgeInsets.all(16.0),
-          alignment: Alignment.centerLeft,
-          child: Text(supportingText),
-        ),
-        // ButtonBar(
-        //   children: [
-        //     TextButton(
-        //       child: const Text('CONTACT AGENT'),
-        //       onPressed: () {/* ... */},
-        //     ),
-        //     TextButton(
-        //       child: const Text('LEARN MORE'),
-        //       onPressed: () {/* ... */},
-        //     )
-        //   ],
-        // )
-      ],
-    ),
-  );
 }

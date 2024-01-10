@@ -17,6 +17,7 @@ import 'package:temple_app/services/notification_service.dart';
 import 'package:temple_app/widgets/update_app_dialog.dart';
 import 'package:temple_app/widgets/update_opacity_component.dart';
 import '../../../constants.dart';
+import '../../../repositories/audo_repository.dart';
 import '../../about-us/screens/about_us_bottom_nav_bar.dart';
 import '../../contact-us/screens/contact_us_screen.dart';
 import '../../sightseen/screens/sightseen_screen.dart';
@@ -227,6 +228,16 @@ class _HomeScreenState extends State<HomeScreen> {
                     //     child: const Text("upload imges"),
                     //   ),
                     // ),
+                    Positioned(
+                      bottom: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          AudioRepository audioRepository = AudioRepository();
+                          audioRepository.uploadYatarasDataToFirebase();
+                        },
+                        child: const Text("upload imges"),
+                      ),
+                    ),
                     state.updateMandatory
                         ? UpdateOpacityComponent()
                         : SizedBox(),

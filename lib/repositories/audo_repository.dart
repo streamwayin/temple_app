@@ -220,8 +220,32 @@ class AudioRepository {
       var finalMap = {
         "albumId": docRef.id,
         "title": "hari om",
-        "index": 2,
+        "index": "2",
         "thumbnail": ""
+      };
+      await docRef.set(finalMap);
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
+
+  Future<void> uploadYatarasDataToFirebase() async {
+    try {
+      final docRef = FirebaseFirestore.instance.collection("yataras").doc();
+      var finalMap = {
+        "yataraId": docRef.id,
+        "title":
+            "LIVE शनिवार भक्ति : आज सुबह यह शनिदेव चालीसा Shani Chalisa सुनने से सभी मनोकामनएं पूर्ण होती हैं",
+        "index": 1,
+        "description":
+            'You will find here best of the best Devotional music like: Bhajans, Aarti\'s,  Mantras, Meditation Chants, Jaap, Shlokas, Amritwani and Kirtan\'s. Shree Krishna Bhajan , Hanuman Bhajan , Ganesh Bhajan ,Ram Bhajan , Laxmi Bhajan , Santoshi Maa , Sherawali Mata , Aarti Sangrah , Morning Mantra ,Shiv Bhajan , Shanidev Bhajan , Vishnu Bhajan , Saibaba Bhajan , Devi maa Bhajna , Laxmi Aarti , Ganesh Aarti , Om Jai Jagdish Aarti , Shiv Aarti , Hnauman Aarti ,Shani Aarti , Santoshi mata Aarti , Sai AratSomvar Special Bhajan , Manglvar Special Bhajan ,Budhwar Special Bhajan , Guruvar Special Bhajan , Shukarvar Special Bhajan , Shanivar Special Bhajan , Ravivar Special Bhajan , Morning Bhajan, Bhajan From Films , Many More Bhajan.... Please subscribe to our channel and send your suggestions/Requests for new bhajans, mantra, etc. We will try to fulfill it at the earliest.',
+        "image": "https://img.youtube.com/vi/1xv1009jSNk/sddefault.jpg",
+        "artistId": "OHUaFtS5SJgQARqnJA3o",
+        "call": "8209568325",
+        "location": GeoPoint(26.2389, 73.0243),
+        "isYatara": true,
+        "fromDate": Timestamp.fromMillisecondsSinceEpoch(1706601293000),
+        "toDate": Timestamp.fromMillisecondsSinceEpoch(1709279693000),
       };
       await docRef.set(finalMap);
     } catch (e) {
