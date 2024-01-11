@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,6 +7,7 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
+import 'package:temple_app/features/ebook/search/screens/search_book_screen.dart';
 
 import '../../../../constants.dart';
 import '../home/screens/home_screen.dart';
@@ -19,104 +18,30 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _controller = PersistentTabController(initialIndex: 0);
-    List<Widget> pages = [
-      const HomeScreen(),
-      Center(child: Text("videoPage")),
-      Center(child: Text("audio page")),
-      Center(child: Text("book page ")),
-      Center(child: Text("more page ")),
-    ];
-    screens() {
-      return [
-        const HomeScreen(),
-        Center(child: Text("videoPage")),
-        AlbumScreen(),
-        EbookScreen(),
-        Center(child: Text("more page ")),
-      ];
-    }
 
-    List<PersistentBottomNavBarItem> navBarItems() {
-      return [
-        PersistentBottomNavBarItem(
-          icon: SvgPicture.asset(
-            "assets/svg/home_svg.svg",
-            colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
-          ),
-          title: "Home",
-          activeColorPrimary: Colors.orange,
-          inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
-        ),
-        PersistentBottomNavBarItem(
-          icon: SvgPicture.asset(
-            "assets/svg/video-favourite.svg",
-            colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
-          ),
-          title: "Home",
-          activeColorPrimary: Colors.orange,
-          inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
-        ),
-        PersistentBottomNavBarItem(
-          icon: SvgPicture.asset(
-            "assets/svg/playlist.svg",
-            colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
-          ),
-          title: "Home",
-          activeColorPrimary: Colors.orange,
-          inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
-        ),
-        PersistentBottomNavBarItem(
-          icon: SvgPicture.asset(
-            "assets/svg/book_svg.svg",
-            colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
-          ),
-          title: "Home",
-          activeColorPrimary: Colors.orange,
-          inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
-        ),
-        PersistentBottomNavBarItem(
-          icon: SvgPicture.asset(
-            "assets/svg/more_svg.svg",
-            colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
-          ),
-          title: "Home",
-          activeColorPrimary: Colors.orange,
-          inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
-        ),
-        // PersistentBottomNavBarItem(
-        //   icon: Icon(Icons.settings),
-        //   title: "Settings",
-        //   activeColorPrimary: Colors.blue,
-        //   inactiveColorPrimary: Colors.grey,
-        // ),
-        // PersistentBottomNavBarItem(
-        //   icon: Icon(Icons.person),
-        //   title: "Profile",
-        //   activeColorPrimary: Colors.blue,
-        //   inactiveColorPrimary: Colors.grey,
-        // ),
-        // PersistentBottomNavBarItem(
-        //   icon: Icon(Icons.person),
-        //   title: "Profile",
-        //   activeColorPrimary: Colors.blue,
-        //   inactiveColorPrimary: Colors.grey,
-        // ),
-        // PersistentBottomNavBarItem(
-        //   icon: Icon(Icons.person),
-        //   title: "Profile",
-        //   activeColorPrimary: Colors.blue,
-        //   inactiveColorPrimary: Colors.grey,
-        // ),
-      ];
-    }
-
-    return PersistentTabView(
-      context,
-      screens: screens(),
-      items: navBarItems(),
-      controller: _controller,
-      navBarStyle: NavBarStyle.style12,
-      popAllScreensOnTapOfSelectedTab: true,
+    return BlocConsumer<BottomBarBloc, BottomBarState>(
+      listener: (context, state) {
+        _controller.index = state.currentPageIndex;
+        if (state.navigationString.isNotEmpty) {
+          // Navigator.push(context,
+          //     MaterialPageRoute(builder: (context) => SearchBookScreen()));
+        }
+      },
+      builder: (context, state) {
+        return PersistentTabView(
+          context,
+          onItemSelected: (value) {
+            context
+                .read<BottomBarBloc>()
+                .add(ChangeCurrentPageIndex(newIndex: value));
+          },
+          screens: screens(),
+          items: navBarItems(),
+          controller: _controller,
+          navBarStyle: NavBarStyle.style12,
+          popAllScreensOnTapOfSelectedTab: true,
+        );
+      },
     );
 
     // BlocBuilder<BottomBarBloc, BottomBarState>(
@@ -138,6 +63,69 @@ class BottomBar extends StatelessWidget {
     // );
   }
 
+  screens() {
+    return [
+      const HomeScreen(),
+      Center(child: Text("videoPage")),
+      AlbumScreen(),
+      EbookScreen(),
+      Center(child: Text("more page ")),
+    ];
+  }
+
+  List<PersistentBottomNavBarItem> navBarItems() {
+    return [
+      PersistentBottomNavBarItem(
+        icon: SvgPicture.asset(
+          "assets/svg/home_svg.svg",
+          colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
+        ),
+        title: "Home",
+        activeColorPrimary: Colors.orange,
+        inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
+      ),
+      PersistentBottomNavBarItem(
+        icon: SvgPicture.asset(
+          "assets/svg/video-favourite.svg",
+          colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
+        ),
+        title: "Home",
+        activeColorPrimary: Colors.orange,
+        inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
+      ),
+      PersistentBottomNavBarItem(
+        icon: SvgPicture.asset(
+          "assets/svg/playlist.svg",
+          colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
+        ),
+        title: "Home",
+        activeColorPrimary: Colors.orange,
+        inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
+      ),
+      PersistentBottomNavBarItem(
+        icon: SvgPicture.asset(
+          "assets/svg/book_svg.svg",
+          colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
+        ),
+        title: "Home",
+        activeColorPrimary: Colors.orange,
+        inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
+      ),
+      PersistentBottomNavBarItem(
+        icon: SvgPicture.asset(
+          "assets/svg/more_svg.svg",
+          colorFilter: ColorFilter.mode(Color(0xff593600), BlendMode.srcIn),
+        ),
+        title: "Home",
+        activeColorPrimary: Colors.orange,
+        inactiveColorPrimary: const Color.fromARGB(255, 110, 70, 10),
+      ),
+    ];
+  }
+
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+// bottom app bar for home page not using currently
+//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   AppBar _buildAppBar() {
     return AppBar(
       flexibleSpace: Container(
@@ -175,7 +163,6 @@ class BottomBar extends StatelessWidget {
   }
 }
 
-// bottom app bar for home page
 ClipRRect _buildBottomNavBar(int currentPageIndex, BuildContext context) {
   return ClipRRect(
     borderRadius: BorderRadius.only(

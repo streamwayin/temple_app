@@ -14,6 +14,10 @@ class BottomBarBloc extends Bloc<BottomBarEvent, BottomBarState> {
   FutureOr<void> onChangeCurrentPageIndex(
       ChangeCurrentPageIndex event, Emitter<BottomBarState> emit) {
     int newIndex = event.newIndex;
-    emit(state.copyWith(currentPageIndex: newIndex));
+    emit(state.copyWith(
+      currentPageIndex: newIndex,
+      navigationString: event.navigationString,
+    ));
+    print(newIndex);
   }
 }

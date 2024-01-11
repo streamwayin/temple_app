@@ -10,11 +10,11 @@ class EbookEvent extends Equatable {
 // class FetchEpubListEvent extends EbookEvent {}
 class FetchEpubListFromWebEvent extends EbookEvent {}
 
-class DownloadBookEvent extends EbookEvent {
+class DownloadBookEventEbookList extends EbookEvent {
   // final int index;
   final EbookModel book;
 
-  const DownloadBookEvent({
+  const DownloadBookEventEbookList({
     required this.book,
   });
 }

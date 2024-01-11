@@ -14,8 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:temple_app/constants.dart';
 
-import '../../../../widgets/common_background_component.dart';
 import '../../ebook_view/bloc/epub_viewer_bloc.dart';
 import '../../ebook_view/epub_viewer_screen.dart';
 import '../bloc/search_book_bloc.dart';
@@ -31,185 +31,173 @@ class SearchBookScreen extends StatelessWidget {
         if (state.pathString != null) {
           context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
               path: state.pathString!, book: state.selectedBook!));
-          Navigator.pushNamed(context, EpubViwerScreen.routeName);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => EpubViwerScreen()));
+          // Navigator.pushNamed(context, EpubViwerScreen.routeName);
         }
       },
       builder: (context, state) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          body: Stack(
-            children: [
-              Positioned(
-                bottom: -25.h,
-                right: 0,
-                left: 0,
-                child: const CommonBackgroundComponent(),
-              ),
-              Container(
-                color: const Color(0xfff5a352).withOpacity(0.6),
-              ),
-              Positioned(
-                child: Image.asset("assets/images/onbaording1.png"),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0)
-                    .copyWith(top: 8),
-                child: SafeArea(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(height: 50.h),
-                      SizedBox(
-                        height: 56.h,
-                        width: size.width,
-                        child: Padding(
-                          padding: const EdgeInsets.only(right: 16.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Row(
-                                children: [
-                                  InkWell(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                    },
-                                    child: const Icon(
-                                      Icons.arrow_back_ios_new,
-                                      weight: BorderSide.strokeAlignOutside,
-                                    ),
-                                  ),
-                                  SizedBox(width: 20.w),
-                                  SizedBox(
-                                    width: 220.w,
-                                    height: 36.h,
-                                    child: TextFormField(
-                                      onChanged: (value) {
-                                        print(value);
-                                        context
-                                            .read<SearchBookBloc>()
-                                            .add(SearchEvent(keyWord: value));
-                                      },
-                                      autofocus: true,
-                                      decoration: const InputDecoration(
-                                        filled: true,
-                                        fillColor:
-                                            Color.fromARGB(176, 218, 140, 77),
-                                        contentPadding: EdgeInsets.all(8),
-                                        border: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color.fromARGB(
-                                                176, 218, 140, 77),
-                                          ),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                            color: Color.fromARGB(
-                                                176, 218, 140, 77),
-                                          ),
+          appBar: _buildAppBar(),
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Stack(
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _gap(10),
+                    _buildSearchBar(context),
+                    _gap(20),
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: state.filteredBooks.length,
+                        itemBuilder: (context, index) {
+                          final book = state.filteredBooks[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 8.0),
+                            child: InkWell(
+                              onTap: () {
+                                context
+                                    .read<SearchBookBloc>()
+                                    .add(DownloadBookEvent(book: book));
+                              },
+                              child: Container(
+                                height: 100,
+                                width: size.width,
+                                color: const Color.fromARGB(255, 233, 208, 155),
+                                child: Row(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: SizedBox(
+                                        height: 100,
+                                        width: 80,
+                                        child: CachedNetworkImage(
+                                          imageUrl: book.thumbnailUrl,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              const Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Container(
-                                  height: 30.h,
-                                  width: 30.w,
-                                  decoration: BoxDecoration(
-                                      color: const Color(0xfffba140),
-                                      borderRadius: BorderRadius.circular(10)),
-                                  child: const Center(
-                                    child: Icon(Icons.close),
-                                  ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          book.title,
+                                          style: const TextStyle(fontSize: 18),
+                                        ),
+                                        book.author != null
+                                            ? Text(
+                                                book.author!,
+                                                style: const TextStyle(
+                                                    fontSize: 16),
+                                              )
+                                            : const SizedBox(),
+                                      ],
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          ),
-                        ),
+                            ),
+                          );
+                        },
                       ),
-                      SizedBox(height: 20.h),
-                      // SizedBox(height: 20.h),
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: state.filteredBooks.length,
-                          itemBuilder: (context, index) {
-                            final book = state.filteredBooks[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: InkWell(
-                                onTap: () {
-                                  context
-                                      .read<SearchBookBloc>()
-                                      .add(DownloadBookEvent(book: book));
-                                },
-                                child: Container(
-                                  height: 100,
-                                  width: size.width,
-                                  color:
-                                      const Color.fromARGB(255, 233, 208, 155),
-                                  child: Row(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: SizedBox(
-                                          height: 100,
-                                          width: 80,
-                                          child: CachedNetworkImage(
-                                            imageUrl: book.thumbnailUrl,
-                                            fit: BoxFit.cover,
-                                            placeholder: (context, url) =>
-                                                const Center(
-                                                    child:
-                                                        CircularProgressIndicator()),
-                                            errorWidget:
-                                                (context, url, error) =>
-                                                    const Icon(Icons.error),
-                                          ),
-                                        ),
-                                      ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            book.title,
-                                            style:
-                                                const TextStyle(fontSize: 18),
-                                          ),
-                                          book.author != null
-                                              ? Text(
-                                                  book.author!,
-                                                  style: const TextStyle(
-                                                      fontSize: 16),
-                                                )
-                                              : const SizedBox(),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      )
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-              ),
-              // (state.loading == true)
-              //     ? Utils.showLoadingOnSceeen()
-              //     : const SizedBox()
-            ],
+                // (state.loading == true)
+                //     ? Utils.showLoadingOnSceeen()
+                //     : const SizedBox()
+              ],
+            ),
           ),
         );
       },
+    );
+  }
+
+  SizedBox _gap(int height) => SizedBox(height: height.h);
+
+  Widget _buildSearchBar(BuildContext context) {
+    return TextField(
+      autofocus: true,
+      onChanged: (value) {
+        print(value);
+        context.read<SearchBookBloc>().add(SearchEvent(keyWord: value));
+      },
+      decoration: InputDecoration(
+        fillColor: orange200,
+        filled: true,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(300),
+          borderSide: BorderSide(
+            width: 0,
+            style: BorderStyle.none,
+          ),
+        ),
+        hintText: "Search",
+        suffixIcon: InkWell(
+          onTap: () {
+            print('object');
+            Navigator.pop(context);
+          },
+          child: Icon(
+            Icons.close,
+            color: Colors.black,
+            size: 25,
+          ),
+        ),
+        isDense: true, // Added this
+        contentPadding: EdgeInsets.symmetric(horizontal: 8)
+            .copyWith(left: 16), // Added this
+      ),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: BackButton(color: Colors.white),
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: appBarGradient,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
+        ),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 55.h,
+            child: Image.asset(
+              "assets/figma/shree_bada_ramdwara.png",
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            // height: 42,
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Badge(
+              child: const Icon(Icons.notifications_sharp,
+                  color: Colors.black, size: 35),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

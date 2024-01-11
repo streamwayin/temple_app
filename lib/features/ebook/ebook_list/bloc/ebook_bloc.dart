@@ -24,7 +24,7 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
   EbookBloc() : super(const EbookState()) {
     init();
     on<FetchEpubListFromWebEvent>(onFetchEpubListEvent);
-    on<DownloadBookEvent>(onDownloadBookEvent);
+    on<DownloadBookEventEbookList>(onDownloadBookEventEbookList);
   }
   void init() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -34,8 +34,8 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
     repository = EpubRepository();
   }
 
-  FutureOr<void> onDownloadBookEvent(
-      DownloadBookEvent event, Emitter<EbookState> emit) async {
+  FutureOr<void> onDownloadBookEventEbookList(
+      DownloadBookEventEbookList event, Emitter<EbookState> emit) async {
     emit(state.copyWith(loading: true));
     EbookModel epubBook = event.book;
     firebaseAnalytics.logEvent(

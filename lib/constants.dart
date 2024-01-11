@@ -20,6 +20,7 @@ String SHOW_BOTTOM_MUSIC_CONTROLLER = "show_bottom_music_controller";
 
 const Color scaffoldBackground = Color(0xfffff1e5);
 const Color indicatorColor = Color(0xffff8f33);
+const Color orange200 = Color(0xffffc799);
 
 const appBarGradient = LinearGradient(
   begin: Alignment.bottomLeft,
@@ -61,17 +62,17 @@ const List<Map<String, String>> categoryImages = [
   {
     'title': 'पंचांग',
     'image': 'assets/figma/panchag_logo.png',
-    "routeName": "",
+    "routeName": "panchang",
   },
   {
     'title': 'कार्यक्रम ',
     'image': 'assets/figma/karyakram_logo.png',
-    "routeName": "",
+    "routeName": "kariyakram",
   },
   {
     'title': 'कलेंडर',
     'image': 'assets/figma/calander_logo.png',
-    "routeName": "",
+    "routeName": "calander",
   },
 ];
 List<Map<String, dynamic>> album = [

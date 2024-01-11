@@ -7,6 +7,8 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
+import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
+import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/home/screens/widgets/carousel_image.dart';
@@ -17,7 +19,6 @@ import 'package:temple_app/services/notification_service.dart';
 import 'package:temple_app/widgets/update_app_dialog.dart';
 import 'package:temple_app/widgets/update_opacity_component.dart';
 import '../../../constants.dart';
-import '../../../repositories/audo_repository.dart';
 import '../../about-us/screens/about_us_bottom_nav_bar.dart';
 import '../../contact-us/screens/contact_us_screen.dart';
 import '../../sightseen/screens/sightseen_screen.dart';
@@ -39,39 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     _requestPermissions();
     notificationService.initiliseNotifications();
-
     super.initState();
-  }
-
-  Future<void> _requestPermissions() async {
-    if (Platform.isIOS || Platform.isMacOS) {
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              IOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-      await flutterLocalNotificationsPlugin
-          .resolvePlatformSpecificImplementation<
-              MacOSFlutterLocalNotificationsPlugin>()
-          ?.requestPermissions(
-            alert: true,
-            badge: true,
-            sound: true,
-          );
-    } else if (Platform.isAndroid) {
-      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
-          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>();
-
-      // final bool? grantedNotificationPermission =
-      await androidImplementation?.requestNotificationsPermission();
-      // setState(() {
-      //   _notificationsEnabled = grantedNotificationPermission ?? false;
-      // });
-    }
   }
 
   @override
@@ -137,119 +106,142 @@ class _HomeScreenState extends State<HomeScreen> {
     ];
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
-        return WillPopScope(
-          onWillPop: () async {
-            exit(0);
-          },
-          child: Scaffold(
-            appBar: _buildAppBar(),
-            backgroundColor: scaffoldBackground,
-            body: SingleChildScrollView(
-              child: SizedBox(
-                width: size.width.w,
-                height: size.height.h,
-                child: Stack(
-                  children: [
-                    _templeBackground(),
-                    Column(
-                      children: [
-                        CarouselImage(cauraselIndex: state.cauraselPageIndex),
-                        _gap(10),
-                        CatagoryComponent(),
-                        _gap(10),
-                        _booksSeeAllText(),
-                        _bookListHomeComponent(size, state),
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(horizontal: 24.0)
-                        //       .copyWith(top: 8),
-                        //   child: SizedBox(
-                        //     height: 400.h,
-                        //     child: GridView.builder(
-                        //       itemCount: homeComponentList.length,
-                        //       gridDelegate:
-                        //           SliverGridDelegateWithFixedCrossAxisCount(
-                        //         mainAxisExtent: 100.h,
-                        //         mainAxisSpacing: 10,
-                        //         crossAxisSpacing: 10,
-                        //         crossAxisCount: 3,
-                        //       ),
-                        //       itemBuilder: (context, index) {
-                        //         Map<String, dynamic> category =
-                        //             homeComponentList[index];
-                        //         return HomeCategoryComponent(
-                        //           imagePath: category["imagePath"]!,
-                        //           name: category["name"]!,
-                        //           // routeName: category['routeName']!,
-                        //           onTap: category["onTap"],
-                        //         );
-                        //       },
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    ),
-
-                    // ElevatedButton(
-                    //   onPressed: () {
-                    //     print('object');
-                    //     final db = FirebaseFirestore.instance;
-                    //     db.settings = const Settings(
-                    //       persistenceEnabled: true,
-                    //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-                    //     );
-                    //   },
-                    //   child: const Text("enable presistance"),
-                    // ),
-                    // Positioned(
-                    //   bottom: 10,
-                    //   child: ElevatedButton(
-                    //     onPressed: () {
-                    //       notificationService.sendNotification("hello", "hi");
-                    //     },
-                    //     child: const Text("send notification"),
-                    //   ),
-                    // ),
-                    // Positioned(
-                    //   bottom: 50,
-                    //   child: ElevatedButton(
-                    //     onPressed: () {
-                    //       notificationService.showBigPictureNotification();
-                    //     },
-                    //     child: const Text("send notification"),
-                    //   ),
-                    // ),
-                    // Positioned(
-                    //   bottom: 50,
-                    //   child: ElevatedButton(
-                    //     onPressed: () {
-                    //       AudioRepository audioRepository = AudioRepository();
-                    //       audioRepository.uploadImageToFirebase();
-                    //     },
-                    //     child: const Text("upload imges"),
-                    //   ),
-                    // ),
-                    Positioned(
-                      bottom: 50,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          AudioRepository audioRepository = AudioRepository();
-                          audioRepository.uploadYatarasDataToFirebase();
-                        },
-                        child: const Text("upload imges"),
-                      ),
-                    ),
-                    state.updateMandatory
-                        ? UpdateOpacityComponent()
-                        : SizedBox(),
-                    state.updateMandatory ? UpdateAppDialog() : SizedBox(),
-                  ],
-                ),
+        return Scaffold(
+          appBar: _buildAppBar(),
+          backgroundColor: scaffoldBackground,
+          body: SingleChildScrollView(
+            child: SizedBox(
+              width: size.width,
+              height: size.height * 0.83,
+              child: Stack(
+                children: [
+                  _templeBackground(),
+                  Column(
+                    children: [
+                      CarouselImage(cauraselIndex: state.cauraselPageIndex),
+                      _gap(10),
+                      CatagoryComponent(),
+                      _gap(10),
+                      _booksSeeAllText(),
+                      _bookListHomeComponent(size, state),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 24.0)
+                      //       .copyWith(top: 8),
+                      //   child: SizedBox(
+                      //     height: 400.h,
+                      //     child: GridView.builder(
+                      //       itemCount: homeComponentList.length,
+                      //       gridDelegate:
+                      //           SliverGridDelegateWithFixedCrossAxisCount(
+                      //         mainAxisExtent: 100.h,
+                      //         mainAxisSpacing: 10,
+                      //         crossAxisSpacing: 10,
+                      //         crossAxisCount: 3,
+                      //       ),
+                      //       itemBuilder: (context, index) {
+                      //         Map<String, dynamic> category =
+                      //             homeComponentList[index];
+                      //         return HomeCategoryComponent(
+                      //           imagePath: category["imagePath"]!,
+                      //           name: category["name"]!,
+                      //           // routeName: category['routeName']!,
+                      //           onTap: category["onTap"],
+                      //         );
+                      //       },
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     print('object');
+                  //     final db = FirebaseFirestore.instance;
+                  //     db.settings = const Settings(
+                  //       persistenceEnabled: true,
+                  //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+                  //     );
+                  //   },
+                  //   child: const Text("enable presistance"),
+                  // ),
+                  // Positioned(
+                  //   bottom: 10,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       notificationService.sendNotification("hello", "hi");
+                  //     },
+                  //     child: const Text("send notification"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       notificationService.showBigPictureNotification();
+                  //     },
+                  //     child: const Text("send notification"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       AudioRepository audioRepository = AudioRepository();
+                  //       audioRepository.uploadImageToFirebase();
+                  //     },
+                  //     child: const Text("upload imges"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       AudioRepository audioRepository = AudioRepository();
+                  //       audioRepository.uploadYatarasDataToFirebase();
+                  //     },
+                  //     child: const Text("upload imges"),
+                  //   ),
+                  // ),
+                  state.updateMandatory ? UpdateOpacityComponent() : SizedBox(),
+                  state.updateMandatory ? UpdateAppDialog() : SizedBox(),
+                ],
               ),
             ),
           ),
         );
       },
     );
+  }
+
+  Future<void> _requestPermissions() async {
+    if (Platform.isIOS || Platform.isMacOS) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              MacOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+    } else if (Platform.isAndroid) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+
+      // final bool? grantedNotificationPermission =
+      await androidImplementation?.requestNotificationsPermission();
+      // setState(() {
+      //   _notificationsEnabled = grantedNotificationPermission ?? false;
+      // });
+    }
   }
 
   // the temple background behind the stack
@@ -264,7 +256,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   AppBar _buildAppBar() {
     return AppBar(
-      leading: BackButton(color: Colors.white),
+      automaticallyImplyLeading: false,
+      // leading: BackButton(color: Colors.white),
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           gradient: appBarGradient,
@@ -326,8 +319,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Center(
                     child: InkWell(
                       onTap: () {
-                        // ebookBloc
-                        //     .add(DownloadBookEvent(book: item));
+                        context.read<BottomBarBloc>().add(
+                            ChangeCurrentPageIndex(
+                                newIndex: 3,
+                                navigationString: EbookScreen.routeName));
+                        context
+                            .read<EbookBloc>()
+                            .add(DownloadBookEventEbookList(book: item));
                       },
                       child: SizedBox(
                         height: 160.h,
@@ -383,9 +381,15 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Row(
             children: [
-              Text(
-                "See all",
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
+              InkWell(
+                onTap: () {
+                  context.read<BottomBarBloc>().add(ChangeCurrentPageIndex(
+                      newIndex: 3, navigationString: EbookScreen.routeName));
+                },
+                child: Text(
+                  "See all",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
+                ),
               ),
               Icon(
                 Icons.arrow_forward_ios_rounded,

@@ -9,6 +9,7 @@ sealed class BottomBarEvent extends Equatable {
 
 class ChangeCurrentPageIndex extends BottomBarEvent {
   final int newIndex;
+  final String? navigationString;
 
-  ChangeCurrentPageIndex({required this.newIndex});
+  ChangeCurrentPageIndex({required this.newIndex, this.navigationString});
 }

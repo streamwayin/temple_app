@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gif_view/gif_view.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
+import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/yatara/yatara_screen.dart';
@@ -16,18 +18,34 @@ class CatagoryComponent extends StatelessWidget {
       switch (routeName) {
         case AlbumScreen.routeName:
           {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => AlbumScreen()));
+            context.read<BottomBarBloc>().add(ChangeCurrentPageIndex(
+                newIndex: 2, navigationString: EbookScreen.routeName));
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => AlbumScreen()));
           }
         case EbookScreen.routeName:
           {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => EbookScreen()));
+            context.read<BottomBarBloc>().add(ChangeCurrentPageIndex(
+                newIndex: 3, navigationString: EbookScreen.routeName));
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => EbookScreen()));
           }
         case YataraScreen.routeName:
           {
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => YataraScreen()));
+          }
+        case "panchang":
+          {
+            showDialogCoomingDiaogBox(context, "Panchang");
+          }
+        case "kariyakram":
+          {
+            showDialogCoomingDiaogBox(context, "Kariyakram");
+          }
+        case "calander":
+          {
+            showDialogCoomingDiaogBox(context, "calander");
           }
       }
     }
@@ -83,5 +101,25 @@ class CatagoryComponent extends StatelessWidget {
         );
       },
     );
+  }
+
+  // cooming soon
+  showDialogCoomingDiaogBox(BuildContext context, String title) {
+    showDialog<String>(
+        context: context,
+        builder: (BuildContext context) => AlertDialog(
+              title: Text(title),
+              content: GifView.asset("assets/images/coming-soon.gif"),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'Cancel'),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'OK'),
+                  child: const Text('OK'),
+                ),
+              ],
+            ));
   }
 }

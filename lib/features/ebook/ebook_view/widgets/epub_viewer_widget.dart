@@ -46,7 +46,7 @@ class EpubViewerWidget extends StatelessWidget {
             ),
           ),
           SizedBox(
-            height: size.height - 136.9.h,
+            height: size.height * .76,
             width: size.width,
             child: Stack(
               children: [
