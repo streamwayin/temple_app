@@ -8,6 +8,7 @@ import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/ebook/search/screens/search_book_screen.dart';
+import 'package:temple_app/features/video/video-list/screens/video_list_screen.dart';
 
 import '../../../../constants.dart';
 import '../home/screens/home_screen.dart';
@@ -66,7 +67,7 @@ class BottomBar extends StatelessWidget {
   screens() {
     return [
       const HomeScreen(),
-      Center(child: Text("videoPage")),
+      VideoListScreen(),
       AlbumScreen(),
       EbookScreen(),
       Center(child: Text("more page ")),

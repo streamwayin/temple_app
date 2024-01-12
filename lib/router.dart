@@ -64,11 +64,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const PlayAudioScreen(),
       );
-    case VideoScreen.routeName:
-      return MaterialPageRoute(
-        settings: routeSettings,
-        builder: (_) => const VideoScreen(),
-      );
+    // case VideoScreen.routeName:
+    //   return MaterialPageRoute(
+    //     settings: routeSettings,
+    //     builder: (_) => const VideoScreen(),
+    //   );
     case AlbumScreen.routeName:
       return MaterialPageRoute(
         settings: routeSettings,

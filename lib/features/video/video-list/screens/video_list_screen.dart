@@ -5,7 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/video/video-list/bloc/video_list_bloc.dart';
 import 'package:temple_app/features/video/video-screen/video_screen.dart';
 import 'package:temple_app/modals/video_album_model.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../../constants.dart';
 
@@ -30,53 +29,97 @@ class VideoListScreen extends StatelessWidget {
                       children: [
                         _gap(10),
                         SizedBox(
-                          height: size.height * .6,
+                          height: size.height * .81,
                           child: ListView.builder(
                             itemCount: state.videoAlbumModelList.length,
                             itemBuilder: (context, index) {
                               VideoAlbumModel videoAlbum =
                                   state.videoAlbumModelList[index];
-                              print(
-                                  "$index==============${videoAlbum.thumbnail}");
-                              print(
-                                  "$index==============${videoAlbum.videosList.length}");
                               return InkWell(
-                                onTap: () {
-                                  Navigator.of(context)
-                                      .pushNamed(VideoScreen.routeName);
-                                },
-                                child: ListTile(
-                                  leading: SizedBox(
-                                    child: CachedNetworkImage(
-                                      height: 50.h,
-                                      width: 50.w,
-                                      imageUrl: videoAlbum.thumbnail,
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => VideoScreen(
+                                                  videoList: state
+                                                      .videoAlbumModelList[
+                                                          index]
+                                                      .videosList,
+                                                )));
+                                    // Navigator.of(context)
+                                    //     .pushNamed(VideoScreen.routeName);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0)
+                                        .copyWith(top: 4),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: CachedNetworkImage(
+                                                height: 55.h,
+                                                width: 100.w,
+                                                imageUrl: videoAlbum.thumbnail,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            SizedBox(
+                                              width: size.width * .65,
+                                              height: 65.h,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(
+                                                    child: Text(
+                                                      maxLines: 2,
+                                                      "${videoAlbum.title}",
+                                                      style: TextStyle(
+                                                          fontSize: 16.sp,
+                                                          overflow: TextOverflow
+                                                              .ellipsis),
+                                                    ),
+                                                  ),
+                                                  Text("${videoAlbum.author}"),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Divider()
+                                      ],
                                     ),
-                                  ),
-                                  title: Text("${videoAlbum.title}"),
-                                ),
-                              );
+                                  ));
                             },
                           ),
                         ),
                       ],
                     ),
-                    Positioned(
-                      bottom: 0,
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            // context
-                            //     .read<VideoListBloc>()
-                            //     .add(VideoListInitialEvent());
-                            var yt = YoutubeExplode();
-                            await for (var video in yt.playlists.getVideos(
-                                "PLmqmKUzk1BJUBctyH5wB9dn5eV6Cn1x3W")) {
-                              print(
-                                  "https://i.ytimg.com/vi/${video.id}/sddefault.jpg");
-                            }
-                          },
-                          child: Text("trigger event")),
-                    )
+                    // Positioned(
+                    //   bottom: 0,
+                    //   child: ElevatedButton(
+                    //       onPressed: () async {
+                    //         // context
+                    //         //     .read<VideoListBloc>()
+                    //         //     .add(VideoListInitialEvent());
+                    //         var yt = YoutubeExplode();
+                    //         await for (var video in yt.playlists.getVideos(
+                    //             "PLmqmKUzk1BJUBctyH5wB9dn5eV6Cn1x3W")) {
+                    //           print(
+                    //               "https://i.ytimg.com/vi/${video.id}/sddefault.jpg");
+                    //         }
+                    //       },
+                    //       child: Text("trigger event")),
+                    // ),
                   ],
                 ),
         );

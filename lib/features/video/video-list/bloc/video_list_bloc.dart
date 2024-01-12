@@ -32,19 +32,24 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
         Map<String, String> mapForVideoAlbumModel = {};
         mapForVideoAlbumModel["albumId"] = a.playlistId;
         mapForVideoAlbumModel["index"] = a.index;
-
+        log(a.playlistId);
         var playlist = await yt.playlists.get(a.playlistId);
         mapForVideoAlbumModel["title"] = playlist.title;
         mapForVideoAlbumModel["playlistId"] = a.playlistId;
         mapForVideoAlbumModel["albumId"] = a.albumId;
         mapForVideoAlbumModel["description"] = playlist.description;
-        Map<String, String> localVideoMap = {};
+        mapForVideoAlbumModel["author"] = playlist.author;
+        mapForVideoAlbumModel["videoCount"] = playlist.videoCount.toString();
         List<Map<String, String>> loalVideoList = [];
         await for (var video in yt.playlists.getVideos(a.playlistId)) {
+          Map<String, String> localVideoMap = {};
           localVideoMap["id"] = video.id.value;
           localVideoMap["title"] = video.title;
           localVideoMap["description"] = video.description;
           localVideoMap["url"] = video.url;
+
+          localVideoMap["duration"] = "${video.duration!.inMilliseconds}";
+
           localVideoMap["thumbnail"] =
               "https://i.ytimg.com/vi/${video.id}/sddefault.jpg";
           loalVideoList.add(localVideoMap);
@@ -58,9 +63,10 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
         }
         videoAlbumModelList
             .add(VideoAlbumModel.fromJson(mapForVideoAlbumModel));
-        emit(state.copyWith(
-            isLoading: false, videoAlbumModelList: videoAlbumModelList));
       }
+
+      emit(state.copyWith(
+          isLoading: false, videoAlbumModelList: videoAlbumModelList));
     } else {
       emit(state.copyWith(isLoading: false));
     }

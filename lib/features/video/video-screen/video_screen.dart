@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rotation_check/rotation_check.dart';
+import 'package:temple_app/constants.dart';
+import 'package:temple_app/modals/video_model.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
-
-import 'video_playlist.dart';
 
 // class VideoScreen extends StatelessWidget {
 //   const VideoScreen({super.key});
@@ -31,8 +32,8 @@ import 'video_playlist.dart';
 // }
 class VideoScreen extends StatefulWidget {
   static const String routeName = '/video-screen';
-
-  const VideoScreen({super.key});
+  final List<VideoModel> videoList;
+  const VideoScreen({super.key, required this.videoList});
   @override
   MyHomePageState createState() => MyHomePageState();
 }
@@ -44,6 +45,8 @@ class MyHomePageState extends State<VideoScreen> {
 
   late PlayerState _playerState;
   late YoutubeMetaData _videoMetaData;
+  int currentVideoIndex = 0;
+
   double _volume = 100;
   bool _muted = false;
   bool _isPlayerReady = false;
@@ -54,28 +57,13 @@ class MyHomePageState extends State<VideoScreen> {
   var yt = YoutubeExplode();
 
   List<String> _ids = [];
-  // final List<String> _ids = [
-  //   '7Pz2uFEBA8Q',
-  //   'gQDByCdjUXw',
-  //   'iLnmTe5Q2Qw',
-  //   '_WoCV4c6XOE',
-  //   'KmzdUe0RSJo',
-  //   '6jZDSSZZxjQ',
-  //   'p2lYr3vM_1w',
-  //   '7QUtEmBT_-w',
-  //   '34_PXCzGw1M',
-  // ];
+
   initial() async {
-    // ytlist = yt.playlists.getVideos("PLosaC3gb0kGC1jJXceKOVZ29Rq0Mfj4wK");
-    await for (var video
-        in yt.playlists.getVideos("PLjycf6h8bQ3knLIvDd_IlycSgCz7lkdld")) {
-      _ids.add(video.id.value);
-      setState(() {});
-      // var videoTitle = video.id;
-      // var videoAuthor = video.author;
+    for (var a in widget.videoList) {
+      _ids.add(a.id);
     }
     _controller = YoutubePlayerController(
-      initialVideoId: _ids.first,
+      initialVideoId: widget.videoList.first.id,
       flags: const YoutubePlayerFlags(
         mute: false,
         autoPlay: true,
@@ -129,6 +117,7 @@ class MyHomePageState extends State<VideoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return YoutubePlayerBuilder(
       onEnterFullScreen: () {
         (isRoationEnabled)
@@ -143,7 +132,7 @@ class MyHomePageState extends State<VideoScreen> {
                 [DeviceOrientation.portraitUp]);
       },
       player: YoutubePlayer(
-        aspectRatio: 9 / 16,
+        // aspectRatio: 9 / 16,
         controller: _controller,
         showVideoProgressIndicator: true,
         progressIndicatorColor: Colors.blueAccent,
@@ -181,23 +170,7 @@ class MyHomePageState extends State<VideoScreen> {
         },
       ),
       builder: (context, player) => Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'Youtube Player Flutter',
-            style: TextStyle(color: Colors.white),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.video_library),
-              onPressed: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => VideoList(controllers: _ids),
-                ),
-              ),
-            ),
-          ],
-        ),
+        appBar: _buildAppBar(),
         body: ListView(
           children: [
             player,
@@ -206,11 +179,9 @@ class MyHomePageState extends State<VideoScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // Text("${widget.videoList[3].title}"),
                   _space,
-                  _text('Title', _videoMetaData.title),
-                  _space,
-                  _text('Channel', _videoMetaData.author),
-                  _space,
+                  _buildVideoList(size, widget.videoList),
                 ],
               ),
             ),
@@ -220,19 +191,291 @@ class MyHomePageState extends State<VideoScreen> {
     );
   }
 
+  String formatDuration(Duration duration) {
+    String twoDigits(int n) {
+      if (n >= 10) return '$n';
+      return '0$n';
+    }
+
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+
+    return '${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds';
+  }
+
+  Widget _buildVideoList(Size size, List<VideoModel> videroList) {
+    Color white = Colors.black;
+    return Container(
+        height: size.height * 0.6,
+        child: Container(
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            width: size.width - 80,
+                            child: Text(
+                              "${_videoMetaData.title}",
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: white.withOpacity(0.8),
+                                  fontWeight: FontWeight.w500,
+                                  height: 1.3),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      Row(
+                        children: <Widget>[
+                          Text(
+                            " ${_videoMetaData.author}",
+                            style: TextStyle(
+                                color: white.withOpacity(0.6), fontSize: 13),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Divider(
+                  color: white.withOpacity(0.1),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 0, left: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        "Up next",
+                        style: TextStyle(
+                            fontSize: 14,
+                            color: white.withOpacity(0.4),
+                            fontWeight: FontWeight.w500),
+                      ),
+                      // Row(
+                      //   children: <Widget>[
+                      //     Text(
+                      //       "Autoplay",
+                      //       style: TextStyle(
+                      //           fontSize: 14,
+                      //           color: white.withOpacity(0.4),
+                      //           fontWeight: FontWeight.w500),
+                      //     ),
+                      //     // Switch(
+                      //     //     value: isSwitched,
+                      //     //     onChanged: (value) {
+                      //     //       setState(() {
+                      //     //         isSwitched = value;
+                      //     //       });
+                      //     //     })
+                      //   ],
+                      // )
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 5,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: List.generate(videroList.length, (index) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              currentVideoIndex = index;
+                              _controller.load(videroList[index].id);
+                            });
+                            // _startPlay(home_video_detail[index]);
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.only(bottom: 20),
+                            child: Stack(
+                              children: [
+                                Row(
+                                  children: <Widget>[
+                                    Container(
+                                      width:
+                                          (MediaQuery.of(context).size.width -
+                                                  70) /
+                                              2,
+                                      height: 100,
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                  videroList[index].thumbnail),
+                                              fit: BoxFit.cover)),
+                                      child: videroList[index].duration == null
+                                          ? SizedBox()
+                                          : Stack(
+                                              children: <Widget>[
+                                                Positioned(
+                                                  bottom: 10,
+                                                  right: 12,
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.black
+                                                            .withOpacity(0.8),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(3)),
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              3.0),
+                                                      child: Text(
+                                                        formatDuration(
+                                                            videroList[index]
+                                                                .duration!),
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                    0.4)),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                    ),
+                                    SizedBox(
+                                      width: 20,
+                                    ),
+                                    Expanded(
+                                        child: Container(
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Container(
+                                            width: size.width * .39,
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: <Widget>[
+                                                Text(
+                                                  videroList[index].title,
+                                                  style: TextStyle(
+                                                      color: white
+                                                          .withOpacity(0.9),
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      height: 1.3,
+                                                      fontSize: 14),
+                                                  maxLines: 3,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                                Text(
+                                                  videroList[index].author,
+                                                  style: TextStyle(
+                                                      color: white
+                                                          .withOpacity(0.4),
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ))
+                                  ],
+                                ),
+                                currentVideoIndex == index
+                                    ? Container(
+                                        height: 100,
+                                        width: 700,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Color.fromARGB(26, 0, 0, 0),
+                                        ),
+                                      )
+                                    : SizedBox()
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: BackButton(color: Colors.white),
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: appBarGradient,
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(10),
+            bottomRight: Radius.circular(10),
+          ),
+        ),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 55.h,
+            child: Image.asset(
+              "assets/figma/shree_bada_ramdwara.png",
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            // height: 42,
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Badge(
+              child: const Icon(Icons.notifications_sharp,
+                  color: Colors.black, size: 35),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _text(String title, String value) {
     return RichText(
       text: TextSpan(
         text: '$title : ',
         style: const TextStyle(
-          color: Colors.blueAccent,
+          color: Colors.black,
+          fontSize: 16,
           fontWeight: FontWeight.bold,
         ),
         children: [
           TextSpan(
             text: value,
             style: const TextStyle(
-              color: Colors.blueAccent,
+              color: Colors.black87,
               fontWeight: FontWeight.w300,
             ),
           ),
@@ -380,3 +623,80 @@ class MyHomePageState extends State<VideoScreen> {
 //                     ],
 //                   ),
 // }
+const List home_video_detail = [
+  {
+    "id": 1,
+    "thumnail_img": "assets/images/menu_5.jpg",
+    "profile_img":
+        "https://yt3.ggpht.com/ytc/AAUvwnihe-DJ8LqGo-CIKGvJif0xpv_8aWF0UWiDZJSpEQ=s176-c-k-c0xffffffff-no-rj-mo",
+    "username": "Heng Visal",
+    "title": "មនុស្សអរូប by Noly Time [Official FULL MV]",
+    "view_count": "1,311,740",
+    "day_ago": "Dec 10, 2019",
+    "subscriber_count": "925K",
+    "like_count": "37K",
+    "unlike_count": "1.1K",
+    "video_url": "assets/videos/video_5.mp4",
+    "video_duration": "12:04"
+  },
+  {
+    "id": 2,
+    "thumnail_img": "assets/images/menu_1.jpg",
+    "profile_img":
+        "https://yt3.ggpht.com/ytc/AAUvwnhuheOArV1o5BSo10TdUivctyIHSfzYGKLwudMCdg=s176-c-k-c0xffffffff-no-rj-mo",
+    "username": "a day magazine",
+    "title": "Violette Wautier - I'd Do It Again | Live in a day",
+    "view_count": "1,122,707",
+    "day_ago": "Jul 2, 2020",
+    "subscriber_count": "88.6K",
+    "like_count": "11K",
+    "unlike_count": "88",
+    "video_url": "assets/videos/video_1.mp4",
+    "video_duration": "04:30"
+  },
+  {
+    "id": 3,
+    "thumnail_img": "assets/images/menu_6.jpg",
+    "profile_img":
+        "https://yt3.ggpht.com/ytc/AAUvwniOFTckqAPsjNIg5zGVZnJqLZ58RTgH0a4RSmFKBQ=s176-c-k-c0xffffffff-no-nd-rj-mo",
+    "username": "Kmeng Khmer - ក្មេងខ្មែរ Official",
+    "title": "KmengKhmer - ឆ្ងាយតែកាយ (Far Away) [Official MV]",
+    "view_count": "5,388,486",
+    "day_ago": "Sep 8, 2018",
+    "subscriber_count": "562K",
+    "like_count": "13K",
+    "unlike_count": "69",
+    "video_url": "assets/videos/video_6.mp4",
+    "video_duration": "07:05"
+  },
+  {
+    "id": 4,
+    "thumnail_img": "assets/images/menu_2.jpg",
+    "profile_img":
+        "https://yt3.ggpht.com/ytc/AAUvwniJv0lOI9XzTWKHHA5pD04MMZSsGWCT9qWxb1w9Dw=s176-c-k-c0xffffffff-no-nd-rj-mo",
+    "username": "វណ្ណដា-VannDa Official",
+    "title": "VANNDA - HIK HIK (FEAT. BAD BOY BERT) [OFFICIAL MUSIC VIDEO]",
+    "view_count": "5,109,116",
+    "day_ago": "Nov 25, 2020",
+    "subscriber_count": "1.45M",
+    "like_count": "13K",
+    "unlike_count": "69",
+    "video_url": "assets/videos/video_2.mp4",
+    "video_duration": "04:30"
+  },
+  {
+    "id": 5,
+    "thumnail_img": "assets/images/menu_4.jpg",
+    "profile_img":
+        "https://yt3.ggpht.com/ytc/AAUvwnjcXhQ1Tl-tCyXrovuQwBMHrFwE9uMzzclq2SzHjg=s176-c-k-c0xffffffff-no-rj-mo",
+    "username": "KlapYaHandz",
+    "title": "Vin Vitou - រាល់ថ្ងៃនេះ (Nowadays) Ft. Ruthko [Official MV]",
+    "view_count": "292,288",
+    "day_ago": "Sep 25, 2020",
+    "subscriber_count": "511K",
+    "like_count": "5.9K",
+    "unlike_count": "65",
+    "video_url": "assets/videos/video_4.mp4",
+    "video_duration": "04:30"
+  },
+];

@@ -9,6 +9,8 @@ class VideoAlbumModel {
   String playlistId;
   String description;
   String thumbnail;
+  String? author;
+  int? videoCount;
 
   List<VideoModel> videosList;
   VideoAlbumModel({
@@ -17,8 +19,10 @@ class VideoAlbumModel {
     required this.title,
     required this.playlistId,
     required this.description,
-    required this.videosList,
     required this.thumbnail,
+    this.author,
+    this.videoCount,
+    required this.videosList,
   });
 
   Map<String, dynamic> toJson() {
@@ -46,6 +50,9 @@ class VideoAlbumModel {
               (json.decode(map['videosList']) as List<dynamic>)
                   .map((item) => VideoModel.fromJson(item)))
           : [],
+      videoCount:
+          map['videoCount'] == null ? null : int.parse(map['videoCount']),
+      author: map['author'] == null ? null : map['author'],
     );
   }
 }
