@@ -39,7 +39,7 @@ class UpdateAppDialog extends StatelessWidget {
                   ElevatedButton(
                       onPressed: () async {
                         Uri url = Uri.parse(
-                            'https://play.google.com/store/apps/details?id=in.streamway.flutterapp');
+                            'https://play.google.com/store/apps/details?id=in.streamway.temple_app');
                         if (await canLaunchUrl(url)) {
                           launchUrl(url, mode: LaunchMode.externalApplication);
                         } else {

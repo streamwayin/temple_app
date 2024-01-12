@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/constants.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
+import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 import '../bloc/play_audio_bloc.dart';
@@ -35,6 +36,7 @@ class AlbumScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      _gap(5),
                       DropdownMenu(
                         width: (size.width - 55).w,
                         enableFilter: true,
@@ -146,6 +148,7 @@ class AlbumScreen extends StatelessWidget {
               (state.albumsPageLoading == true)
                   ? Utils.showLoadingOnSceeen()
                   : const SizedBox(),
+              Text("${context.read<HomeBloc>().state.onPlayAudioScreen}")
             ],
           ),
         );
@@ -153,6 +156,7 @@ class AlbumScreen extends StatelessWidget {
     );
   }
 
+  SizedBox _gap(int height) => SizedBox(height: height.h);
   List<DropdownMenuEntry> getMenuItems(
       PlayAudioState state, BuildContext context) {
     List<DropdownMenuEntry> list = [];

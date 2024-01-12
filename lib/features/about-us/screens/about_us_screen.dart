@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
+import "package:temple_app/constants.dart";
 
 class AboutUsScreen extends StatelessWidget {
   const AboutUsScreen({super.key});
@@ -13,6 +14,7 @@ class AboutUsScreen extends StatelessWidget {
       'प्रतिवर्ष पौष माह में यहां बरसी उत्सव का कार्यक्रम आयोजित होता है जिसमें स्थानीय व बाहर से सन्तों का आगमन अनेक स्थानों से होता है। सन्तों द्वारा प्रवचन, कथा, भजन कीर्तन का आयोजन विशेष रूप से होता है।',
     ];
     return Scaffold(
+      appBar: _buildAppBar(),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: SingleChildScrollView(
@@ -53,6 +55,39 @@ class AboutUsScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  AppBar _buildAppBar() {
+    return AppBar(
+      leading: BackButton(color: Colors.white),
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: appBarGradient,
+        ),
+      ),
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            height: 55.h,
+            child: Image.asset(
+              "assets/figma/shree_bada_ramdwara.png",
+              fit: BoxFit.fitHeight,
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(30)),
+            // height: 42,
+            margin: const EdgeInsets.symmetric(horizontal: 10),
+            child: Badge(
+              child: const Icon(Icons.notifications_sharp,
+                  color: Colors.black, size: 35),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -13,80 +13,97 @@ class ControlButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return BlocBuilder<PlayAudioBloc, PlayAudioState>(
       builder: (context, state) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            _buildDownloadButton(state, context),
-            IconButton(
-              iconSize: 50,
-              onPressed: () {
-                context
-                    .read<PlayAudioBloc>()
-                    .add(const ChangeSongEvent(previous: true));
-              },
-              icon: SvgPicture.asset('assets/svg/previous.svg'),
-            ),
-            BlocConsumer<PlayAudioBloc, PlayAudioState>(
-              listener: (context, state) {},
-              builder: (context, state) {
-                PlayerState? playerState =
-                    state.musicPlayerDataModel?.playerState;
+        return Container(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          height: 55,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildDownloadButton(state, context),
+              SizedBox(
+                width: size.width * .18,
+                child: IconButton(
+                  iconSize: 50,
+                  onPressed: () {
+                    context
+                        .read<PlayAudioBloc>()
+                        .add(const ChangeSongEvent(previous: true));
+                  },
+                  icon: SvgPicture.asset('assets/svg/previous.svg'),
+                ),
+              ),
+              SizedBox(
+                width: size.width * .18,
+                child: BlocConsumer<PlayAudioBloc, PlayAudioState>(
+                  listener: (context, state) {},
+                  builder: (context, state) {
+                    PlayerState? playerState =
+                        state.musicPlayerDataModel?.playerState;
 
-                final processingState = playerState?.processingState;
-                final playing = playerState?.playing;
-                if (processingState == ProcessingState.loading ||
-                    processingState == ProcessingState.buffering) {
-                  return Container(
-                    margin: const EdgeInsets.all(8.0),
-                    width: 60.0,
-                    height: 60.0,
-                    child: const CircularProgressIndicator(),
-                  );
-                } else if (playing != true) {
-                  return IconButton(
-                    icon: const Icon(Icons.play_arrow),
-                    iconSize: 60.0,
-                    onPressed: () {
-                      context
-                          .read<PlayAudioBloc>()
-                          .add(const PlayOrPauseSongEvent(play: true));
-                    },
-                  );
-                } else if (processingState != ProcessingState.completed) {
-                  return IconButton(
-                    icon: SvgPicture.asset('assets/svg/pause.svg'),
-                    iconSize: 60.0,
-                    onPressed: () {
-                      context
-                          .read<PlayAudioBloc>()
-                          .add(const PlayOrPauseSongEvent(play: false));
-                    },
-                  );
-                } else {
-                  return IconButton(
-                    icon: const Icon(Icons.replay),
-                    iconSize: 60.0,
-                    onPressed: () {
-                      // player.seek(Duration.zero)
-                    },
-                  );
-                }
-              },
-            ),
-            IconButton(
-              iconSize: 50,
-              onPressed: () {
-                context
-                    .read<PlayAudioBloc>()
-                    .add(const ChangeSongEvent(next: true));
-              },
-              icon: SvgPicture.asset('assets/svg/next.svg'),
-            ),
-            Icon(Icons.more_horiz)
-          ],
+                    final processingState = playerState?.processingState;
+                    final playing = playerState?.playing;
+                    if (processingState == ProcessingState.loading ||
+                        processingState == ProcessingState.buffering) {
+                      return IconButton(
+                        icon: const Icon(Icons.play_arrow),
+                        iconSize: 40.0,
+                        onPressed: () {
+                          // context
+                          //     .read<PlayAudioBloc>()
+                          //     .add(const PlayOrPauseSongEvent(play: true));
+                        },
+                      );
+                    } else if (playing != true) {
+                      return IconButton(
+                        icon: const Icon(Icons.play_arrow),
+                        iconSize: 40.0,
+                        onPressed: () {
+                          context
+                              .read<PlayAudioBloc>()
+                              .add(const PlayOrPauseSongEvent(play: true));
+                        },
+                      );
+                    } else if (processingState != ProcessingState.completed) {
+                      return IconButton(
+                        icon: SvgPicture.asset('assets/svg/pause.svg'),
+                        iconSize: 60.0,
+                        onPressed: () {
+                          context
+                              .read<PlayAudioBloc>()
+                              .add(const PlayOrPauseSongEvent(play: false));
+                        },
+                      );
+                    } else {
+                      return IconButton(
+                        icon: const Icon(Icons.replay),
+                        iconSize: 60.0,
+                        onPressed: () {
+                          // player.seek(Duration.zero)
+                        },
+                      );
+                    }
+                  },
+                ),
+              ),
+              SizedBox(
+                width: size.width * .18,
+                child: IconButton(
+                  iconSize: 50,
+                  onPressed: () {
+                    context
+                        .read<PlayAudioBloc>()
+                        .add(const ChangeSongEvent(next: true));
+                  },
+                  icon: SvgPicture.asset('assets/svg/next.svg'),
+                ),
+              ),
+              Icon(Icons.more_horiz)
+            ],
+          ),
         );
       },
     );
