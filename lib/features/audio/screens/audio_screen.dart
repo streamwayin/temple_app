@@ -1,10 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
+import 'package:temple_app/features/audio/play-audio-screen/play_audio_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/modals/track_model.dart';
 
@@ -84,9 +85,9 @@ class AudioScreen extends StatelessWidget {
                       //     )
                       //   ],
                       // ),
-                      SizedBox(
+                      Expanded(
                         // height: size.height * .84,
-                        height: 568.h,
+                        // height: 568.h,
                         child: songList == null
                             ? (state.tracksPageLoading == true)
                                 ? const SizedBox()
@@ -224,7 +225,9 @@ class AudioScreen extends StatelessWidget {
       context.read<PlayAudioBloc>().add(const SaveCurrentAlbumToLocalStorage());
       context.read<PlayAudioBloc>().add(SavePlayingTracksEvent());
     } else {
-      Navigator.pushNamed(context, AuthScreen.routeName);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => AuthScreen()));
+      // Navigator.pushNamed(context, AuthScreen.routeName);
     }
   }
 

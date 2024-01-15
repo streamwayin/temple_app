@@ -27,7 +27,8 @@ part 'play_audio_event.dart';
 part 'play_audio_state.dart';
 
 class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
-  PlayAudioBloc() : super(PlayAudioInitial()) {
+  final AudioRepository audioRepository;
+  PlayAudioBloc({required this.audioRepository}) : super(PlayAudioInitial()) {
     _getPref();
     on<PlayAudioEventInitial>(onPlayAudioEventInitial);
     on<AlbumIndexChanged>(onAlbumIndexChanged);
@@ -47,10 +48,9 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<ChangeOnAboutUsNavBar>(onChangeOnAboutUsNavBar);
     on<ChangeCurrentPlaylistAlbumId>(onChangeCurrentPlaylistAlbumId);
     on<SavePlayingTracksEvent>(onSavePlayingTracksEvent);
-    on<ToggleLoopMode>(onToggleLoopMode);
-    on<ToggleSuffleMode>(onToggleSuffleMode);
+    // on<ToggleLoopMode>(onToggleLoopMode);
+    // on<ToggleSuffleMode>(onToggleSuffleMode);
   }
-  AudioRepository audioRepository = AudioRepository();
   late SharedPreferences sharedPreferences;
   FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.instance;
   void _getPref() async {
@@ -440,16 +440,16 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     emit(state.copyWith(currentPlaylistTracks: tracks));
   }
 
-  FutureOr<void> onToggleLoopMode(
-      ToggleLoopMode event, Emitter<PlayAudioState> emit) async {
-    print('oooooooooooooooooooooooo');
-    await audioRepository.loopMode(event.loopmode);
-    emit(state.copyWith(isLooping: event.loopmode));
-  }
+  // FutureOr<void> onToggleLoopMode(
+  //     ToggleLoopMode event, Emitter<PlayAudioState> emit) async {
+  //   print('oooooooooooooooooooooooo');
+  //   await audioRepository.loopMode(event.loopmode);
+  //   emit(state.copyWith(isLooping: event.loopmode));
+  // }
 
-  FutureOr<void> onToggleSuffleMode(
-      ToggleSuffleMode event, Emitter<PlayAudioState> emit) async {
-    await audioRepository.suffle(event.suffle);
-    emit(state.copyWith(isSuffling: event.suffle));
-  }
+  // FutureOr<void> onToggleSuffleMode(
+  //     ToggleSuffleMode event, Emitter<PlayAudioState> emit) async {
+  //   await audioRepository.suffle(event.suffle);
+  //   emit(state.copyWith(isSuffling: event.suffle));
+  // }
 }

@@ -5,12 +5,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:temple_app/constants.dart';
 import 'package:temple_app/features/about-us/bloc/about_us_bloc.dart';
 import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
+import 'package:temple_app/features/audio/play-audio-screen/bloc/play_audio_screen_bloc.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
@@ -25,6 +27,7 @@ import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.da
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/yatara/bloc/yatara_bloc.dart';
 import 'package:temple_app/firebase_options.dart';
+import 'package:temple_app/repositories/audo_repository.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
 import 'package:temple_app/router.dart';
@@ -48,6 +51,11 @@ void main() async {
     androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
   );
+  Future.wait([
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]),
+  ]);
   await EasyLocalization.ensureInitialized();
   runApp(
     EasyLocalization(
@@ -68,9 +76,9 @@ class MyApp extends StatelessWidget {
   static FirebaseAnalytics analytics = FirebaseAnalytics.instance;
   static FirebaseAnalyticsObserver observer =
       FirebaseAnalyticsObserver(analytics: analytics);
-
   @override
   Widget build(BuildContext context) {
+    AudioRepository audioRepository = AudioRepository();
     return ScreenUtilInit(
       designSize: const Size(360, 690),
       minTextAdapt: true,
@@ -92,7 +100,8 @@ class MyApp extends StatelessWidget {
               ),
               BlocProvider(
                 create: (context) =>
-                    PlayAudioBloc()..add(PlayAudioEventInitial()),
+                    PlayAudioBloc(audioRepository: audioRepository)
+                      ..add(PlayAudioEventInitial()),
               ),
               // BlocProvider(create: (context) => EbookBloc()),
               BlocProvider(create: (context) => EpubViewerBloc()),
@@ -119,7 +128,10 @@ class MyApp extends StatelessWidget {
                   create: (context) => YataraBloc()..add(YataraInitialEvent())),
               BlocProvider(
                   create: (context) =>
-                      EbookBloc()..add(FetchEpubListFromWebEvent()))
+                      EbookBloc()..add(FetchEpubListFromWebEvent())),
+              BlocProvider(
+                  create: (context) =>
+                      PlayAudioScreenBloc(audioRepository: audioRepository))
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,

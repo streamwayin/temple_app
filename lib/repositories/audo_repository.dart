@@ -79,14 +79,16 @@ class AudioRepository {
     await _player.seek(Duration.zero, index: index);
   }
 
-  Future<void> suffle(bool suffle) async =>
-      await _player.setShuffleModeEnabled(suffle);
+  void suffle(bool suffle) => _player.setShuffleModeEnabled(suffle);
 
-  Future<void> loopMode(bool loop) async {
+  loopMode(bool loop) {
     if (loop) {
-      await _player.setLoopMode(LoopMode.one);
-    } else
-      await _player.setLoopMode(LoopMode.off);
+      print("loop mode set==================  true");
+      _player.setLoopMode(LoopMode.one);
+    } else {
+      print("loop mode set==================  false");
+      _player.setLoopMode(LoopMode.off);
+    }
   }
 
   // get all albums from web
@@ -165,7 +167,9 @@ class AudioRepository {
       final data = await FirebaseFirestore.instance
           .collection('tracks')
           .where("albumId", isEqualTo: albumId)
-          .get();
+          .get(
+            const GetOptions(source: Source.serverAndCache),
+          );
       // final dataa = await FirebaseFirestore.instance.collection('tracks').where(album).get();
       List<QueryDocumentSnapshot<Map<String, dynamic>>> a = data.docs;
       for (var b in a) {
@@ -422,7 +426,9 @@ class AudioRepository {
       final data = await FirebaseFirestore.instance
           .collection('tracks')
           .where("albumId", isEqualTo: a.albumId)
-          .get();
+          .get(
+            const GetOptions(source: Source.serverAndCache),
+          );
       List<QueryDocumentSnapshot<Map<String, dynamic>>> ab = data.docs;
       TrackModel model;
       if (ab.length != 0) {

@@ -31,6 +31,15 @@ const appBarGradient = LinearGradient(
   ],
   // stops: [0.5, 1.0],
 );
+const indicatorGradient = LinearGradient(
+  begin: Alignment.bottomLeft,
+  end: Alignment.bottomRight,
+  colors: [
+    Color(0xffff6316),
+    Color(0xffff963f),
+  ],
+  // stops: [0.5, 1.0],
+);
 
 List<String> wallpaperImagesList = [
   'https://firebasestorage.googleapis.com/v0/b/religiousapp-e15d2.appspot.com/o/baba-bholenath-with-cow-baba-bholenath-bhakti-thumbnail%20(1).jpg?alt=media&token=f3634454-616a-48ba-a499-f306300d8c3b',

@@ -30,13 +30,19 @@ class MyAppState extends State<PlayAudioScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (didPop) {
         context
             .read<HomeBloc>()
             .add(const ChangeOnPlayAudioSreenOrNot(onPlayAudioScreen: false));
-        return true;
+        //   return true;
       },
+      // onWillPop: () async {
+      //   context
+      //       .read<HomeBloc>()
+      //       .add(const ChangeOnPlayAudioSreenOrNot(onPlayAudioScreen: false));
+      //   return true;
+      // },
       child: Scaffold(
         appBar: _buildAppBar(),
         body: BlocListener<PlayAudioBloc, PlayAudioState>(
@@ -77,38 +83,55 @@ class MyAppState extends State<PlayAudioScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
                     child: Row(
                       children: [
-                        SvgPicture.asset('assets/svg/volume.svg'),
+                        // SvgPicture.asset('assets/svg/volume.svg'),
                         Spacer(),
                         InkWell(
                             onTap: () {
-                              print('object');
-                              context.read<PlayAudioScreenBloc>().add(
-                                  ToggleLoopMode(loopmode: !state.isLooping));
+                              bool loopMode = context
+                                  .read<PlayAudioScreenBloc>()
+                                  .state
+                                  .loopMode;
+                              print('loop mode from screen');
+                              print(loopMode);
+                              context
+                                  .read<PlayAudioScreenBloc>()
+                                  .add(ToggleLoopMode(loopmode: !loopMode));
                             },
                             child: Stack(
                               children: [
-                                SvgPicture.asset('assets/svg/loop.svg'),
-                                state.isLooping
-                                    ? Text(
-                                        " 1",
-                                        style: TextStyle(
-                                            color: Color(0xff8996b8),
-                                            fontSize: 16),
+                                context
+                                        .read<PlayAudioScreenBloc>()
+                                        .state
+                                        .loopMode
+                                    ? SvgPicture.asset(
+                                        'assets/svg/loop.svg',
+                                        colorFilter: ColorFilter.mode(
+                                            Color(0xff593600), BlendMode.srcIn),
                                       )
-                                    : SizedBox()
+                                    : SvgPicture.asset('assets/svg/loop.svg')
                               ],
                             )),
                         SizedBox(width: 5.w),
                         InkWell(
                           onTap: () {
-                            context.read<PlayAudioScreenBloc>().add(
-                                ToggleSuffleMode(suffle: !state.isSuffling));
+                            bool isSuffling = context
+                                .read<PlayAudioScreenBloc>()
+                                .state
+                                .isSuffling;
+                            context
+                                .read<PlayAudioScreenBloc>()
+                                .add(ToggleSuffleMode(suffle: !isSuffling));
                           },
-                          child: state.isSuffling
-                              ? Icon(
-                                  Icons.shuffle_on_outlined,
-                                  // color: Color(0xff8996b8),
+                          child: context
+                                  .read<PlayAudioScreenBloc>()
+                                  .state
+                                  .isSuffling
+                              ? SvgPicture.asset(
+                                  'assets/svg/shuffle-outline.svg',
+                                  colorFilter: ColorFilter.mode(
+                                      Color(0xff593600), BlendMode.srcIn),
                                 )
+                              // color: Color(0xff8996b8),
                               : SvgPicture.asset(
                                   'assets/svg/shuffle-outline.svg'),
                           // Icon(Icons.shuffle_on, color: Color(0xff8996b8)),

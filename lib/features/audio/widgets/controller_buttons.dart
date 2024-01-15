@@ -49,7 +49,7 @@ class ControlButtons extends StatelessWidget {
                     if (processingState == ProcessingState.loading ||
                         processingState == ProcessingState.buffering) {
                       return IconButton(
-                        icon: const Icon(Icons.play_arrow),
+                        icon: SvgPicture.asset('assets/svg/pause.svg'),
                         iconSize: 40.0,
                         onPressed: () {
                           // context

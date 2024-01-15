@@ -10,7 +10,9 @@ class HomeRepository {
       CollectionReference metadataCollection =
           FirebaseFirestore.instance.collection('metadata');
       DocumentSnapshot documentSnapshot =
-          await metadataCollection.doc('androidVersion').get();
+          await metadataCollection.doc('androidVersion').get(
+                const GetOptions(source: Source.serverAndCache),
+              );
 
       // Check if the document exists
       if (documentSnapshot.exists) {

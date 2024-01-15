@@ -5,7 +5,9 @@ class VideoRepository {
   final dbInstance = FirebaseFirestore.instance;
   Future<List<VideoAlbumModelDb>> getVideoAlbumListFromWeb() async {
     List<VideoAlbumModelDb> videoList = [];
-    final data = await dbInstance.collection("video-albums").get();
+    final data = await dbInstance.collection("video-albums").get(
+          const GetOptions(source: Source.serverAndCache),
+        );
     final listOfDataMap = data.docs;
 
     for (var a in listOfDataMap) {

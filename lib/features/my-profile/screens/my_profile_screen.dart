@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/constants.dart';
 import 'package:temple_app/features/about-us/screens/about_us_screen.dart';
 import 'package:temple_app/features/contact-us/screens/contact_us_screen.dart';
@@ -63,10 +64,13 @@ class MyProfileScreen extends StatelessWidget {
               ),
               _gap(10),
               InkWell(
-                  onTap: () {
+                  onTap: () async {
+                    SharedPreferences sharedPreferences =
+                        await SharedPreferences.getInstance();
                     FirebaseAuth.instance.signOut();
                     Utils.showSnackBar(
                         context: context, message: "Sucessfully logged out !!");
+                    sharedPreferences.setBool(IS_USER_LOGGED_IN, false);
                   },
                   child: _buildCardButton("Log Out", Icons.logout)),
               _gap(10),

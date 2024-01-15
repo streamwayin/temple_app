@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -109,14 +110,14 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           appBar: _buildAppBar(),
           backgroundColor: scaffoldBackground,
-          body: SingleChildScrollView(
-            child: SizedBox(
-              width: size.width,
-              height: size.height * 0.83,
-              child: Stack(
-                children: [
-                  _templeBackground(),
-                  Column(
+          body: SizedBox(
+            width: size.width,
+            height: size.height * 0.83,
+            child: Stack(
+              children: [
+                _templeBackground(),
+                SingleChildScrollView(
+                  child: Column(
                     children: [
                       CarouselImage(cauraselIndex: state.cauraselPageIndex),
                       _gap(10),
@@ -153,59 +154,59 @@ class _HomeScreenState extends State<HomeScreen> {
                       // ),
                     ],
                   ),
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     print('object');
-                  //     final db = FirebaseFirestore.instance;
-                  //     db.settings = const Settings(
-                  //       persistenceEnabled: true,
-                  //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-                  //     );
-                  //   },
-                  //   child: const Text("enable presistance"),
-                  // ),
-                  // Positioned(
-                  //   bottom: 10,
-                  //   child: ElevatedButton(
-                  //     onPressed: () {
-                  //       notificationService.sendNotification("hello", "hi");
-                  //     },
-                  //     child: const Text("send notification"),
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   bottom: 50,
-                  //   child: ElevatedButton(
-                  //     onPressed: () {
-                  //       notificationService.showBigPictureNotification();
-                  //     },
-                  //     child: const Text("send notification"),
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   bottom: 50,
-                  //   child: ElevatedButton(
-                  //     onPressed: () {
-                  //       AudioRepository audioRepository = AudioRepository();
-                  //       audioRepository.uploadImageToFirebase();
-                  //     },
-                  //     child: const Text("upload imges"),
-                  //   ),
-                  // ),
-                  // Positioned(
-                  //   bottom: 50,
-                  //   child: ElevatedButton(
-                  //     onPressed: () {
-                  //       AudioRepository audioRepository = AudioRepository();
-                  //       audioRepository.uploadYatarasDataToFirebase();
-                  //     },
-                  //     child: const Text("upload imges"),
-                  //   ),
-                  // ),
-                  state.updateMandatory ? UpdateOpacityComponent() : SizedBox(),
-                  state.updateMandatory ? UpdateAppDialog() : SizedBox(),
-                ],
-              ),
+                ),
+                // ElevatedButton(
+                //   onPressed: () {
+                //     print('object');
+                //     final db = FirebaseFirestore.instance;
+                //     db.settings = const Settings(
+                //       persistenceEnabled: true,
+                //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+                //     );
+                //   },
+                //   child: const Text("enable presistance"),
+                // ),
+                // Positioned(
+                //   bottom: 10,
+                //   child: ElevatedButton(
+                //     onPressed: () {
+                //       notificationService.sendNotification("hello", "hi");
+                //     },
+                //     child: const Text("send notification"),
+                //   ),
+                // ),
+                // Positioned(
+                //   bottom: 50,
+                //   child: ElevatedButton(
+                //     onPressed: () {
+                //       notificationService.showBigPictureNotification();
+                //     },
+                //     child: const Text("send notification"),
+                //   ),
+                // ),
+                // Positioned(
+                //   bottom: 50,
+                //   child: ElevatedButton(
+                //     onPressed: () {
+                //       AudioRepository audioRepository = AudioRepository();
+                //       audioRepository.uploadImageToFirebase();
+                //     },
+                //     child: const Text("upload imges"),
+                //   ),
+                // ),
+                // Positioned(
+                //   bottom: 50,
+                //   child: ElevatedButton(
+                //     onPressed: () {
+                //       AudioRepository audioRepository = AudioRepository();
+                //       audioRepository.uploadYatarasDataToFirebase();
+                //     },
+                //     child: const Text("upload imges"),
+                //   ),
+                // ),
+                state.updateMandatory ? UpdateOpacityComponent() : SizedBox(),
+                state.updateMandatory ? UpdateAppDialog() : SizedBox(),
+              ],
             ),
           ),
         );

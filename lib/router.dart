@@ -4,7 +4,7 @@ import 'package:temple_app/features/about-us/screens/about_us_bottom_nav_bar.dar
 import 'package:temple_app/features/about-us/screens/about_us_screen.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
-import 'package:temple_app/features/audio/screens/play_audio_screen.dart';
+import 'package:temple_app/features/audio/play-audio-screen/play_audio_screen.dart';
 import 'package:temple_app/features/auth/screens/auth_screen.dart';
 import 'package:temple_app/features/contact-us/screens/contact_us_screen.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
@@ -62,7 +62,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       // int index = routeSettings.arguments as int;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => const PlayAudioScreen(),
+        builder: (_) => PlayAudioScreen(),
       );
     // case VideoScreen.routeName:
     //   return MaterialPageRoute(

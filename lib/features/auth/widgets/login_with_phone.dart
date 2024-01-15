@@ -5,12 +5,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../bloc/auth_bloc.dart';
 
+final submitNumberKey = GlobalKey<FormState>();
+
 class LoginWithPhone extends StatelessWidget {
   const LoginWithPhone({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final submitNumberKey = GlobalKey<FormState>();
     const countryPicker = FlCountryCodePicker();
     final _phoneNoController = TextEditingController();
     CountryCode code =

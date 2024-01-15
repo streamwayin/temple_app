@@ -10,12 +10,14 @@ class SeekBar extends StatefulWidget {
   final Duration duration;
   final Duration position;
   final Duration bufferedPosition;
+  final bool showDuration;
 
   const SeekBar({
     Key? key,
     required this.duration,
     required this.position,
     required this.bufferedPosition,
+    this.showDuration = true,
   }) : super(key: key);
 
   @override
@@ -73,7 +75,7 @@ class SeekBarState extends State<SeekBar> {
               inactiveTrackColor: Colors.transparent,
             ),
             child: Slider(
-              activeColor: const Color.fromARGB(183, 244, 67, 54),
+              activeColor: Color(0xff593600),
               min: 0.0,
               max: widget.duration.inMilliseconds.toDouble(),
               value: min(
@@ -93,27 +95,31 @@ class SeekBarState extends State<SeekBar> {
               },
             ),
           ),
-          Positioned(
-            right: 25.0,
-            bottom: 0.0,
-            child: Text(
-                RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
-                        .firstMatch("$_remaining")
-                        ?.group(1) ??
-                    '$_remaining',
-                style: Theme.of(context).textTheme.bodySmall),
-          ),
-          Positioned(
-            left: 25.0,
-            bottom: 0.0,
-            child: Text(
-              RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
-                      .firstMatch("${widget.position}")
-                      ?.group(1) ??
-                  '${widget.position}',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ),
+          widget.showDuration
+              ? Positioned(
+                  right: 25.0,
+                  bottom: 0.0,
+                  child: Text(
+                      RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
+                              .firstMatch("$_remaining")
+                              ?.group(1) ??
+                          '$_remaining',
+                      style: Theme.of(context).textTheme.bodySmall),
+                )
+              : SizedBox(),
+          widget.showDuration
+              ? Positioned(
+                  left: 25.0,
+                  bottom: 0.0,
+                  child: Text(
+                    RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
+                            .firstMatch("${widget.position}")
+                            ?.group(1) ??
+                        '${widget.position}',
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                )
+              : SizedBox(),
         ],
       ),
     );

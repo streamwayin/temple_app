@@ -148,7 +148,6 @@ class AlbumScreen extends StatelessWidget {
               (state.albumsPageLoading == true)
                   ? Utils.showLoadingOnSceeen()
                   : const SizedBox(),
-              Text("${context.read<HomeBloc>().state.onPlayAudioScreen}")
             ],
           ),
         );
