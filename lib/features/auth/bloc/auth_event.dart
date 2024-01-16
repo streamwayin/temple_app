@@ -89,3 +89,10 @@ class VerifySentOtpEvent extends AuthEvent {
   @override
   List<Object> get props => [otpCode, verificationId];
 }
+
+class SignInWithgoogleEvent2 extends AuthEvent {
+  final User user;
+  final BuildContext context;
+
+  SignInWithgoogleEvent2({required this.user, required this.context});
+}

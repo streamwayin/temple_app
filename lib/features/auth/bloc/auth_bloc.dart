@@ -17,7 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
   AuthBloc({required this.authRepository}) : super(const AuthState()) {
     on<AuthEventInitial>(onAuthEventInitial);
-    on<SignInWithGoogelEvent>(onSignInWithGoogelEvent);
+    // on<SignInWithGoogelEvent>(onSignInWithGoogelEvent);
     on<SignUpRequested>(onSignUpRequested);
     on<SignInRequested>(onSignInRequested);
     on<AuthTypeChangedEvent>(onAuthTypeChangedEvent);
@@ -31,21 +31,22 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<OnPhoneAuthErrorEvent>(
         (event, emit) => emit(AuthErrorState(errorMessagge: event.error)));
     on<OnPhoneAuthVerificationCompleteEvent>(_loginWithCredential);
+    on<SignInWithgoogleEvent2>(onSignInWithgoogleEvent2);
   }
 
-  FutureOr<void> onSignInWithGoogelEvent(
-      SignInWithGoogelEvent event, Emitter<AuthState> emit) async {
-    UserCredential? userCredential =
-        await authRepository.signInWithGoogle(event.context);
-    if (userCredential == null) {
-      emit(const AuthErrorState(errorMessagge: 'User cancelled google login'));
-    } else {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      sharedPreferences.setBool(IS_USER_LOGGED_IN, true);
-      emit(state.copyWith(isLoggedIn: true));
-    }
-  }
+  // FutureOr<void> onSignInWithGoogelEvent(
+  //     SignInWithGoogelEvent event, Emitter<AuthState> emit) async {
+  //   UserCredential? userCredential =
+  //       await authRepository.signInWithGoogle(event.context);
+  //   if (userCredential == null) {
+  //     emit(const AuthErrorState(errorMessagge: 'User cancelled google login'));
+  //   } else {
+  //     SharedPreferences sharedPreferences =
+  //         await SharedPreferences.getInstance();
+  //     sharedPreferences.setBool(IS_USER_LOGGED_IN, true);
+  //     emit(state.copyWith(isLoggedIn: true));
+  //   }
+  // }
 
   FutureOr<void> onSignUpRequested(
       SignUpRequested event, Emitter<AuthState> emit) async {
@@ -129,7 +130,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           sharedPreferences.setBool(IS_USER_LOGGED_IN, true);
           emit(state.copyWith(
               // authType: AuthType.signinWithEmail,
-              isLoggedIn: true));
+              navigateToAskNameScreen: true));
         }
       });
     } on FirebaseAuthException catch (e) {
@@ -144,5 +145,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
     bool isLoggedIn = sharedPreferences.getBool(IS_USER_LOGGED_IN) ?? false;
     emit(state.copyWith(isLoggedIn: isLoggedIn));
+  }
+
+  FutureOr<void> onSignInWithgoogleEvent2(
+      SignInWithgoogleEvent2 event, Emitter<AuthState> emit) async {
+    await authRepository.signInWithGoogle(event.context, event.user);
+    emit(state.copyWith(isLoggedIn: true));
   }
 }

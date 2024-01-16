@@ -19,7 +19,9 @@ class LoginWithPhone extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            SizedBox(height: 50.h),
             InkWell(
               onTap: () async {
                 CountryCode? local =
@@ -73,22 +75,34 @@ class LoginWithPhone extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             const Text(
-              'We will send a code to confirm your number to proceed your reservation.',
+              'हम आपके नंबर की पुष्टि करने के लिए एक कोड भेजेंगे।',
               maxLines: 2,
+              style: TextStyle(
+                fontFamily: "KRDEV020",
+              ),
             ),
             SizedBox(height: 40.h),
-            OutlinedButton(
-              onPressed: () {
-                if (submitNumberKey.currentState!.validate()) {
-                  BlocProvider.of<AuthBloc>(context).add(
-                    SendOtpToPhoneEvent(
-                        phoneNumber:
-                            '${code.dialCode}${_phoneNoController.text}'),
-                  );
-                }
-              },
-              child: const Text(
-                'Send otp',
+            Center(
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Color.fromARGB(255, 241, 133, 44), // background
+                    foregroundColor: Colors.white, // foreground
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(18.0),
+                    )),
+                onPressed: () {
+                  if (submitNumberKey.currentState!.validate()) {
+                    BlocProvider.of<AuthBloc>(context).add(
+                      SendOtpToPhoneEvent(
+                          phoneNumber:
+                              '${code.dialCode}${_phoneNoController.text}'),
+                    );
+                  }
+                },
+                child: const Text(
+                  'Send otp',
+                ),
               ),
             ),
             SizedBox(height: 30.h)

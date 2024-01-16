@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
-import 'package:temple_app/features/auth/widgets/login_with_email_password.dart';
 import 'package:temple_app/features/auth/widgets/login_with_phone.dart';
 import 'package:temple_app/features/auth/widgets/otp_screen.dart';
 import 'package:temple_app/widgets/utils.dart';
-import '../../../widgets/common_background_component.dart';
-import '../widgets/custom_auth_button.dart';
-import '../widgets/signup_with_email.dart';
 
 class AuthScreen extends StatelessWidget {
   static const String routeName = "auth-screen";
@@ -16,103 +12,99 @@ class AuthScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      // appBar: AppBar(
-      //   automaticallyImplyLeading: false,
-      //   title: const Text("Temple App"),
-      //   actions: [
-      //     IconButton(
-      //         onPressed: () => Navigator.pop(context),
-      //         icon: const Icon(Icons.close_rounded))
-      //   ],
-      // ),
+      resizeToAvoidBottomInset: true,
+      appBar: _buildAppBar(context),
       body: BlocListener<AuthBloc, AuthState>(
         listener: (context, state) {
           if (state is AuthErrorState) {
             Utils.showSnackBar(context: context, message: state.errorMessagge);
           }
-          if (state.isLoggedIn != null && state.isLoggedIn == true) {
-            Navigator.pop(context);
+          if (state is PhoneAuthCodeSentSuccess) {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => OtpWidget(
+                          phoneNo: state.phoneNumber,
+                          verificationId: state.verificationId,
+                        )));
           }
         },
-        child: Stack(
-          children: [
-            const CommonBackgroundComponent(),
-            Padding(
+        child: SingleChildScrollView(
+          child: Container(
+            height: size.height,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage(
+                    "assets/figma/img_16_sign_up_screen.png",
+                  ),
+                  fit: BoxFit.cover),
+            ),
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0)
                   .copyWith(top: 24.0),
               child: BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, state) {
                   return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(
-                        height: 56,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              onPressed: () => Navigator.pop(context),
-                              icon: const Icon(
-                                Icons.close_rounded,
-                                size: 40,
-                                color: Color.fromARGB(255, 51, 51, 51),
-                              ),
-                            ),
-                          ],
-                        ),
+                      _gap(20),
+                      Text(
+                        "हर सुविधा का आनंद लेना शुरू करने के लिए लॉग इन करें ।",
+                        style: TextStyle(
+                            fontFamily: "KRDEV020",
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold),
                       ),
-                      (state is PhoneAuthCodeSentSuccess)
-                          ? OtpWidget(
-                              verificationId: state.verificationId,
-                              phoneNo: state.phoneNumber)
-                          : Column(
-                              children: [
-                                LoginWithPhone()
-                                // (state.authType == AuthType.signupWithEmail)
-                                //     ? const SignupWithEmail()
-                                //     : const SizedBox(),
-                                // (state.authType == AuthType.loginWithPhone)
-                                //     ? const LoginWithPhone()
-                                //     : const SizedBox(),
-                              ],
-                            ),
-                      CustomAuthButton(
-                        assetUrl: 'assets/images/google.png',
-                        title: 'Continue with google',
-                        onTap: () {
-                          context
-                              .read<AuthBloc>()
-                              .add(SignInWithGoogelEvent(context: context));
-                        },
-                      ),
-                      // CustomAuthButton(
-                      //   assetUrl: 'assets/images/phone.png',
-                      //   title: 'Login with phone',
-                      //   onTap: () {
-                      //     // context.read<AuthBloc>().add(AuthTypeChangedEvent(
-                      //     //     authType: AuthType.loginWithPhone));
-                      //   },
-                      // )
-                      // (state.authType != AuthType.loginWithPhone)
-                      //     ? CustomAuthButton(
-                      //         assetUrl: 'assets/images/phone.png',
-                      //         title: 'Login with phone',
-                      //         onTap: () {
-                      //           context.read<AuthBloc>().add(
-                      //               AuthTypeChangedEvent(
-                      //                   authType: AuthType.loginWithPhone));
-                      //         },
-                      //       )
-                      //     : const SizedBox(),
+                      // (state is PhoneAuthCodeSentSuccess)
+                      //     ?
+                      // OtpWidget(
+                      //     verificationId: state.verificationId,
+                      //     phoneNo: state.phoneNumber)
+                      // :
+                      LoginWithPhone()
                     ],
                   );
                 },
               ),
             ),
-          ],
+          ),
         ),
       ),
+    );
+  }
+
+  AppBar _buildAppBar(BuildContext context) {
+    return AppBar(
+      automaticallyImplyLeading: false,
+      // leading: BackButton(color: Colors.white),
+      flexibleSpace: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.bottomLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              Color(0xfffeebbd),
+              Color(0xfffff1e5),
+            ],
+          ),
+        ),
+      ),
+      actions: [
+        IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(
+              Icons.close_rounded,
+              size: 40,
+            ))
+      ],
+    );
+  }
+
+  SizedBox _gap(int height) {
+    return SizedBox(
+      height: height.h,
     );
   }
 }

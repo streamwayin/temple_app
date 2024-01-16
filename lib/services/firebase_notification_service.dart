@@ -101,7 +101,7 @@ class FirebaseNotificatonService {
   Future<void> initNotification() async {
     await _firebaseMessenging.requestPermission();
     final fCMTOKEN = await _firebaseMessenging.getToken();
-    print(fCMTOKEN);
+    // print(fCMTOKEN);
     initPushNotifications();
     FirebaseMessaging.onMessage.listen((message) {
       if (Platform.isAndroid) {

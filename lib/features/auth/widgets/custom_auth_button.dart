@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:temple_app/constants.dart';
 
 class CustomAuthButton extends StatelessWidget {
   const CustomAuthButton({
@@ -16,10 +17,17 @@ class CustomAuthButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: OutlinedButton(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: Color(0xffe86900), // background
+            foregroundColor: Colors.white, // foreground
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(18.0),
+                side: BorderSide(color: Colors.red))),
         onPressed: onTap,
         child: SizedBox(
           width: 250.w,
+          height: 50.h,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

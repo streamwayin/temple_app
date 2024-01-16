@@ -8,8 +8,9 @@ import '../modals/user_model.dart';
 class AuthRepository {
   final _firebaseAuth = FirebaseAuth.instance;
   saveDataToFirestore() {}
-  Future<UserCredential?> signInWithGoogle(BuildContext context) async {
+  Future signInWithGoogle(BuildContext context, User phoneUser) async {
     // Trigger the authentication flow
+
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     if (googleUser == null) {
       return null;
@@ -27,16 +28,15 @@ class AuthRepository {
     // Once signed in, return the UserCredential
     UserCredential? userCredential =
         await FirebaseAuth.instance.signInWithCredential(credential);
+    phoneUser.linkWithCredential(credential);
     User user = FirebaseAuth.instance.currentUser!;
     UserModel userModel = UserModel();
-    userModel.name = user.displayName!;
+
     userModel.email = user.email!;
-    userModel.uid = user.uid;
     log('${userModel.toMap()}');
     final database =
-        FirebaseFirestore.instance.collection('users').doc(user.uid);
-    database.set(userModel.toMap());
-    return userCredential;
+        FirebaseFirestore.instance.collection('users').doc(phoneUser.uid);
+    await database.update(userModel.toMap());
   }
 
   Future<void> signUp({required String email, required String password}) async {
@@ -84,5 +84,21 @@ class AuthRepository {
         codeSent: codeSent,
         codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
         timeout: const Duration(seconds: 60));
+  }
+
+  Future addNameToUserCollection(String name) async {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final instance =
+        await FirebaseFirestore.instance.collection('users').doc(uid);
+    User user = FirebaseAuth.instance.currentUser!;
+    final phoneNo = user.phoneNumber;
+
+    final database =
+        FirebaseFirestore.instance.collection('users').doc(user.uid);
+    database.set({
+      "name": name,
+      "phoneNo": phoneNo,
+      "uid": user.uid,
+    });
   }
 }
