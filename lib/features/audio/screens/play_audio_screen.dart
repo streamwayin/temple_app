@@ -208,10 +208,6 @@ class MyAppState extends State<PlayAudioScreen> {
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           gradient: appBarGradient,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
-          ),
         ),
       ),
       title: Row(

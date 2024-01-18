@@ -50,7 +50,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBOZH5ZmfK9W66b7Bk091scEhydUqMdbeM',
+    apiKey: 'AIzaSyCAhooujFTUIJ2r4rtzNNAFCl0oSriJZD8',
     appId: '1:147635598668:android:720f467ba99169d4b04be9',
     messagingSenderId: '147635598668',
     projectId: 'religiousapp-e15d2',
@@ -58,12 +58,11 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDLLX6vE83BC8OLmfcIANJtnDsShItxL7Y',
+    apiKey: 'AIzaSyC2BjozvKVL2LNuyZJPMQRHCPHuibNh2BM',
     appId: '1:147635598668:ios:bf692ce3ec3b3830b04be9',
     messagingSenderId: '147635598668',
     projectId: 'religiousapp-e15d2',
     storageBucket: 'religiousapp-e15d2.appspot.com',
-    iosClientId: '147635598668-46nvs10s8j8s9t6j9g5jjh6tquf5l33v.apps.googleusercontent.com',
     iosBundleId: 'in.streamway.templeApp',
   );
 }

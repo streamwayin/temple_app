@@ -96,3 +96,5 @@ class SignInWithgoogleEvent2 extends AuthEvent {
 
   SignInWithgoogleEvent2({required this.user, required this.context});
 }
+
+class AddNameToFirebasedatabaseEvent extends AuthEvent {}

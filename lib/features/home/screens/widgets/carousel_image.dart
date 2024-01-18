@@ -4,11 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
+import 'package:temple_app/modals/banner_model.dart';
 
 class CarouselImage extends StatelessWidget {
-  const CarouselImage({Key? key, required this.cauraselIndex})
+  const CarouselImage(
+      {Key? key, required this.cauraselIndex, required this.list})
       : super(key: key);
   final int cauraselIndex;
+  final BannerModel? list;
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -17,6 +21,7 @@ class CarouselImage extends StatelessWidget {
       "हानि लाभ तो चलता रहेगा,हौसला और श्री राम पे भरोसा कम मत होने देना!",
       "हानि लाभ तो चलता रहेगा,हौसला और श्री राम पे भरोसा कम मत होने देना!",
     ];
+
     return SizedBox(
       height: 160.h,
       width: size.width,
@@ -34,22 +39,39 @@ class CarouselImage extends StatelessWidget {
               height: 160.h,
               width: size.width,
               child: CarouselSlider(
-                items: carouselText.map(
-                  (i) {
-                    return Builder(
-                      builder: (BuildContext context) => Align(
-                        alignment: Alignment.centerLeft,
-                        child: SizedBox(
-                          width: 210.w,
-                          child: Text(
-                            i,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ).toList(),
+                items: list == null
+                    ? carouselText.map(
+                        (i) {
+                          return Builder(
+                            builder: (BuildContext context) => Align(
+                              alignment: Alignment.centerLeft,
+                              child: SizedBox(
+                                width: 210.w,
+                                child: Text(
+                                  i,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ).toList()
+                    : list!.quotes.map(
+                        (i) {
+                          return Builder(
+                            builder: (BuildContext context) => Align(
+                              alignment: Alignment.centerLeft,
+                              child: SizedBox(
+                                width: 210.w,
+                                child: Text(
+                                  i,
+                                  style: TextStyle(fontSize: 16),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ).toList(),
                 options: CarouselOptions(
                   viewportFraction: 1,
                   autoPlay: true,

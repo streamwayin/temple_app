@@ -16,6 +16,7 @@ import 'package:temple_app/features/home/screens/widgets/carousel_image.dart';
 import 'package:temple_app/features/home/screens/widgets/category_component.dart';
 import 'package:temple_app/features/video/video-list/screens/video_list_screen.dart';
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
+import 'package:temple_app/repositories/home_repository.dart';
 import 'package:temple_app/services/notification_service.dart';
 import 'package:temple_app/widgets/update_app_dialog.dart';
 import 'package:temple_app/widgets/update_opacity_component.dart';
@@ -119,7 +120,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 SingleChildScrollView(
                   child: Column(
                     children: [
-                      CarouselImage(cauraselIndex: state.cauraselPageIndex),
+                      CarouselImage(
+                        cauraselIndex: state.cauraselPageIndex,
+                        list: state.bannerText,
+                      ),
                       _gap(10),
                       CatagoryComponent(),
                       _gap(10),
@@ -204,8 +208,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 //     child: const Text("upload imges"),
                 //   ),
                 // ),
-                state.updateMandatory ? UpdateOpacityComponent() : SizedBox(),
-                state.updateMandatory ? UpdateAppDialog() : SizedBox(),
               ],
             ),
           ),
@@ -301,69 +303,75 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 170.h,
             width: size.width,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: state.booksList.length,
-              itemBuilder: (context, index) {
-                var item = state.booksList[index];
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 1,
-                      color: const Color.fromARGB(255, 212, 212, 212),
-                    ),
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.all(10),
-                  margin: const EdgeInsets.all(10),
-                  child: Center(
-                    child: InkWell(
-                      onTap: () {
-                        context.read<BottomBarBloc>().add(
-                            ChangeCurrentPageIndex(
-                                newIndex: 3,
-                                navigationString: EbookScreen.routeName));
-                        context
-                            .read<EbookBloc>()
-                            .add(DownloadBookEventEbookList(book: item));
-                      },
-                      child: SizedBox(
-                        height: 160.h,
-                        width: 80.w,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              height: 100.h,
-                              width: 80.w,
-                              child: CachedNetworkImage(
-                                imageUrl: item.thumbnailUrl,
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
-                            ),
-                            Text(
-                              item.title,
-                              maxLines: 2,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                fontSize: 12,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
+            child: state.booksLoading
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: state.booksList.length,
+                    itemBuilder: (context, index) {
+                      var item = state.booksList[index];
+                      return Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1,
+                            color: const Color.fromARGB(255, 212, 212, 212),
+                          ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                      ),
-                    ),
+                        padding: const EdgeInsets.all(10),
+                        margin: const EdgeInsets.all(10),
+                        child: Center(
+                          child: InkWell(
+                            onTap: () {
+                              context.read<BottomBarBloc>().add(
+                                  ChangeCurrentPageIndex(
+                                      newIndex: 3,
+                                      navigationString: EbookScreen.routeName));
+                              context
+                                  .read<EbookBloc>()
+                                  .add(DownloadBookEventEbookList(book: item));
+                            },
+                            child: SizedBox(
+                              height: 160.h,
+                              width: 80.w,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SizedBox(
+                                    height: 100.h,
+                                    width: 80.w,
+                                    child: CachedNetworkImage(
+                                      imageUrl: item.thumbnailUrl,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const Center(
+                                              child:
+                                                  CircularProgressIndicator()),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    ),
+                                  ),
+                                  Text(
+                                    item.title,
+                                    maxLines: 2,
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 12,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
         ],
       ),

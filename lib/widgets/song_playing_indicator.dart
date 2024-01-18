@@ -47,289 +47,315 @@ class SongPlayingIndicator extends StatelessWidget {
               }
               if (state.showBottomMusicController == true &&
                   homeState.onPlayAudioScreen == false) {
-                return GestureDetector(
-                  onHorizontalDragUpdate: (details) {
-                    print(details.primaryDelta);
-                    if (details.primaryDelta! < -10) {
-                      // Swiped left
-                      // setState(() {
-                      //   isDraggedLeft = true;
-                      context.read<PlayAudioBloc>().add(
-                          ChangeShowBottomMusicController(
-                              changeShowBottomMusicController: false));
-                      //   isDraggedRight = false;
-                      print("dragged");
+                return Stack(
+                  children: [
+                    GestureDetector(
+                      // onHorizontalDragUpdate: (details) {
+                      //   print(details.primaryDelta);
+                      //   if (details.primaryDelta! < -10) {
+                      //     // Swiped left
+                      //     // setState(() {
+                      //     //   isDraggedLeft = true;
+                      //     context.read<PlayAudioBloc>().add(
+                      //         ChangeShowBottomMusicController(
+                      //             changeShowBottomMusicController: false));
+                      //     //   isDraggedRight = false;
+                      //     print("dragged");
 
-                      // });
-                    } else if (details.primaryDelta! > 10) {
-                      print("dragged");
-                      // Swiped right
-                      // setState(() {
-                      //   isDraggedRight = true;
-                      //   isDraggedLeft = false;
-                      // });
-                      context.read<PlayAudioBloc>().add(
-                          ChangeShowBottomMusicController(
-                              changeShowBottomMusicController: false));
-                    }
-                  },
-                  onHorizontalDragEnd: (details) {
-                    // setState(() {
-                    //   isDraggedLeft = false;
-                    //   isDraggedRight = false;
-                    // });
-                    print("dragged endeddd");
-                  },
-                  onTap: () {
-                    context.read<HomeBloc>().add(
-                        const ChangeOnPlayAudioSreenOrNot(
-                            onPlayAudioScreen: true));
-                    Navigator.of(navigatorKey.currentContext!)
-                        .pushNamed(PlayAudioScreen.routeName);
-                  },
-                  child: sequenceState == null
-                      ? const SizedBox()
-                      : Container(
-                          padding: const EdgeInsets.only(left: 8, right: 8),
-                          height: 75.h,
-                          width: size.width,
-                          decoration: BoxDecoration(
-                            gradient: indicatorGradient,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              // image container
-                              Container(
-                                height: 55.h,
-                                width: 55.w,
-                                decoration: BoxDecoration(
-                                    color:
-                                        const Color.fromARGB(255, 187, 115, 27),
-                                    borderRadius: BorderRadius.circular(10)),
-                                child: CachedNetworkImage(
-                                  imageUrl: sequenceState.artUri.toString(),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                  fit: BoxFit.cover,
-                                ),
+                      //     // });
+                      //   } else if (details.primaryDelta! > 10) {
+                      //     print("dragged");
+                      //     // Swiped right
+                      //     // setState(() {
+                      //     //   isDraggedRight = true;
+                      //     //   isDraggedLeft = false;
+                      //     // });
+                      //     context.read<PlayAudioBloc>().add(
+                      //         ChangeShowBottomMusicController(
+                      //             changeShowBottomMusicController: false));
+                      //   }
+                      // },
+                      // onHorizontalDragEnd: (details) {
+                      //   // setState(() {
+                      //   //   isDraggedLeft = false;
+                      //   //   isDraggedRight = false;
+                      //   // });
+                      //   print("dragged endeddd");
+                      // },
+                      onTap: () {
+                        context.read<HomeBloc>().add(
+                            const ChangeOnPlayAudioSreenOrNot(
+                                onPlayAudioScreen: true));
+                        Navigator.of(navigatorKey.currentContext!)
+                            .pushNamed(PlayAudioScreen.routeName);
+                      },
+                      child: sequenceState == null
+                          ? const SizedBox()
+                          : Container(
+                              padding: const EdgeInsets.only(left: 8, right: 8),
+                              height: 75.h,
+                              width: size.width,
+                              decoration: BoxDecoration(
+                                gradient: indicatorGradient,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              _gap(10),
-                              Expanded(
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 4.0),
-                                  child: Stack(
-                                    // crossAxisAlignment:
-                                    //     CrossAxisAlignment.start,
-                                    children: [
-                                      Positioned(
-                                          top: 0,
-                                          child: Container(
-                                            // color: Colors.lightGreen,
-                                            width: 210.w,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  sequenceState.title,
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                    fontSize: 18,
-                                                    color: Colors.white,
-                                                  ),
+                              child: Row(
+                                children: [
+                                  // image container
+                                  Container(
+                                    height: 55.h,
+                                    width: 55.w,
+                                    decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            255, 187, 115, 27),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: CachedNetworkImage(
+                                      imageUrl: sequenceState.artUri.toString(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  _gap(10),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: Stack(
+                                        // crossAxisAlignment:
+                                        //     CrossAxisAlignment.start,
+                                        children: [
+                                          Positioned(
+                                              top: 0,
+                                              child: Container(
+                                                // color: Colors.lightGreen,
+                                                width: 210.w,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                      sequenceState.title,
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                        fontSize: 18,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      sequenceState.artist!,
+                                                      // "${state.onPlayAudioScreen}",
+                                                      maxLines: 1,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: const TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ],
                                                 ),
-                                                Text(
-                                                  sequenceState.artist!,
-                                                  // "${state.onPlayAudioScreen}",
-                                                  maxLines: 1,
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ],
+                                              )),
+                                          Positioned(
+                                            bottom: 10,
+                                            left: -15,
+                                            child: Container(
+                                              width: 230.w,
+                                              child: BlocBuilder<PlayAudioBloc,
+                                                  PlayAudioState>(
+                                                builder: (context, state) {
+                                                  final PositionData?
+                                                      positionData = state
+                                                          .musicPlayerDataModel
+                                                          ?.positionData;
+                                                  return SizedBox(
+                                                    height: 20,
+                                                    child: SeekBar(
+                                                      duration: positionData
+                                                              ?.duration ??
+                                                          Duration.zero,
+                                                      position: positionData
+                                                              ?.position ??
+                                                          Duration.zero,
+                                                      bufferedPosition: positionData
+                                                              ?.bufferedPosition ??
+                                                          Duration.zero,
+                                                      showDuration: false,
+                                                    ),
+                                                  );
+                                                },
+                                              ),
                                             ),
-                                          )),
-                                      Positioned(
-                                        bottom: 10,
-                                        left: -15,
-                                        child: Container(
-                                          width: 230.w,
-                                          child: BlocBuilder<PlayAudioBloc,
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 45.h,
+                                    width: 45.h,
+                                    child: Stack(
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/svg/indicator_background.svg",
+                                          height: 45.h,
+                                          width: 45.h,
+                                        ),
+                                        Center(
+                                          child: BlocConsumer<PlayAudioBloc,
                                               PlayAudioState>(
+                                            listener: (context, state) {},
                                             builder: (context, state) {
-                                              final PositionData? positionData =
-                                                  state.musicPlayerDataModel
-                                                      ?.positionData;
-                                              return SizedBox(
-                                                height: 20,
-                                                child: SeekBar(
-                                                  duration:
-                                                      positionData?.duration ??
-                                                          Duration.zero,
-                                                  position:
-                                                      positionData?.position ??
-                                                          Duration.zero,
-                                                  bufferedPosition: positionData
-                                                          ?.bufferedPosition ??
-                                                      Duration.zero,
-                                                  showDuration: false,
-                                                ),
-                                              );
+                                              PlayerState? playerState = state
+                                                  .musicPlayerDataModel
+                                                  ?.playerState;
+
+                                              final processingState =
+                                                  playerState?.processingState;
+                                              final playing =
+                                                  playerState?.playing;
+                                              if (processingState ==
+                                                      ProcessingState.loading ||
+                                                  processingState ==
+                                                      ProcessingState
+                                                          .buffering) {
+                                                return CustomIconButton(
+                                                    icon: Icons.pause,
+                                                    color: Color(0xff593600),
+                                                    onTap: () {});
+                                              } else if (playing != true) {
+                                                return CustomIconButton(
+                                                    icon: Icons.play_arrow,
+                                                    color: Color(0xff593600),
+                                                    onTap: () {
+                                                      context
+                                                          .read<PlayAudioBloc>()
+                                                          .add(
+                                                              const PlayOrPauseSongEvent(
+                                                                  play: true));
+                                                    });
+                                              } else if (processingState !=
+                                                  ProcessingState.completed) {
+                                                return CustomIconButton(
+                                                    icon: Icons.pause,
+                                                    color: Color(0xff593600),
+                                                    onTap: () {
+                                                      context
+                                                          .read<PlayAudioBloc>()
+                                                          .add(
+                                                              const PlayOrPauseSongEvent(
+                                                                  play: false));
+                                                    });
+                                              } else {
+                                                return CustomIconButton(
+                                                    icon: Icons.replay,
+                                                    onTap: () {
+                                                      // player.seek(Duration.zero)
+                                                    });
+                                              }
                                             },
                                           ),
                                         ),
-                                      )
-                                    ],
-                                  ),
-                                ),
+                                      ],
+                                    ),
+                                  )
+                                  // SizedBox(
+                                  // width: size.width * .42,
+                                  // child: Row(
+                                  // children: [
+                                  // CustomIconButton(
+                                  //   icon: Icons.skip_previous_rounded,
+                                  //   onTap: () {
+                                  //     context.read<PlayAudioBloc>().add(
+                                  //         const ChangeSongEvent(
+                                  //             previous: true));
+                                  //   },
+                                  // ),
+                                  // BlocConsumer<PlayAudioBloc,
+                                  //     PlayAudioState>(
+                                  //   listener: (context, state) {},
+                                  //   builder: (context, state) {
+                                  //     PlayerState? playerState = state
+                                  //         .musicPlayerDataModel
+                                  //         ?.playerState;
+
+                                  //     final processingState =
+                                  //         playerState?.processingState;
+                                  //     final playing = playerState?.playing;
+                                  //     if (processingState ==
+                                  //             ProcessingState.loading ||
+                                  //         processingState ==
+                                  //             ProcessingState.buffering) {
+                                  //       return CustomIconButton(
+                                  //           icon: Icons.pause,
+                                  //           color: const Color.fromARGB(
+                                  //               255, 238, 179, 108),
+                                  //           onTap: () {});
+                                  //     } else if (playing != true) {
+                                  //       return CustomIconButton(
+                                  //           icon: Icons.play_arrow,
+                                  //           onTap: () {
+                                  //             context.read<PlayAudioBloc>().add(
+                                  //                 const PlayOrPauseSongEvent(
+                                  //                     play: true));
+                                  //           });
+                                  //     } else if (processingState !=
+                                  //         ProcessingState.completed) {
+                                  //       return CustomIconButton(
+                                  //           icon: Icons.pause,
+                                  //           onTap: () {
+                                  //             context.read<PlayAudioBloc>().add(
+                                  //                 const PlayOrPauseSongEvent(
+                                  //                     play: false));
+                                  //           });
+                                  //     } else {
+                                  //       return CustomIconButton(
+                                  //           icon: Icons.replay,
+                                  //           onTap: () {
+                                  //             // player.seek(Duration.zero)
+                                  //           });
+                                  //     }
+                                  //   },
+                                  // ),
+                                  // CustomIconButton(
+                                  //     icon: Icons.skip_next_rounded,
+                                  //     onTap: () {
+                                  //       context.read<PlayAudioBloc>().add(
+                                  //           const ChangeSongEvent(
+                                  //               next: true));
+                                  //     }),
+                                  // _gap(5),
+                                  // CustomIconButton(
+                                  //     icon: Icons.close,
+                                  //     onTap: () {
+                                  //       context.read<PlayAudioBloc>().add(
+                                  //           const ChangeShowBottomMusicController(
+                                  //               changeShowBottomMusicController:
+                                  //                   false));
+                                  //     }),
+                                  // ],
+                                  // ),
+                                  // )
+                                ],
                               ),
-                              SizedBox(
-                                height: 45.h,
-                                width: 45.h,
-                                child: Stack(
-                                  children: [
-                                    SvgPicture.asset(
-                                      "assets/svg/indicator_background.svg",
-                                      height: 45.h,
-                                      width: 45.h,
-                                    ),
-                                    Center(
-                                      child: BlocConsumer<PlayAudioBloc,
-                                          PlayAudioState>(
-                                        listener: (context, state) {},
-                                        builder: (context, state) {
-                                          PlayerState? playerState = state
-                                              .musicPlayerDataModel
-                                              ?.playerState;
-
-                                          final processingState =
-                                              playerState?.processingState;
-                                          final playing = playerState?.playing;
-                                          if (processingState ==
-                                                  ProcessingState.loading ||
-                                              processingState ==
-                                                  ProcessingState.buffering) {
-                                            return CustomIconButton(
-                                                icon: Icons.pause,
-                                                color: Color(0xff593600),
-                                                onTap: () {});
-                                          } else if (playing != true) {
-                                            return CustomIconButton(
-                                                icon: Icons.play_arrow,
-                                                color: Color(0xff593600),
-                                                onTap: () {
-                                                  context.read<PlayAudioBloc>().add(
-                                                      const PlayOrPauseSongEvent(
-                                                          play: true));
-                                                });
-                                          } else if (processingState !=
-                                              ProcessingState.completed) {
-                                            return CustomIconButton(
-                                                icon: Icons.pause,
-                                                color: Color(0xff593600),
-                                                onTap: () {
-                                                  context.read<PlayAudioBloc>().add(
-                                                      const PlayOrPauseSongEvent(
-                                                          play: false));
-                                                });
-                                          } else {
-                                            return CustomIconButton(
-                                                icon: Icons.replay,
-                                                onTap: () {
-                                                  // player.seek(Duration.zero)
-                                                });
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                              // SizedBox(
-                              // width: size.width * .42,
-                              // child: Row(
-                              // children: [
-                              // CustomIconButton(
-                              //   icon: Icons.skip_previous_rounded,
-                              //   onTap: () {
-                              //     context.read<PlayAudioBloc>().add(
-                              //         const ChangeSongEvent(
-                              //             previous: true));
-                              //   },
-                              // ),
-                              // BlocConsumer<PlayAudioBloc,
-                              //     PlayAudioState>(
-                              //   listener: (context, state) {},
-                              //   builder: (context, state) {
-                              //     PlayerState? playerState = state
-                              //         .musicPlayerDataModel
-                              //         ?.playerState;
-
-                              //     final processingState =
-                              //         playerState?.processingState;
-                              //     final playing = playerState?.playing;
-                              //     if (processingState ==
-                              //             ProcessingState.loading ||
-                              //         processingState ==
-                              //             ProcessingState.buffering) {
-                              //       return CustomIconButton(
-                              //           icon: Icons.pause,
-                              //           color: const Color.fromARGB(
-                              //               255, 238, 179, 108),
-                              //           onTap: () {});
-                              //     } else if (playing != true) {
-                              //       return CustomIconButton(
-                              //           icon: Icons.play_arrow,
-                              //           onTap: () {
-                              //             context.read<PlayAudioBloc>().add(
-                              //                 const PlayOrPauseSongEvent(
-                              //                     play: true));
-                              //           });
-                              //     } else if (processingState !=
-                              //         ProcessingState.completed) {
-                              //       return CustomIconButton(
-                              //           icon: Icons.pause,
-                              //           onTap: () {
-                              //             context.read<PlayAudioBloc>().add(
-                              //                 const PlayOrPauseSongEvent(
-                              //                     play: false));
-                              //           });
-                              //     } else {
-                              //       return CustomIconButton(
-                              //           icon: Icons.replay,
-                              //           onTap: () {
-                              //             // player.seek(Duration.zero)
-                              //           });
-                              //     }
-                              //   },
-                              // ),
-                              // CustomIconButton(
-                              //     icon: Icons.skip_next_rounded,
-                              //     onTap: () {
-                              //       context.read<PlayAudioBloc>().add(
-                              //           const ChangeSongEvent(
-                              //               next: true));
-                              //     }),
-                              // _gap(5),
-                              // CustomIconButton(
-                              //     icon: Icons.close,
-                              //     onTap: () {
-                              //       context.read<PlayAudioBloc>().add(
-                              //           const ChangeShowBottomMusicController(
-                              //               changeShowBottomMusicController:
-                              //                   false));
-                              //     }),
-                              // ],
-                              // ),
-                              // )
-                            ],
+                            ),
+                    ),
+                    Positioned(
+                        right: 0,
+                        top: 0,
+                        child: InkWell(
+                          onTap: () {
+                            context.read<PlayAudioBloc>().add(
+                                ChangeShowBottomMusicController(
+                                    changeShowBottomMusicController: false));
+                          },
+                          child: Icon(
+                            Icons.close,
+                            color: Color(0xff593500),
                           ),
-                        ),
+                        ))
+                  ],
                 );
               } else {
                 return const SizedBox();

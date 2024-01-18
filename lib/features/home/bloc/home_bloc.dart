@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/modals/app_update_model.dart';
+import 'package:temple_app/modals/banner_model.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/repositories/home_repository.dart';
 
@@ -36,7 +37,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   FutureOr<void> onHomeEventInitial(
       HomeEventInitial event, Emitter<HomeState> emit) async {
+    emit(state.copyWith(booksLoading: true));
     AppUpdateModel? appUpdateModel = await homeRepository.getMetadata();
+    final quotes = await homeRepository.getQuotes();
     if (appUpdateModel != null) {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       if (packageInfo.version != '${appUpdateModel.version}' &&
@@ -55,7 +58,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         downloadedEbookMap[key] = value.toString();
       });
     }
-    emit(state.copyWith(booksList: list, downloadEbookMap: downloadedEbookMap));
+    emit(state.copyWith(
+        booksList: list,
+        downloadEbookMap: downloadedEbookMap,
+        booksLoading: false,
+        bannerText: quotes));
   }
 
   FutureOr<void> onCarouselPageIndexChanged(

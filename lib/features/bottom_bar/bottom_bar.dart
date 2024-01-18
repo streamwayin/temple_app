@@ -7,9 +7,11 @@ import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
-import 'package:temple_app/features/ebook/search/screens/search_book_screen.dart';
+import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/my-profile/screens/my_profile_screen.dart';
 import 'package:temple_app/features/video/video-list/screens/video_list_screen.dart';
+import 'package:temple_app/widgets/update_app_dialog.dart';
+import 'package:temple_app/widgets/update_opacity_component.dart';
 
 import '../../../../constants.dart';
 import '../home/screens/home_screen.dart';
@@ -21,27 +23,37 @@ class BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final _controller = PersistentTabController(initialIndex: 0);
 
-    return BlocConsumer<BottomBarBloc, BottomBarState>(
-      listener: (context, state) {
-        _controller.index = state.currentPageIndex;
-        if (state.navigationString.isNotEmpty) {
-          // Navigator.push(context,
-          //     MaterialPageRoute(builder: (context) => SearchBookScreen()));
-        }
-      },
-      builder: (context, state) {
-        return PersistentTabView(
-          context,
-          onItemSelected: (value) {
-            context
-                .read<BottomBarBloc>()
-                .add(ChangeCurrentPageIndex(newIndex: value));
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state1) {
+        return BlocConsumer<BottomBarBloc, BottomBarState>(
+          listener: (context, state) {
+            _controller.index = state.currentPageIndex;
+            if (state.navigationString.isNotEmpty) {
+              // Navigator.push(context,
+              //     MaterialPageRoute(builder: (context) => SearchBookScreen()));
+            }
           },
-          screens: screens(),
-          items: navBarItems(),
-          controller: _controller,
-          navBarStyle: NavBarStyle.style12,
-          popAllScreensOnTapOfSelectedTab: true,
+          builder: (context, state) {
+            return Stack(
+              children: [
+                PersistentTabView(
+                  context,
+                  onItemSelected: (value) {
+                    context
+                        .read<BottomBarBloc>()
+                        .add(ChangeCurrentPageIndex(newIndex: value));
+                  },
+                  screens: screens(),
+                  items: navBarItems(),
+                  controller: _controller,
+                  navBarStyle: NavBarStyle.style12,
+                  popAllScreensOnTapOfSelectedTab: true,
+                ),
+                state1.updateMandatory ? UpdateOpacityComponent() : SizedBox(),
+                state1.updateMandatory ? UpdateAppDialog() : SizedBox(),
+              ],
+            );
+          },
         );
       },
     );

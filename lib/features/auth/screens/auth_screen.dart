@@ -16,40 +16,38 @@ class AuthScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: true,
       appBar: _buildAppBar(context),
-      body: BlocListener<AuthBloc, AuthState>(
-        listener: (context, state) {
-          if (state is AuthErrorState) {
-            Utils.showSnackBar(context: context, message: state.errorMessagge);
-          }
-          if (state is PhoneAuthCodeSentSuccess) {
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => OtpWidget(
-                          phoneNo: state.phoneNumber,
-                          verificationId: state.verificationId,
-                        )));
-          }
-        },
-        child: SingleChildScrollView(
-          child: Container(
-            height: size.height,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(
-                    "assets/figma/img_16_sign_up_screen.png",
-                  ),
-                  fit: BoxFit.cover),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0)
-                  .copyWith(top: 24.0),
-              child: BlocBuilder<AuthBloc, AuthState>(
-                builder: (context, state) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      body: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
+        if (state is AuthErrorState) {
+          Utils.showSnackBar(context: context, message: state.errorMessagge);
+        }
+        if (state is PhoneAuthCodeSentSuccess) {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => OtpWidget(
+                        phoneNo: state.phoneNumber,
+                        verificationId: state.verificationId,
+                      )));
+        }
+      }, builder: (context, state) {
+        return Stack(
+          children: [
+            SingleChildScrollView(
+              child: Container(
+                height: size.height,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                      image: AssetImage(
+                        "assets/figma/img_16_sign_up_screen.png",
+                      ),
+                      fit: BoxFit.cover),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0)
+                      .copyWith(top: 24.0),
+                  child: Column(
                     children: [
-                      _gap(20),
+                      _gap(50),
                       Text(
                         "हर सुविधा का आनंद लेना शुरू करने के लिए लॉग इन करें ।",
                         style: TextStyle(
@@ -65,13 +63,16 @@ class AuthScreen extends StatelessWidget {
                       // :
                       LoginWithPhone()
                     ],
-                  );
-                },
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-      ),
+            (state.watingForOtp == true)
+                ? Utils.showLoadingOnSceeen()
+                : const SizedBox(),
+          ],
+        );
+      }),
     );
   }
 

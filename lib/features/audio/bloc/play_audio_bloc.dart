@@ -62,6 +62,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
   FutureOr<void> onPlayAudioEventInitial(
       PlayAudioEventInitial event, Emitter<PlayAudioState> emit) async {
+    emit(state.copyWith(albumsPageLoading: true));
     final list = await audioRepository.getAlbumListFromDb();
     final artistsList = await audioRepository.getAritstsListFromDb();
     Map<String, String> downloadedSongsMap = {};
@@ -94,9 +95,16 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
             tracksMapList.map((map) => TrackModel.fromJson(map)).toList();
         bool isTracksListempty = trackList2.isEmpty ? false : true;
         audioRepository.playSingleSong(2);
+        var shortedAlubmList;
+        if (list != null && list.isNotEmpty && list[0].index != null) {
+          // Create a copy of the list before sorting
+          List<AlbumModel> tempTracks = List.from(list);
+          tempTracks.sort((a, b) => (a.index ?? 0).compareTo(b.index ?? 0));
+          shortedAlubmList = tempTracks;
+        }
         emit(
           state.copyWith(
-            albums: list,
+            albums: shortedAlubmList,
             downloadedSongsMap: downloadedSongsMap,
             albumsPageLoading: false,
             artistList: artistsList,

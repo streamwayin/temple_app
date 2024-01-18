@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:temple_app/features/bottom_bar/bottom_bar.dart';
+import 'package:temple_app/features/onboarding/screens/onboarding_screen1.dart';
 
 import '../../../constants.dart';
 
@@ -110,7 +112,11 @@ class SplashContent extends StatelessWidget {
                         await sharedPreferences.setBool(
                             HAS_USER_VISITED_ONBOARDING_SCREEN, true);
                         if (context.mounted) {
-                          Navigator.pushNamed(context, HomeScreen.routeName);
+                          print("object");
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BottomBar()));
                         }
                       } else {
                         int ind = index + 1;

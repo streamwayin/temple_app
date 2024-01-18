@@ -40,29 +40,12 @@ class _AskNameScreenState extends State<AskNameScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _gap(40),
-                Center(
-                  child: Text(
-                    "अंतिम चरण",
-                    style: TextStyle(
-                        fontFamily: "KRDEV020",
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold),
-                  ),
-                ),
                 _gap(40),
-                Text(
-                  "अपना नाम दर्ज करें",
-                  style: TextStyle(
-                      fontFamily: "KRDEV020",
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold),
-                ),
+                _buildAntimCharan(),
+                _gap(40),
+                _buildApnaNaamDarjKaran(),
                 _gap(10),
-                CustomTextField(
-                  isPassword: false,
-                  controller: nameController,
-                  hintText: "Name",
-                ),
+                _buildTextField(),
                 _gap(20),
                 Center(
                   child: ElevatedButton(
@@ -73,10 +56,10 @@ class _AskNameScreenState extends State<AskNameScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(18.0),
                         )),
-                    onPressed: () {
-                      // User? user = FirebaseAuth.instance.currentUser;
-                      authRepository
+                    onPressed: () async {
+                      await authRepository
                           .addNameToUserCollection(nameController.text.trim());
+                      Navigator.of(context).pop();
                     },
                     child: SizedBox(
                       width: 150.w,
@@ -95,48 +78,76 @@ class _AskNameScreenState extends State<AskNameScreen> {
                   ),
                 ),
                 _gap(30),
-                _buildYaText(),
-                _gap(20),
-                Center(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color.fromARGB(
-                            255, 255, 225, 225), // background
-                        // foregroundColor: Colors.white, // foreground
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(18.0),
-                        )),
-                    onPressed: () async {
-                      context.read<AuthBloc>().add(SignInWithgoogleEvent2(
-                          user: FirebaseAuth.instance.currentUser!,
-                          context: context));
-                    },
-                    child: SizedBox(
-                      width: 250.w,
-                      height: 50.h,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 10.w),
-                          SizedBox(
-                              height: 25.h,
-                              child: Image.asset(
-                                "assets/images/google.png",
-                                scale: 25,
-                              )),
-                          SizedBox(width: 10.w),
-                          Text(
-                            "गूगल से भरें",
-                            style:
-                                TextStyle(fontFamily: "KRDEV020", fontSize: 16),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                )
+                // _buildYaText(),
+                // _gap(20),
+                // _buildGoogleLoginButton(context)
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  CustomTextField _buildTextField() {
+    return CustomTextField(
+      isPassword: false,
+      controller: nameController,
+      hintText: "Name",
+    );
+  }
+
+  Text _buildApnaNaamDarjKaran() {
+    return Text(
+      "अपना नाम दर्ज करें",
+      style: TextStyle(
+          fontFamily: "KRDEV020", fontSize: 18, fontWeight: FontWeight.bold),
+    );
+  }
+
+  Center _buildAntimCharan() {
+    return Center(
+      child: Text(
+        "अंतिम चरण",
+        style: TextStyle(
+            fontFamily: "KRDEV020", fontSize: 24, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+
+  Center _buildGoogleLoginButton(BuildContext context) {
+    return Center(
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            backgroundColor:
+                const Color.fromARGB(255, 255, 225, 225), // background
+            // foregroundColor: Colors.white, // foreground
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18.0),
+            )),
+        onPressed: () async {
+          context.read<AuthBloc>().add(SignInWithgoogleEvent2(
+              user: FirebaseAuth.instance.currentUser!, context: context));
+        },
+        child: SizedBox(
+          width: 250.w,
+          height: 50.h,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(width: 10.w),
+              SizedBox(
+                  height: 25.h,
+                  child: Image.asset(
+                    "assets/images/google.png",
+                    scale: 25,
+                  )),
+              SizedBox(width: 10.w),
+              Text(
+                "गूगल से भरें",
+                style: TextStyle(fontFamily: "KRDEV020", fontSize: 16),
+              ),
+            ],
           ),
         ),
       ),

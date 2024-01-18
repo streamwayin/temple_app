@@ -37,20 +37,49 @@ class AlbumScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       _gap(5),
-                      DropdownMenu(
-                        width: (size.width - 55).w,
-                        enableFilter: true,
-                        label: const Text('filterByArtist').tr(),
-                        inputDecorationTheme: const InputDecorationTheme(
-                          filled: true,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 5.0, horizontal: 24),
-                        ),
-                        onSelected: (value) {
-                          context.read<PlayAudioBloc>().add(
-                              GetAlbumsByArtistEvent(index: int.parse(value)));
-                        },
-                        dropdownMenuEntries: getMenuItems(state, context),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          DropdownMenu(
+                            width: size.width * .8,
+                            enableFilter: true,
+                            label: const Text('filterByArtist').tr(),
+                            inputDecorationTheme: const InputDecorationTheme(
+                              filled: true,
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 5.0, horizontal: 24),
+                            ),
+                            onSelected: (value) {
+                              context.read<PlayAudioBloc>().add(
+                                  GetAlbumsByArtistEvent(
+                                      index: int.parse(value)));
+                            },
+                            dropdownMenuEntries: getMenuItems(state, context),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              context
+                                  .read<PlayAudioBloc>()
+                                  .add(PlayAudioEventInitial());
+                            },
+                            child: Container(
+                              height: 40.h,
+                              width: 40.h,
+                              decoration: BoxDecoration(
+                                  color: Colors.orange,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Center(
+                                child: Text(
+                                  "All",
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                       Expanded(
                         child: ListView.builder(
@@ -126,7 +155,9 @@ class AlbumScreen extends StatelessWidget {
                                     SizedBox(
                                       width: size.width - 110.w,
                                       child: Text(
-                                        album.name,
+                                        album.translated != null
+                                            ? album.translated!.hi
+                                            : album.name,
                                         overflow: TextOverflow.ellipsis,
                                         maxLines: 1,
                                         style: const TextStyle(
@@ -167,14 +198,11 @@ class AlbumScreen extends StatelessWidget {
 
   AppBar _buildAppBar() {
     return AppBar(
-      leading: BackButton(color: Colors.white),
+      automaticallyImplyLeading: false,
+      // leading: BackButton(color: Colors.white),
       flexibleSpace: Container(
         decoration: const BoxDecoration(
           gradient: appBarGradient,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
-          ),
         ),
       ),
       title: Row(

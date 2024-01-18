@@ -2,8 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'dart:developer';
-import '../modals/user_model.dart';
 
 class AuthRepository {
   final _firebaseAuth = FirebaseAuth.instance;
@@ -11,32 +9,49 @@ class AuthRepository {
   Future signInWithGoogle(BuildContext context, User phoneUser) async {
     // Trigger the authentication flow
 
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-    if (googleUser == null) {
-      return null;
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        return null;
+      }
+
+      // Obtain the auth details from the request
+      GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
+
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken,
+      );
+      // link google auth credentials with phone auth
+      final userCredential = await FirebaseAuth.instance.currentUser
+          ?.linkWithCredential(credential);
+
+      User user = FirebaseAuth.instance.currentUser!;
+
+      final map = {
+        "photoUrl": user.photoURL,
+        "email": user.email,
+      };
+      final database =
+          FirebaseFirestore.instance.collection('users').doc(phoneUser.uid);
+      await database.update(map);
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "provider-already-linked":
+          print("The provider has already been linked to the user.");
+          break;
+        case "invalid-credential":
+          print("The provider's credential is not valid.");
+          break;
+        case "credential-already-in-use":
+          print("The account corresponding to the credential already exists, "
+              "or is already linked to a Firebase User.");
+          break;
+        // See the API reference for the full list of error codes.
+        default:
+          print("Unknown error.");
+      }
     }
-
-    // Obtain the auth details from the request
-    GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    UserCredential? userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-    phoneUser.linkWithCredential(credential);
-    User user = FirebaseAuth.instance.currentUser!;
-    UserModel userModel = UserModel();
-
-    userModel.email = user.email!;
-    log('${userModel.toMap()}');
-    final database =
-        FirebaseFirestore.instance.collection('users').doc(phoneUser.uid);
-    await database.update(userModel.toMap());
   }
 
   Future<void> signUp({required String email, required String password}) async {

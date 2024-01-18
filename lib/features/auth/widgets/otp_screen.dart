@@ -63,26 +63,38 @@ class _OtpWidgetState extends State<OtpWidget> {
               SizedBox(
                 height: 100.h,
               ),
-              InkWell(
-                onTap: () {
-                  if (_otpFormKey.currentState!.validate()) {
-                    _verifyOtp(
-                        context: context, otp: codeController.text.toString());
-                  }
-                },
-                child: Container(
-                  height: 45.h,
-                  width: double.maxFinite,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Verify OTP',
+              Center(
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(
+                          255, 255, 225, 225), // background
+                      // foregroundColor: Colors.white, // foreground
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(18.0),
+                      )),
+                  onPressed: () async {
+                    if (_otpFormKey.currentState!.validate()) {
+                      _verifyOtp(
+                          context: context,
+                          otp: codeController.text.toString());
+                    }
+                  },
+                  child: SizedBox(
+                    width: 150.w,
+                    height: 40.h,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "ओटीपी सत्यापित करें",
+                          style: TextStyle(
+                              fontFamily: "KRDEV020", fontSize: 14.sp),
+                        ),
+                      ],
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           ),
         ),

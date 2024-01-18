@@ -1,13 +1,19 @@
+import 'package:temple_app/modals/track_model.dart';
+
 class AlbumModel {
   String albumId;
   String artistId;
   String name;
   String thumbnail;
+  Translated? translated;
+  int? index;
   AlbumModel({
     required this.albumId,
     required this.artistId,
     required this.name,
     required this.thumbnail,
+    this.translated,
+    this.index,
   });
 
   Map<String, dynamic> toJson() {
@@ -16,16 +22,22 @@ class AlbumModel {
       'artistId': artistId,
       'name': name,
       'thumbnail': thumbnail,
+      "translated": translated != null ? translated!.toJson() : null,
+      'index': index,
     };
   }
 
   factory AlbumModel.fromJson(Map<String, dynamic> map) {
     return AlbumModel(
-      albumId: map['albumId'] ?? '',
-      artistId: map['artistId'] ?? '',
-      name: map['name'] ?? '',
-      thumbnail: map['thumbnail'] ?? '',
-    );
+        albumId: map['albumId'] ?? '',
+        artistId: map['artistId'] ?? '',
+        name: map['name'] ?? '',
+        thumbnail: map['thumbnail'] ?? '',
+        translated: map["translated"] == null
+            ? null
+            : Translated.fromJson(map["translated"]),
+        index:
+            (map['index'] != null) ? int.parse(map['index'].toString()) : null);
   }
 }
 

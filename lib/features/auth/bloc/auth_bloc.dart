@@ -79,6 +79,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   FutureOr<void> onSendOtpToPhoneEvent(
       SendOtpToPhoneEvent event, Emitter<AuthState> emit) async {
     try {
+      emit(state.copyWith(watingForOtp: true));
       await authRepository.verifyPhone(
         phoneNumber: event.phoneNumber,
         verificationCompleted: (PhoneAuthCredential credential) async {
