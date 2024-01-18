@@ -15,7 +15,7 @@ class AuthScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: _buildAppBar(context),
+      appBar: Utils.buildAppBarNoBackButton(),
       body: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
         if (state is AuthErrorState) {
           Utils.showSnackBar(context: context, message: state.errorMessagge);
@@ -73,33 +73,6 @@ class AuthScreen extends StatelessWidget {
           ],
         );
       }),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      // leading: BackButton(color: Colors.white),
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xfffeebbd),
-              Color(0xfffff1e5),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(
-              Icons.close_rounded,
-              size: 40,
-            ))
-      ],
     );
   }
 

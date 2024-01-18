@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/auth/bloc/auth_bloc.dart';
 import 'package:temple_app/features/auth/widgets/custom_text_field.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
+import 'package:temple_app/widgets/utils.dart';
 
 class AskNameScreen extends StatefulWidget {
   const AskNameScreen({super.key});
@@ -25,7 +26,7 @@ class _AskNameScreenState extends State<AskNameScreen> {
         }
       },
       child: Scaffold(
-        appBar: _buildAppBar(context),
+        appBar: Utils.buildAppBarNoBackButton(),
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
@@ -161,33 +162,6 @@ class _AskNameScreenState extends State<AskNameScreen> {
         style: TextStyle(
             fontFamily: "KRDEV020", fontSize: 18, fontWeight: FontWeight.bold),
       ),
-    );
-  }
-
-  AppBar _buildAppBar(BuildContext context) {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      // leading: BackButton(color: Colors.white),
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.bottomLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xfffeebbd),
-              Color(0xfffff1e5),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(
-              Icons.close_rounded,
-              size: 40,
-            ))
-      ],
     );
   }
 

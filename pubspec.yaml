@@ -79,6 +79,7 @@ dependencies:
   dots_indicator: ^3.0.0
   persistent_bottom_nav_bar:
     ^5.0.2
+  share_plus: ^7.2.1
 
     # path: packages/flutter-widgets/packages/syncfusion_flutter_pdfviewer
 

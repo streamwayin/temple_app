@@ -5,8 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/video/video-list/bloc/video_list_bloc.dart';
 import 'package:temple_app/features/video/video-screen/video_screen.dart';
 import 'package:temple_app/modals/video_album_model.dart';
-
-import '../../../../constants.dart';
+import 'package:temple_app/widgets/utils.dart';
 
 class VideoListScreen extends StatelessWidget {
   const VideoListScreen({super.key});
@@ -19,7 +18,7 @@ class VideoListScreen extends StatelessWidget {
     return BlocBuilder<VideoListBloc, VideoListState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: _buildAppBar(),
+          appBar: Utils.buildAppBarNoBackButton(),
           body: state.isLoading
               ? Center(child: CircularProgressIndicator())
               : Stack(
@@ -137,38 +136,6 @@ class VideoListScreen extends StatelessWidget {
       right: 0,
       left: 0,
       child: Image.asset("assets/figma/bottom_temple.png"),
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: appBarGradient,
-        ),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            height: 55.h,
-            child: Image.asset(
-              "assets/figma/shree_bada_ramdwara.png",
-              fit: BoxFit.fitHeight,
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-            // height: 42,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Badge(
-              child: const Icon(Icons.notifications_sharp,
-                  color: Colors.black, size: 35),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

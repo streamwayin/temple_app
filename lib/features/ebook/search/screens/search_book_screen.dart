@@ -15,6 +15,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/constants.dart';
+import 'package:temple_app/widgets/utils.dart';
 
 import '../../ebook_view/bloc/epub_viewer_bloc.dart';
 import '../../ebook_view/epub_viewer_screen.dart';
@@ -39,7 +40,7 @@ class SearchBookScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: _buildAppBar(),
+          appBar: Utils.buildAppBarWithBackButton(),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Stack(
@@ -160,43 +161,6 @@ class SearchBookScreen extends StatelessWidget {
         isDense: true, // Added this
         contentPadding: EdgeInsets.symmetric(horizontal: 8)
             .copyWith(left: 16), // Added this
-      ),
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      leading: BackButton(color: Colors.white),
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: appBarGradient,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
-          ),
-        ),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            height: 55.h,
-            child: Image.asset(
-              "assets/figma/shree_bada_ramdwara.png",
-              fit: BoxFit.fitHeight,
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-            // height: 42,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Badge(
-              child: const Icon(Icons.notifications_sharp,
-                  color: Colors.black, size: 35),
-            ),
-          ),
-        ],
       ),
     );
   }

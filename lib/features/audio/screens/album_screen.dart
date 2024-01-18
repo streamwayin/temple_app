@@ -25,7 +25,7 @@ class AlbumScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: _buildAppBar(),
+          appBar: Utils.buildAppBarNoBackButton(),
           body: Stack(
             children: [
               _templeBackground(),
@@ -194,40 +194,6 @@ class AlbumScreen extends StatelessWidget {
       list.add(DropdownMenuEntry(value: a.index, label: a.name));
     }
     return list;
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      // leading: BackButton(color: Colors.white),
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: appBarGradient,
-        ),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            height: 55.h,
-            child: Image.asset(
-              "assets/figma/shree_bada_ramdwara.png",
-              fit: BoxFit.fitHeight,
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-            // height: 42,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Badge(
-              child: const Icon(Icons.notifications_sharp,
-                  color: Colors.black, size: 35),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 
   Positioned _templeBackground() {

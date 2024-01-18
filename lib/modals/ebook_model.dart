@@ -8,6 +8,7 @@ class EbookModel {
   final String url;
   final String thumbnailUrl;
   final String fileType;
+  final int? index;
   EbookModel({
     required this.id,
     required this.title,
@@ -18,6 +19,7 @@ class EbookModel {
     required this.url,
     required this.thumbnailUrl,
     required this.fileType,
+    this.index,
   });
 
   Map<String, dynamic> toJson() {
@@ -31,6 +33,7 @@ class EbookModel {
       'url': url,
       'thumbnail_url': thumbnailUrl,
       'file_type': fileType,
+      'index': index,
     };
   }
 
@@ -45,6 +48,7 @@ class EbookModel {
       url: map['url'],
       thumbnailUrl: map['thumbnail_url'],
       fileType: map['file_type'],
+      index: map['index'],
     );
   }
 }

@@ -44,7 +44,7 @@ class MyAppState extends State<PlayAudioScreen> {
       //   return true;
       // },
       child: Scaffold(
-        appBar: _buildAppBar(),
+        appBar: Utils.buildAppBarWithBackButton(),
         body: BlocListener<PlayAudioBloc, PlayAudioState>(
           listener: (context, state) {
             if (state is PlayAudioErrorState) {
@@ -222,43 +222,6 @@ class MyAppState extends State<PlayAudioScreen> {
                 ),
               ),
             ),
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      leading: BackButton(color: Colors.white),
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: appBarGradient,
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
-          ),
-        ),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            height: 55.h,
-            child: Image.asset(
-              "assets/figma/shree_bada_ramdwara.png",
-              fit: BoxFit.fitHeight,
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-            // height: 42,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Badge(
-              child: const Icon(Icons.notifications_sharp,
-                  color: Colors.black, size: 35),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

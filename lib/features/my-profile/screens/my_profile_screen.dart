@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/constants.dart';
 import 'package:temple_app/features/about-us/screens/about_us_screen.dart';
@@ -12,7 +14,7 @@ class MyProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(),
+      appBar: Utils.buildAppBarNoBackButton(),
       body: Column(
         children: [
           _gap(30),
@@ -74,6 +76,14 @@ class MyProfileScreen extends StatelessWidget {
                   },
                   child: _buildCardButton("Log Out", Icons.logout)),
               _gap(10),
+              InkWell(
+                  onTap: () async {
+                    Share.share(
+                        "https://play.google.com/store/apps/details?id=in.streamway.temple_app",
+                        subject: "Check out this app ");
+                  },
+                  child: _buildCardButton("Share app", Icons.share)),
+              _gap(10),
               ///////////////////////////////////////////
               //////////////////////////////////////////
               // Card(
@@ -122,38 +132,6 @@ class MyProfileScreen extends StatelessWidget {
           Icons.arrow_forward_ios_outlined,
           color: Colors.black54,
         ),
-      ),
-    );
-  }
-
-  AppBar _buildAppBar() {
-    return AppBar(
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: appBarGradient,
-        ),
-      ),
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Container(
-            height: 55.h,
-            child: Image.asset(
-              "assets/figma/shree_bada_ramdwara.png",
-              fit: BoxFit.fitHeight,
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-            // height: 42,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Badge(
-              child: const Icon(Icons.notifications_sharp,
-                  color: Colors.black, size: 35),
-            ),
-          ),
-        ],
       ),
     );
   }

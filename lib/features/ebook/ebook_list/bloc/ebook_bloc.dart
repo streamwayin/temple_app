@@ -129,9 +129,16 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
   FutureOr<void> onFetchEpubListEvent(
       FetchEpubListFromWebEvent event, Emitter<EbookState> emit) async {
     emit(state.copyWith(loading: true));
-    final list = await repository.getEpubListFromWeb();
+    List<EbookModel>? list = await repository.getEpubListFromWeb();
     Map<String, String> downloadedEbookMap = {};
-
+    if (list != null && list.isNotEmpty && list[0].index != null) {
+      // Create a copy of the list before sorting
+      List<EbookModel> tempTracks = List.from(list);
+      int tempIndex = list.length + 1;
+      tempTracks.sort(
+          (a, b) => (a.index ?? tempIndex).compareTo(b.index ?? tempIndex));
+      list = tempTracks;
+    }
     String? offlineBooks =
         sharedPreferences.getString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY);
     if (offlineBooks != null) {
