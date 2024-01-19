@@ -18,3 +18,9 @@ class DownloadBookEventEbookList extends EbookEvent {
     required this.book,
   });
 }
+
+class AddEbookListFromRefreshIndicatorEvent extends EbookEvent {
+  final List<EbookModel> bookList;
+
+  AddEbookListFromRefreshIndicatorEvent({required this.bookList});
+}

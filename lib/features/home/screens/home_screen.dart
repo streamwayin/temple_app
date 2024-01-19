@@ -112,108 +112,151 @@ class _HomeScreenState extends State<HomeScreen> {
         return Scaffold(
           appBar: Utils.buildAppBarNoBackButton(),
           backgroundColor: scaffoldBackground,
-          body: SizedBox(
-            width: size.width,
-            height: size.height * 0.83,
-            child: Stack(
-              children: [
-                _templeBackground(),
-                SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      CarouselImage(
-                        cauraselIndex: state.cauraselPageIndex,
-                        list: state.bannerText,
-                      ),
-                      _gap(10),
-                      CatagoryComponent(),
-                      _gap(10),
-                      _booksSeeAllText(),
-                      _bookListHomeComponent(size, state),
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(horizontal: 24.0)
-                      //       .copyWith(top: 8),
-                      //   child: SizedBox(
-                      //     height: 400.h,
-                      //     child: GridView.builder(
-                      //       itemCount: homeComponentList.length,
-                      //       gridDelegate:
-                      //           SliverGridDelegateWithFixedCrossAxisCount(
-                      //         mainAxisExtent: 100.h,
-                      //         mainAxisSpacing: 10,
-                      //         crossAxisSpacing: 10,
-                      //         crossAxisCount: 3,
-                      //       ),
-                      //       itemBuilder: (context, index) {
-                      //         Map<String, dynamic> category =
-                      //             homeComponentList[index];
-                      //         return HomeCategoryComponent(
-                      //           imagePath: category["imagePath"]!,
-                      //           name: category["name"]!,
-                      //           // routeName: category['routeName']!,
-                      //           onTap: category["onTap"],
-                      //         );
-                      //       },
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
+          body: RefreshIndicator(
+            onRefresh: () async {
+              print("refreshed");
+
+              return Future.delayed(Duration(seconds: 5));
+            },
+            child: SizedBox(
+              width: size.width,
+              height: size.height * 0.83,
+              child: Stack(
+                children: [
+                  _templeBackground(),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        CarouselImage(
+                          cauraselIndex: state.cauraselPageIndex,
+                          list: state.bannerText,
+                        ),
+                        _gap(10),
+                        CatagoryComponent(),
+                        _gap(10),
+                        _booksSeeAllText(),
+                        _bookListHomeComponent(size, state),
+                        _buildWallpaperText(context)
+
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(horizontal: 24.0)
+                        //       .copyWith(top: 8),
+                        //   child: SizedBox(
+                        //     height: 400.h,
+                        //     child: GridView.builder(
+                        //       itemCount: homeComponentList.length,
+                        //       gridDelegate:
+                        //           SliverGridDelegateWithFixedCrossAxisCount(
+                        //         mainAxisExtent: 100.h,
+                        //         mainAxisSpacing: 10,
+                        //         crossAxisSpacing: 10,
+                        //         crossAxisCount: 3,
+                        //       ),
+                        //       itemBuilder: (context, index) {
+                        //         Map<String, dynamic> category =
+                        //             homeComponentList[index];
+                        //         return HomeCategoryComponent(
+                        //           imagePath: category["imagePath"]!,
+                        //           name: category["name"]!,
+                        //           // routeName: category['routeName']!,
+                        //           onTap: category["onTap"],
+                        //         );
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
+                      ],
+                    ),
                   ),
-                ),
-                // ElevatedButton(
-                //   onPressed: () {
-                //     print('object');
-                //     final db = FirebaseFirestore.instance;
-                //     db.settings = const Settings(
-                //       persistenceEnabled: true,
-                //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-                //     );
-                //   },
-                //   child: const Text("enable presistance"),
-                // ),
-                // Positioned(
-                //   bottom: 10,
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       notificationService.sendNotification("hello", "hi");
-                //     },
-                //     child: const Text("send notification"),
-                //   ),
-                // ),
-                // Positioned(
-                //   bottom: 50,
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       notificationService.showBigPictureNotification();
-                //     },
-                //     child: const Text("send notification"),
-                //   ),
-                // ),
-                // Positioned(
-                //   bottom: 50,
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       AudioRepository audioRepository = AudioRepository();
-                //       audioRepository.uploadImageToFirebase();
-                //     },
-                //     child: const Text("upload imges"),
-                //   ),
-                // ),
-                // Positioned(
-                //   bottom: 50,
-                //   child: ElevatedButton(
-                //     onPressed: () {
-                //       AudioRepository audioRepository = AudioRepository();
-                //       audioRepository.uploadYatarasDataToFirebase();
-                //     },
-                //     child: const Text("upload imges"),
-                //   ),
-                // ),
-              ],
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     print('object');
+                  //     final db = FirebaseFirestore.instance;
+                  //     db.settings = const Settings(
+                  //       persistenceEnabled: true,
+                  //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+                  //     );
+                  //   },
+                  //   child: const Text("enable presistance"),
+                  // ),
+                  // Positioned(
+                  //   bottom: 10,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       notificationService.sendNotification("hello", "hi");
+                  //     },
+                  //     child: const Text("send notification"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       notificationService.showBigPictureNotification();
+                  //     },
+                  //     child: const Text("send notification"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       AudioRepository audioRepository = AudioRepository();
+                  //       audioRepository.uploadImageToFirebase();
+                  //     },
+                  //     child: const Text("upload imges"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       AudioRepository audioRepository = AudioRepository();
+                  //       audioRepository.uploadYatarasDataToFirebase();
+                  //     },
+                  //     child: const Text("upload imges"),
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
           ),
         );
       },
+    );
+  }
+
+  Padding _buildWallpaperText(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Wallpapers",
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+          ),
+          Row(
+            children: [
+              InkWell(
+                onTap: () {
+                  context.read<BottomBarBloc>().add(ChangeCurrentPageIndex(
+                      newIndex: 3, navigationString: EbookScreen.routeName));
+                },
+                child: Text(
+                  "See all",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.w300),
+                ),
+              ),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 15,
+                color: Color(0xffc5bab1),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 

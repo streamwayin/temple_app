@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,6 +18,7 @@ class CardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: state.yataraList.length,
+      physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         YataraModel yataraModel = state.yataraList[index];
         return Card(
@@ -105,12 +107,9 @@ class CardWidget extends StatelessWidget {
             height: 160.h,
             width: double.infinity,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(5),
-              child: Image.network(
-                yataraModel.image,
-                fit: BoxFit.cover,
-              ),
-            ),
+                borderRadius: BorderRadius.circular(5),
+                child: CachedNetworkImage(
+                    imageUrl: yataraModel.image, fit: BoxFit.cover)),
           ),
           Container(
             height: 200,

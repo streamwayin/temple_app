@@ -10,6 +10,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -48,6 +49,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<ChangeOnAboutUsNavBar>(onChangeOnAboutUsNavBar);
     on<ChangeCurrentPlaylistAlbumId>(onChangeCurrentPlaylistAlbumId);
     on<SavePlayingTracksEvent>(onSavePlayingTracksEvent);
+    on<AddAlubmDateFromRefreshIndicator>(onAddAlubmDateFromRefreshIndicator);
+    on<AddTrackDateFromRefreshIndicator>(onAddTrackDateFromRefreshIndicator);
     // on<ToggleLoopMode>(onToggleLoopMode);
     // on<ToggleSuffleMode>(onToggleSuffleMode);
   }
@@ -327,7 +330,9 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
 
   FutureOr<void> onUpdateSelectedAlbumIndex(
       UpdateSelectedAlbumIndex event, Emitter<PlayAudioState> emit) {
-    emit(state.copyWith(currentAlbumId: state.albums[event.index].albumId));
+    emit(state.copyWith(
+        currentAlbumId: state.albums[event.index].albumId,
+        currentAlbumIndex: event.index));
   }
 
   FutureOr<void> onChangeShowBottomMusicController(
@@ -460,4 +465,14 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   //   await audioRepository.suffle(event.suffle);
   //   emit(state.copyWith(isSuffling: event.suffle));
   // }
+
+  FutureOr<void> onAddAlubmDateFromRefreshIndicator(
+      AddAlubmDateFromRefreshIndicator event, Emitter<PlayAudioState> emit) {
+    emit(state.copyWith(albums: event.list));
+  }
+
+  FutureOr<void> onAddTrackDateFromRefreshIndicator(
+      AddTrackDateFromRefreshIndicator event, Emitter<PlayAudioState> emit) {
+    emit(state.copyWith(tracks: event.list));
+  }
 }

@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/features/audio/play-audio-screen/play_audio_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/modals/track_model.dart';
+import 'package:temple_app/repositories/audo_repository.dart';
 
 import '../../../constants.dart';
 import '../../../widgets/utils.dart';
@@ -39,152 +40,167 @@ class AudioScreen extends StatelessWidget {
         child: BlocBuilder<PlayAudioBloc, PlayAudioState>(
           builder: (context, state) {
             List<TrackModel>? songList = state.tracks;
-            return Stack(
-              children: [
-                _templeBackground(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Row(
-                      //   children: [
-                      //     SizedBox(width: 10.w),
-                      //     SizedBox(
-                      //       width: size.width - 150.w,
-                      //       child: Text(
-                      //         '',
-                      //         // state.c
-                      //         overflow: TextOverflow.ellipsis,
-                      //         style: const TextStyle(
-                      //             fontSize: 24, fontWeight: FontWeight.w500),
-                      //       ),
-                      //     ),
-                      //     const Spacer(),
-                      //     InkWell(
-                      //       onTap: () {
-                      //         if (isUserLoggedIn != null &&
-                      //             isUserLoggedIn == true) {
-                      //           context.read<PlayAudioBloc>().add(
-                      //               const PlayOrPauseSongEvent(play: true));
-                      //           Navigator.pushNamed(
-                      //               context, PlayAudioScreen.routeName);
-                      //         } else {
-                      //           Navigator.pushNamed(
-                      //               context, AuthScreen.routeName);
-                      //         }
-                      //       },
-                      //       child: Container(
-                      //         alignment: Alignment.center,
-                      //         height: 25.h,
-                      //         width: 70.w,
-                      //         decoration: BoxDecoration(
-                      //             border: Border.all(),
-                      //             borderRadius: BorderRadius.circular(10)),
-                      //         child: const Text("playAll").tr(),
-                      //       ),
-                      //     )
-                      //   ],
-                      // ),
-                      Expanded(
-                        // height: size.height * .84,
-                        // height: 568.h,
-                        child: songList == null
-                            ? (state.tracksPageLoading == true)
-                                ? const SizedBox()
-                                : const Center(
-                                    child: Text("Unable to fetch data"),
-                                  )
-                            : ListView.builder(
-                                itemBuilder: (context, ind) {
-                                  TrackModel song = songList[ind];
-                                  return Padding(
-                                    key: Key(ind.toString()),
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 4.0),
-                                    child: ListTile(
-                                      // on tap audio
-                                      onTap: () =>
-                                          tapOnsongTile(context, state, ind),
-                                      leading: (song.thumbnail != null)
-                                          ? SizedBox(
-                                              width: 55.w,
-                                              height: 55.h,
-                                              child: Stack(
-                                                children: [
-                                                  ClipRRect(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            10),
-                                                    child: CachedNetworkImage(
-                                                      imageUrl: song.thumbnail!,
-                                                      placeholder: (context,
-                                                              url) =>
-                                                          Image.asset(
-                                                              'assets/images/sound-waves.png'),
-                                                      fit: BoxFit.cover,
+            return RefreshIndicator(
+              onRefresh: () async {
+                AudioRepository audioRepository = AudioRepository();
+                List<TrackModel>? trackList = await audioRepository
+                    .getTracksListFromDb(state.currentAlbumId!);
+                if (trackList != null) {
+                  context
+                      .read<PlayAudioBloc>()
+                      .add(AddTrackDateFromRefreshIndicator(list: trackList));
+                }
+              },
+              child: Stack(
+                children: [
+                  _templeBackground(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Row(
+                        //   children: [
+                        //     SizedBox(width: 10.w),
+                        //     SizedBox(
+                        //       width: size.width - 150.w,
+                        //       child: Text(
+                        //         '',
+                        //         // state.c
+                        //         overflow: TextOverflow.ellipsis,
+                        //         style: const TextStyle(
+                        //             fontSize: 24, fontWeight: FontWeight.w500),
+                        //       ),
+                        //     ),
+                        //     const Spacer(),
+                        //     InkWell(
+                        //       onTap: () {
+                        //         if (isUserLoggedIn != null &&
+                        //             isUserLoggedIn == true) {
+                        //           context.read<PlayAudioBloc>().add(
+                        //               const PlayOrPauseSongEvent(play: true));
+                        //           Navigator.pushNamed(
+                        //               context, PlayAudioScreen.routeName);
+                        //         } else {
+                        //           Navigator.pushNamed(
+                        //               context, AuthScreen.routeName);
+                        //         }
+                        //       },
+                        //       child: Container(
+                        //         alignment: Alignment.center,
+                        //         height: 25.h,
+                        //         width: 70.w,
+                        //         decoration: BoxDecoration(
+                        //             border: Border.all(),
+                        //             borderRadius: BorderRadius.circular(10)),
+                        //         child: const Text("playAll").tr(),
+                        //       ),
+                        //     )
+                        //   ],
+                        // ),
+                        Expanded(
+                          // height: size.height * .84,
+                          // height: 568.h,
+                          child: songList == null
+                              ? (state.tracksPageLoading == true)
+                                  ? const SizedBox()
+                                  : const Center(
+                                      child: Text("Unable to fetch data"),
+                                    )
+                              : ListView.builder(
+                                  itemBuilder: (context, ind) {
+                                    TrackModel song = songList[ind];
+                                    return Padding(
+                                      key: Key(ind.toString()),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 4.0),
+                                      child: ListTile(
+                                        // on tap audio
+                                        onTap: () =>
+                                            tapOnsongTile(context, state, ind),
+                                        leading: (song.thumbnail != null)
+                                            ? SizedBox(
+                                                width: 55.w,
+                                                height: 55.h,
+                                                child: Stack(
+                                                  children: [
+                                                    ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      child: CachedNetworkImage(
+                                                        imageUrl:
+                                                            song.thumbnail!,
+                                                        placeholder: (context,
+                                                                url) =>
+                                                            Image.asset(
+                                                                'assets/images/sound-waves.png'),
+                                                        fit: BoxFit.cover,
+                                                      ),
                                                     ),
-                                                  ),
-                                                  state.currentPlaylistTracks != null &&
-                                                          state.singleSongIndex !=
-                                                              null &&
-                                                          state
-                                                                  .currentPlaylistTracks![
-                                                                      state
-                                                                          .singleSongIndex!]
-                                                                  .trackId ==
-                                                              state.tracks![ind]
-                                                                  .trackId &&
-                                                          state.showBottomMusicController ==
-                                                              true
-                                                      ? Positioned(
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          5),
-                                                            ),
-                                                            height: 55.h,
-                                                            width: 55.w,
-                                                            child: SizedBox(
-                                                              height: 10.h,
-                                                              width: 10.w,
-                                                              child:
-                                                                  Image.asset(
-                                                                'assets/images/music.gif',
-                                                                // fit: BoxFit
-                                                                //     .contain,
+                                                    state.currentPlaylistTracks != null &&
+                                                            state.singleSongIndex !=
+                                                                null &&
+                                                            state
+                                                                    .currentPlaylistTracks![
+                                                                        state
+                                                                            .singleSongIndex!]
+                                                                    .trackId ==
+                                                                state
+                                                                    .tracks![
+                                                                        ind]
+                                                                    .trackId &&
+                                                            state.showBottomMusicController ==
+                                                                true
+                                                        ? Positioned(
+                                                            child: Container(
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            5),
+                                                              ),
+                                                              height: 55.h,
+                                                              width: 55.w,
+                                                              child: SizedBox(
+                                                                height: 10.h,
+                                                                width: 10.w,
+                                                                child:
+                                                                    Image.asset(
+                                                                  'assets/images/music.gif',
+                                                                  // fit: BoxFit
+                                                                  //     .contain,
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                        )
-                                                      : const SizedBox(),
-                                                ],
-                                              ),
-                                            )
-                                          : const SizedBox(),
-                                      title: Text(
-                                        currentLocale.languageCode == "hi"
-                                            ? song.translated.hi
-                                            : song.title,
-                                        overflow: TextOverflow.ellipsis,
-                                        maxLines: 1,
+                                                          )
+                                                        : const SizedBox(),
+                                                  ],
+                                                ),
+                                              )
+                                            : const SizedBox(),
+                                        title: Text(
+                                          currentLocale.languageCode == "hi"
+                                              ? song.translated.hi
+                                              : song.title,
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 1,
+                                        ),
                                       ),
-                                    ),
-                                  );
-                                },
-                                itemCount: songList.length,
-                              ),
-                      )
-                    ],
+                                    );
+                                  },
+                                  itemCount: songList.length,
+                                ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                (state.tracksPageLoading == true)
-                    ? Utils.showLoadingOnSceeen()
-                    : const SizedBox(),
-              ],
+                  (state.tracksPageLoading == true)
+                      ? Utils.showLoadingOnSceeen()
+                      : const SizedBox(),
+                ],
+              ),
             );
           },
         ),

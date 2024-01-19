@@ -8,3 +8,9 @@ class YataraEvent extends Equatable {
 }
 
 class YataraInitialEvent extends YataraEvent {}
+
+class AddYataraListFromRefreshIndicator extends YataraEvent {
+  final List<YataraModel> yataraList;
+
+  AddYataraListFromRefreshIndicator({required this.yataraList});
+}

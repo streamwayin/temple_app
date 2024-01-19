@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:temple_app/modals/yatara_model.dart';
 import 'package:temple_app/repositories/yatara_repository.dart';
 
@@ -12,6 +13,7 @@ class YataraBloc extends Bloc<YataraEvent, YataraState> {
   YataraRepository yataraRepository = YataraRepository();
   YataraBloc() : super(YataraInitial()) {
     on<YataraInitialEvent>(onYataraInitialEvent);
+    on<AddYataraListFromRefreshIndicator>(onAddYataraListFromRefreshIndicator);
   }
 
   FutureOr<void> onYataraInitialEvent(
@@ -25,5 +27,10 @@ class YataraBloc extends Bloc<YataraEvent, YataraState> {
     } else {
       emit(state.copyWith(isLoading: false));
     }
+  }
+
+  FutureOr<void> onAddYataraListFromRefreshIndicator(
+      AddYataraListFromRefreshIndicator event, Emitter<YataraState> emit) {
+    emit(state.copyWith(yataraList: event.yataraList));
   }
 }

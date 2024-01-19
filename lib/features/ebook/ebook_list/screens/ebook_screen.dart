@@ -11,6 +11,8 @@ import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart'
 import 'package:temple_app/features/ebook/ebook_view/epub_viewer_screen.dart';
 import 'package:temple_app/features/ebook/search/bloc/search_book_bloc.dart';
 import 'package:temple_app/features/ebook/search/screens/search_book_screen.dart';
+import 'package:temple_app/modals/ebook_model.dart';
+import 'package:temple_app/repositories/epub_repository.dart';
 import 'package:temple_app/widgets/common_background_component.dart';
 import 'package:temple_app/widgets/utils.dart';
 
@@ -72,30 +74,43 @@ class EbookScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return Scaffold(
-          appBar: Utils.buildAppBarNoBackButton(),
-          body: Stack(
-            children: [
-              _templeBackground(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0)
-                    .copyWith(top: 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _gap(10),
-                    _buildSearchBar(context, state),
-                    _gap(10),
-                    _buildAllBookText().tr(),
-                    _gap(10),
-                    _buildBookListViewBuilder(state),
-                  ],
+        return RefreshIndicator(
+          onRefresh: () async {
+            EpubRepository epubRepository = EpubRepository();
+            List<EbookModel>? list = await epubRepository.getEpubListFromWeb();
+            print(list);
+            if (list != null) {
+              context
+                  .read<EbookBloc>()
+                  .add(AddEbookListFromRefreshIndicatorEvent(bookList: list));
+            }
+            return;
+          },
+          child: Scaffold(
+            appBar: Utils.buildAppBarNoBackButton(),
+            body: Stack(
+              children: [
+                _templeBackground(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0)
+                      .copyWith(top: 8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _gap(10),
+                      _buildSearchBar(context, state),
+                      _gap(10),
+                      _buildAllBookText().tr(),
+                      _gap(10),
+                      _buildBookListViewBuilder(state),
+                    ],
+                  ),
                 ),
-              ),
-              (state.loading == true)
-                  ? Utils.showLoadingOnSceeen()
-                  : const SizedBox(),
-            ],
+                (state.loading == true)
+                    ? Utils.showLoadingOnSceeen()
+                    : const SizedBox(),
+              ],
+            ),
           ),
         );
       },

@@ -127,4 +127,14 @@ class SavePlayingTracksEvent extends PlayAudioEvent {}
 //   ToggleSuffleMode({required this.suffle});
 // }
 
-// class SaveDuration and current index continously even to do
+class AddAlubmDateFromRefreshIndicator extends PlayAudioEvent {
+  final List<AlbumModel> list;
+
+  AddAlubmDateFromRefreshIndicator({required this.list});
+}
+
+class AddTrackDateFromRefreshIndicator extends PlayAudioEvent {
+  final List<TrackModel> list;
+
+  AddTrackDateFromRefreshIndicator({required this.list});
+}

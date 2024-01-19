@@ -33,7 +33,7 @@ class Utils {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            height: 55.h,
+            height: 50.h,
             child: Image.asset(
               "assets/figma/shree_bada_ramdwara.png",
               fit: BoxFit.fitHeight,
@@ -66,7 +66,7 @@ class Utils {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            height: 55.h,
+            height: 50.h,
             child: Image.asset(
               "assets/figma/shree_bada_ramdwara.png",
               fit: BoxFit.fitHeight,

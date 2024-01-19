@@ -8,3 +8,9 @@ sealed class VideoListEvent extends Equatable {
 }
 
 class VideoListInitialEvent extends VideoListEvent {}
+
+class AddVideoAlbumListFromRefreshIndicator extends VideoListEvent {
+  final List<VideoAlbumModel> videoList;
+
+  AddVideoAlbumListFromRefreshIndicator({required this.videoList});
+}

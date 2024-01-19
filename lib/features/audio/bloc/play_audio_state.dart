@@ -25,6 +25,7 @@ class PlayAudioState extends Equatable {
   final bool updateSavedDataOfPlayer;
   final bool isLooping;
   final bool isSuffling;
+  final int? currentAlbumIndex;
   const PlayAudioState({
     this.albums = const [],
     this.concatenatingAudioSource,
@@ -50,6 +51,7 @@ class PlayAudioState extends Equatable {
     this.updateSavedDataOfPlayer = false,
     this.isLooping = false,
     this.isSuffling = false,
+    this.currentAlbumIndex,
   });
   @override
   List<Object?> get props => [
@@ -77,6 +79,7 @@ class PlayAudioState extends Equatable {
         updateSavedDataOfPlayer,
         isLooping,
         isSuffling,
+        currentAlbumIndex,
       ];
 
   PlayAudioState copyWith({
@@ -104,6 +107,7 @@ class PlayAudioState extends Equatable {
     bool? updateSavedDataOfPlayer,
     bool? isLooping,
     bool? isSuffling,
+    int? currentAlbumIndex,
   }) {
     return PlayAudioState(
       albums: albums ?? this.albums,
@@ -136,6 +140,7 @@ class PlayAudioState extends Equatable {
       updateSavedDataOfPlayer: updateSavedDataOfPlayer ?? false,
       isLooping: isLooping ?? false,
       isSuffling: isSuffling ?? false,
+      currentAlbumIndex: currentAlbumIndex ?? this.currentAlbumIndex,
     );
   }
 }

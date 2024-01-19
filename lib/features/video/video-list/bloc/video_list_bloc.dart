@@ -16,6 +16,8 @@ part 'video_list_state.dart';
 class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
   VideoListBloc() : super(VideoInitial()) {
     on<VideoListInitialEvent>(onVideoInitialEvent);
+    on<AddVideoAlbumListFromRefreshIndicator>(
+        onAddVideoAlbumListFromRefreshIndicator);
   }
   VideoRepository videoRepository = VideoRepository();
   FutureOr<void> onVideoInitialEvent(
@@ -70,5 +72,11 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
     } else {
       emit(state.copyWith(isLoading: false));
     }
+  }
+
+  FutureOr<void> onAddVideoAlbumListFromRefreshIndicator(
+      AddVideoAlbumListFromRefreshIndicator event,
+      Emitter<VideoListState> emit) {
+    emit(state.copyWith(videoAlbumModelList: event.videoList));
   }
 }

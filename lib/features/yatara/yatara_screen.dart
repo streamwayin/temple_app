@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/yatara/bloc/yatara_bloc.dart';
 import 'package:temple_app/features/yatara/widget/card_widget.dart';
+import 'package:temple_app/modals/yatara_model.dart';
+import 'package:temple_app/repositories/yatara_repository.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 class YataraScreen extends StatelessWidget {
@@ -17,13 +19,32 @@ class YataraScreen extends StatelessWidget {
           appBar: Utils.buildAppBarWithBackButton(),
           body: state.isLoading
               ? Center(child: CircularProgressIndicator())
-              : SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: SizedBox(
-                      height: size.height,
-                      width: size.width,
-                      child: CardWidget(state: state),
+              : RefreshIndicator(
+                  onRefresh: () async {
+                    print('object');
+                    YataraRepository yataraRepository = YataraRepository();
+                    List<YataraModel>? yataraList =
+                        await yataraRepository.getYatraDetilsFromDb();
+                    if (yataraList != null) {
+                      print(yataraList);
+                      context.read<YataraBloc>().add(
+                          AddYataraListFromRefreshIndicator(
+                              yataraList: yataraList));
+                    }
+                    return;
+                  },
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                          child: SizedBox(
+                            height: size.height,
+                            width: size.width,
+                            child: CardWidget(state: state),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

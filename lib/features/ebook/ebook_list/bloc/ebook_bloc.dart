@@ -25,6 +25,8 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
     init();
     on<FetchEpubListFromWebEvent>(onFetchEpubListEvent);
     on<DownloadBookEventEbookList>(onDownloadBookEventEbookList);
+    on<AddEbookListFromRefreshIndicatorEvent>(
+        onAddEbookListFromRefreshIndicatorEvent);
   }
   void init() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -149,5 +151,10 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
     }
     emit(state.copyWith(
         booksList: list, downloadEbookMap: downloadedEbookMap, loading: false));
+  }
+
+  FutureOr<void> onAddEbookListFromRefreshIndicatorEvent(
+      AddEbookListFromRefreshIndicatorEvent event, Emitter<EbookState> emit) {
+    emit(state.copyWith(booksList: event.bookList));
   }
 }
