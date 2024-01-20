@@ -47,6 +47,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         emit(state.copyWith(updateMandatory: true));
       }
     }
+
     final list = await bookRepository.getEpubListFromWeb();
     Map<String, String> downloadedEbookMap = {};
 

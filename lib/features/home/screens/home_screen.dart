@@ -6,25 +6,19 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
-import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/home/screens/widgets/carousel_image.dart';
 import 'package:temple_app/features/home/screens/widgets/category_component.dart';
-import 'package:temple_app/features/video/video-list/screens/video_list_screen.dart';
+import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.dart';
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
-import 'package:temple_app/repositories/home_repository.dart';
+import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
+import 'package:temple_app/features/wallpaper/image/image_screen.dart';
 import 'package:temple_app/services/notification_service.dart';
-import 'package:temple_app/widgets/update_app_dialog.dart';
-import 'package:temple_app/widgets/update_opacity_component.dart';
 import 'package:temple_app/widgets/utils.dart';
 import '../../../constants.dart';
-import '../../about-us/screens/about_us_bottom_nav_bar.dart';
-import '../../contact-us/screens/contact_us_screen.dart';
-import '../../sightseen/screens/sightseen_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -49,64 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    List<Map<String, dynamic>> homeComponentList = [
-      {
-        "name": "wallpaper",
-        "imagePath": "assets/images/images.png",
-        "routeName": ImageAlbumScreen.routeName,
-        "onTap": () {
-          Navigator.pushNamed(context, ImageAlbumScreen.routeName);
-        }
-      },
-      {
-        "name": "audio",
-        "imagePath": "assets/images/volume.png",
-        "routeName": AlbumScreen.routeName,
-        "onTap": () {
-          Navigator.pushNamed(context, AlbumScreen.routeName);
-        }
-      },
-      {
-        "name": "video",
-        "imagePath": "assets/images/series.png",
-        "routeName": VideoListScreen.routeName,
-        "onTap": () {
-          Navigator.pushNamed(context, VideoListScreen.routeName);
-        }
-      },
-      {
-        "name": "ebook",
-        "imagePath": "assets/images/ebook.png",
-        "routeName": EbookScreen.routeName,
-        "onTap": () {
-          Navigator.pushNamed(context, EbookScreen.routeName);
-        }
-      },
-      {
-        "name": "aboutUs",
-        "imagePath": "assets/images/personal-information.png",
-        "onTap": () {
-          context
-              .read<PlayAudioBloc>()
-              .add(const ChangeOnAboutUsNavBar(onAboutUsNavBar: true));
-          Navigator.pushNamed(context, AboutUsBottomNavBar.routeName);
-        }
-      },
-      {
-        "name": "contactUs",
-        "imagePath": "assets/images/operator.png",
-        "onTap": () {
-          Navigator.pushNamed(context, ContactUsScreen.routeName);
-        }
-      },
-      {
-        "name": "sightseen",
-        "imagePath": "assets/images/operator.png",
-        "onTap": () {
-          Navigator.pushNamed(context, SigntseenScreen.routeName);
-        }
-      },
-    ];
+
     return BlocBuilder<HomeBloc, HomeState>(
       builder: (context, state) {
         return Scaffold(
@@ -115,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
           body: RefreshIndicator(
             onRefresh: () async {
               print("refreshed");
-
+              
               return Future.delayed(Duration(seconds: 5));
             },
             child: SizedBox(
@@ -136,35 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         _gap(10),
                         _booksSeeAllText(),
                         _bookListHomeComponent(size, state),
-                        _buildWallpaperText(context)
-
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(horizontal: 24.0)
-                        //       .copyWith(top: 8),
-                        //   child: SizedBox(
-                        //     height: 400.h,
-                        //     child: GridView.builder(
-                        //       itemCount: homeComponentList.length,
-                        //       gridDelegate:
-                        //           SliverGridDelegateWithFixedCrossAxisCount(
-                        //         mainAxisExtent: 100.h,
-                        //         mainAxisSpacing: 10,
-                        //         crossAxisSpacing: 10,
-                        //         crossAxisCount: 3,
-                        //       ),
-                        //       itemBuilder: (context, index) {
-                        //         Map<String, dynamic> category =
-                        //             homeComponentList[index];
-                        //         return HomeCategoryComponent(
-                        //           imagePath: category["imagePath"]!,
-                        //           name: category["name"]!,
-                        //           // routeName: category['routeName']!,
-                        //           onTap: category["onTap"],
-                        //         );
-                        //       },
-                        //     ),
-                        //   ),
-                        // ),
+                        _buildWallpaperText(context),
+                        _buildHomeWalpapersComponent(size),
                       ],
                     ),
                   ),
@@ -240,8 +150,13 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               InkWell(
                 onTap: () {
-                  context.read<BottomBarBloc>().add(ChangeCurrentPageIndex(
-                      newIndex: 3, navigationString: EbookScreen.routeName));
+                  // context.read<BottomBarBloc>().add(ChangeCurrentPageIndex(
+                  //     newIndex: 3,
+                  //     navigationString: ImageAlbumScreen.routeName));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ImageAlbumScreen()));
                 },
                 child: Text(
                   "See all",
@@ -419,4 +334,91 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   SizedBox _gap(int height) => SizedBox(height: height.h);
+
+  Widget _buildHomeWalpapersComponent(Size size) {
+    return BlocBuilder<WallpaperBloc, WallpaperState>(
+      builder: (context, state) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14.0),
+          child: Column(
+            children: [
+              SizedBox(
+                height: 170.h,
+                width: size.width,
+                child: state.isLoading
+                    ? Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.imageAlbumList.length,
+                        itemBuilder: (context, index) {
+                          var item = state.imageAlbumList[index];
+                          return Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 1,
+                                color: const Color.fromARGB(255, 212, 212, 212),
+                              ),
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.all(10),
+                            child: Center(
+                              child: InkWell(
+                                onTap: () {
+                                  context.read<ImageBloc>().add(ImageInitialEvent(
+                                      albumModel:
+                                          item)); //     navigationString: ImageAlbumScreen.routeName));
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ImageScreen()));
+                                },
+                                child: SizedBox(
+                                  height: 160.h,
+                                  width: 80.w,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      SizedBox(
+                                        height: 100.h,
+                                        width: 80.w,
+                                        child: CachedNetworkImage(
+                                          imageUrl: item.thumbnail!,
+                                          fit: BoxFit.cover,
+                                          placeholder: (context, url) =>
+                                              const Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                        ),
+                                      ),
+                                      Text(
+                                        item.title,
+                                        maxLines: 2,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }

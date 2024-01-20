@@ -1,19 +1,16 @@
-import 'dart:developer' as lgr;
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:temple_app/features/wallpaper/widgets/set_wallpaper_as_dialog.dart';
 import 'package:temple_app/modals/image_model.dart';
+import 'package:temple_app/widgets/utils.dart';
 import 'package:wallpaper/wallpaper.dart';
 
 class SingleWallpaperComponent extends StatefulWidget {
-  const SingleWallpaperComponent(
-      {super.key, required this.wallpaperUrl, required this.image});
-  final String wallpaperUrl;
+  const SingleWallpaperComponent({super.key, required this.image});
+
   final ImageModel image;
 
   @override
@@ -28,58 +25,107 @@ class _SingleWallpaperComponentState extends State<SingleWallpaperComponent> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return SizedBox(
-      width: size.width * .4,
-      child: Column(
-        children: [
-          Container(
-            color: const Color.fromARGB(162, 207, 207, 207),
-            height: 250.h,
-            width: size.width.h * .35.h,
-            child: CachedNetworkImage(
-              imageUrl: widget.wallpaperUrl,
-              fit: BoxFit.fitHeight,
-              errorWidget: (context, url, error) => const Icon(Icons.error),
-              progressIndicatorBuilder: (context, url, progress) =>
-                  const Center(child: CircularProgressIndicator()),
+    return Stack(
+      children: [
+        Container(
+          color: const Color.fromARGB(162, 207, 207, 207),
+          height: size.height,
+          width: size.width,
+          // width: size.width.h * .35.h,
+          child: CachedNetworkImage(
+            imageUrl: widget.image.thumbnail,
+            fit: BoxFit.cover,
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+            progressIndicatorBuilder: (context, url, progress) =>
+                const Center(child: CircularProgressIndicator()),
+          ),
+        ),
+        Positioned(
+          bottom: 40.h,
+          right: 10.w,
+          child: Container(
+            decoration: BoxDecoration(),
+            height: 130.h,
+            width: 70,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // _buildwhatsAppShareButton(),
+                _buildShareButton(),
+                _buildDownloadButton(widget.image.thumbnail),
+              ],
             ),
           ),
-          Container(
-            height: 25.h,
-            width: double.maxFinite,
-            decoration: BoxDecoration(
-              border: Border.all(),
-              borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(10),
-                  bottomRight: Radius.circular(10)),
-            ),
-            child: InkWell(
-              onTap: () {
-                lgr.log('started');
-                context
-                    .read<ImageBloc>()
-                    .add(LogImageSetAswallpaperEvent(image: widget.image));
-                dowloadImage(
-                  context,
-                  widget.wallpaperUrl,
-                );
-              },
-              child: Center(
-                  child: (downloading)
-                      ? const SizedBox(
-                          height: 20,
-                          child: AspectRatio(
-                              aspectRatio: 1 / 1,
-                              child: CircularProgressIndicator()),
-                        )
-                      : const Text(
-                          'setAs',
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w600),
-                        ).tr()),
-            ),
-          )
-        ],
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+              margin: EdgeInsets.only(bottom: 16.0.sp),
+              child: SvgPicture.asset("assets/svg/Combo_shape.svg")),
+        ),
+        (downloading == true) ? Utils.showLoadingOnSceeen() : const SizedBox(),
+      ],
+    );
+  }
+
+  InkWell _buildwhatsAppShareButton() {
+    return InkWell(
+      onTap: () async {
+        Share.share(
+            "https://play.google.com/store/apps/details?id=in.streamway.temple_app",
+            subject: "Check out this app ");
+      },
+      child: Container(
+        height: 55.h,
+        width: 55.h,
+        child: SvgPicture.asset('assets/svg/Whatsapp.svg'),
+      ),
+    );
+  }
+
+  Widget _buildShareButton() {
+    return InkWell(
+      onTap: () async {
+        Share.share(
+            "https://play.google.com/store/apps/details?id=in.streamway.temple_app",
+            subject: "Check out this app ");
+      },
+      child: Container(
+        height: 55.h,
+        width: 55.h,
+        decoration: BoxDecoration(
+          color: Color(0xffff7300),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          Icons.share,
+          color: Colors.white,
+          size: 40,
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDownloadButton(String imageUrl) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          downloading = true;
+        });
+        dowloadImage(context, imageUrl);
+      },
+      child: Container(
+        height: 55.h,
+        width: 55.h,
+        decoration: BoxDecoration(
+          color: Color(0xffff7300),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          Icons.wallpaper,
+          color: Colors.white,
+          size: 40,
+        ),
       ),
     );
   }

@@ -1,6 +1,6 @@
 class ArtistModel {
   final String artistId;
-  final String index;
+  final int index;
   final String name;
 
   ArtistModel(
@@ -17,7 +17,7 @@ class ArtistModel {
   factory ArtistModel.fromJson(Map<String, dynamic> map) {
     return ArtistModel(
       artistId: map['artistId'] ?? '',
-      index: map['index'] ?? '',
+      index: map['index'],
       name: map['name'] ?? '',
     );
   }

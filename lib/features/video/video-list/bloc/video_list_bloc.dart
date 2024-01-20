@@ -33,7 +33,7 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
       for (var a in videoList) {
         Map<String, String> mapForVideoAlbumModel = {};
         mapForVideoAlbumModel["albumId"] = a.playlistId;
-        mapForVideoAlbumModel["index"] = a.index;
+        mapForVideoAlbumModel["index"] = '${a.index}';
         log(a.playlistId);
         var playlist = await yt.playlists.get(a.playlistId);
         mapForVideoAlbumModel["title"] = playlist.title;

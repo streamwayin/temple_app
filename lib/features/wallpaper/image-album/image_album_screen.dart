@@ -7,7 +7,7 @@ import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.da
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/image_screen.dart';
 
-import 'package:temple_app/widgets/common_background_component.dart';
+import 'package:temple_app/widgets/utils.dart';
 
 class ImageAlbumScreen extends StatelessWidget {
   const ImageAlbumScreen({super.key});
@@ -17,15 +17,12 @@ class ImageAlbumScreen extends StatelessWidget {
     return BlocBuilder<WallpaperBloc, WallpaperState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text('wallpaper').tr(),
-          ),
+          appBar: Utils.buildAppBarWithBackButton(),
           body: SizedBox(
             width: double.infinity,
             height: double.infinity,
             child: Stack(
               children: [
-                const CommonBackgroundComponent(),
                 Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: GridView.builder(
@@ -42,15 +39,19 @@ class ImageAlbumScreen extends StatelessWidget {
                         imagePath: album.thumbnail!,
                         name: album.title,
                         onTap: () {
-                          context
-                              .read<ImageBloc>()
-                              .add(ImageInitialEvent(albumModel: album));
-                          Navigator.pushNamed(context, ImageScreen.routeName);
+                          context.read<ImageBloc>().add(ImageInitialEvent(
+                              albumModel:
+                                  album)); //     navigationString: ImageAlbumScreen.routeName));
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ImageScreen()));
                         },
                       );
                     },
                   ),
                 ),
+                Utils.templeBackground(),
               ],
             ),
           ),

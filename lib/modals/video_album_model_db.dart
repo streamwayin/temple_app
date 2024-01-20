@@ -1,6 +1,6 @@
 class VideoAlbumModelDb {
   String albumId;
-  String index;
+  int index;
   String name;
   String playlistId;
   VideoAlbumModelDb({
@@ -22,7 +22,7 @@ class VideoAlbumModelDb {
   factory VideoAlbumModelDb.fromJson(Map<String, dynamic> map) {
     return VideoAlbumModelDb(
       albumId: map['albumId'] ?? '',
-      index: map['index'] ?? '',
+      index: map['index'],
       name: map['name'] ?? '',
       playlistId: map['playlistId'] ?? '',
     );

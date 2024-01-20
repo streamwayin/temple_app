@@ -86,4 +86,13 @@ class Utils {
       ),
     );
   }
+
+  static Positioned templeBackground() {
+    return Positioned(
+      bottom: 0,
+      right: 0,
+      left: 0,
+      child: Image.asset("assets/figma/bottom_temple.png"),
+    );
+  }
 }
