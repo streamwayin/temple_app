@@ -21,4 +21,12 @@ class CarouselPageIndexChanged extends HomeEvent {
   CarouselPageIndexChanged({required this.newIndex});
 }
 
-class FetchEpubListEvent extends HomeEvent {}
+class AddStateEbookDataFromRefreshIndicator extends HomeEvent {
+  final List<EbookModel> bookList;
+  // final List<ImageAlbumModel> imageAlbum;
+
+  AddStateEbookDataFromRefreshIndicator({
+    required this.bookList,
+    // required this.imageAlbum,
+  });
+}

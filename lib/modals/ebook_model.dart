@@ -6,7 +6,7 @@ class EbookModel {
   final String? author;
   final String? authorId;
   final String url;
-  final String thumbnailUrl;
+  final String thumbnail;
   final String fileType;
   final int? index;
   EbookModel({
@@ -17,7 +17,7 @@ class EbookModel {
     this.author,
     this.authorId,
     required this.url,
-    required this.thumbnailUrl,
+    required this.thumbnail,
     required this.fileType,
     this.index,
   });
@@ -31,7 +31,7 @@ class EbookModel {
       'author': author,
       'author_id': authorId,
       'url': url,
-      'thumbnail_url': thumbnailUrl,
+      'thumbnail_url': thumbnail,
       'file_type': fileType,
       'index': index,
     };
@@ -46,7 +46,7 @@ class EbookModel {
       author: map['author'],
       authorId: map['author_id'],
       url: map['url'],
-      thumbnailUrl: map['thumbnail_url'],
+      thumbnail: map['thumbnail'],
       fileType: map['file_type'],
       index: map['index'],
     );

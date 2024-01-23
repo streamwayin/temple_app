@@ -18,3 +18,9 @@ class LogImageSetAswallpaperEvent extends ImageEvent {
 
   LogImageSetAswallpaperEvent({required this.image});
 }
+
+class AddImageListFromRefreshIndicator extends ImageEvent {
+  final List<ImageModel> imageList;
+
+  AddImageListFromRefreshIndicator({required this.imageList});
+}

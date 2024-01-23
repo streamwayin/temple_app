@@ -76,7 +76,7 @@ class SearchBookScreen extends StatelessWidget {
                                         height: 100,
                                         width: 80,
                                         child: CachedNetworkImage(
-                                          imageUrl: book.thumbnailUrl,
+                                          imageUrl: book.thumbnail,
                                           fit: BoxFit.cover,
                                           placeholder: (context, url) =>
                                               const Center(

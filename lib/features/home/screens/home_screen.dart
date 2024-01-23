@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,6 +15,10 @@ import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.da
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/image_screen.dart';
+import 'package:temple_app/modals/ebook_model.dart';
+import 'package:temple_app/modals/image_album_model.dart';
+import 'package:temple_app/repositories/epub_repository.dart';
+import 'package:temple_app/repositories/wallpaper_repository.dart';
 import 'package:temple_app/services/notification_service.dart';
 import 'package:temple_app/widgets/utils.dart';
 import '../../../constants.dart';
@@ -50,11 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar: Utils.buildAppBarNoBackButton(),
           backgroundColor: scaffoldBackground,
           body: RefreshIndicator(
-            onRefresh: () async {
-              print("refreshed");
-              
-              return Future.delayed(Duration(seconds: 5));
-            },
+            onRefresh: () => onRefresh(),
             child: SizedBox(
               width: size.width,
               height: size.height * 0.83,
@@ -266,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     height: 100.h,
                                     width: 80.w,
                                     child: CachedNetworkImage(
-                                      imageUrl: item.thumbnailUrl,
+                                      imageUrl: item.thumbnail,
                                       fit: BoxFit.cover,
                                       placeholder: (context, url) =>
                                           const Center(
@@ -420,5 +419,24 @@ class _HomeScreenState extends State<HomeScreen> {
         );
       },
     );
+  }
+
+  Future<void> onRefresh() async {
+    EpubRepository bookRepository = EpubRepository();
+    WallpaperRepository wallpaperRepo = WallpaperRepository();
+    List<EbookModel>? bookList = await bookRepository.getEpubListFromWeb();
+    List<ImageAlbumModel>? imageAlbumList =
+        await wallpaperRepo.getImageAlbumFromDb();
+    if (imageAlbumList != null) {
+      context.read<WallpaperBloc>().add(AddImageAlbumModelFromRefreshIndicator(
+          imageAlbumModel: imageAlbumList));
+    }
+    if (bookList != null) {
+      context
+          .read<HomeBloc>()
+          .add(AddStateEbookDataFromRefreshIndicator(bookList: bookList));
+    }
+    print(imageAlbumList);
+    return;
   }
 }

@@ -6,6 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/image_screen.dart';
+import 'package:temple_app/modals/image_album_model.dart';
+import 'package:temple_app/repositories/wallpaper_repository.dart';
 
 import 'package:temple_app/widgets/utils.dart';
 
@@ -18,46 +20,59 @@ class ImageAlbumScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           appBar: Utils.buildAppBarWithBackButton(),
-          body: SizedBox(
-            width: double.infinity,
-            height: double.infinity,
-            child: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: GridView.builder(
-                    itemCount: state.imageAlbumList.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      mainAxisExtent: 100.h,
-                      mainAxisSpacing: 10,
-                      crossAxisSpacing: 10,
-                      crossAxisCount: 3,
+          body: RefreshIndicator(
+            onRefresh: () => onRefresh(context),
+            child: SizedBox(
+              width: double.infinity,
+              height: double.infinity,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: GridView.builder(
+                      itemCount: state.imageAlbumList.length,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        mainAxisExtent: 100.h,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 10,
+                        crossAxisCount: 3,
+                      ),
+                      itemBuilder: (context, index) {
+                        final album = state.imageAlbumList[index];
+                        return ImageAlbumComponent(
+                          imagePath: album.thumbnail!,
+                          name: album.title,
+                          onTap: () {
+                            context.read<ImageBloc>().add(ImageInitialEvent(
+                                albumModel:
+                                    album)); //     navigationString: ImageAlbumScreen.routeName));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ImageScreen()));
+                          },
+                        );
+                      },
                     ),
-                    itemBuilder: (context, index) {
-                      final album = state.imageAlbumList[index];
-                      return ImageAlbumComponent(
-                        imagePath: album.thumbnail!,
-                        name: album.title,
-                        onTap: () {
-                          context.read<ImageBloc>().add(ImageInitialEvent(
-                              albumModel:
-                                  album)); //     navigationString: ImageAlbumScreen.routeName));
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ImageScreen()));
-                        },
-                      );
-                    },
                   ),
-                ),
-                Utils.templeBackground(),
-              ],
+                  Utils.templeBackground(),
+                ],
+              ),
             ),
           ),
         );
       },
     );
+  }
+
+  Future<void> onRefresh(BuildContext context) async {
+    WallpaperRepository wallpaperRepo = WallpaperRepository();
+    List<ImageAlbumModel>? imageAlbumList =
+        await wallpaperRepo.getImageAlbumFromDb();
+    if (imageAlbumList != null) {
+      context.read<WallpaperBloc>().add(AddImageAlbumModelFromRefreshIndicator(
+          imageAlbumModel: imageAlbumList));
+    }
   }
 }
 

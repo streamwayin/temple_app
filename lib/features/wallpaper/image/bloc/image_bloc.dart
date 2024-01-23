@@ -17,6 +17,7 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
   ImageBloc() : super(ImageInitial()) {
     on<ImageInitialEvent>(onImageInitialEvent);
     on<LogImageSetAswallpaperEvent>(onLogImageSetAswallpaperEvent);
+    on<AddImageListFromRefreshIndicator>(onAddImageListFromRefreshIndicator);
   }
   void init() {
     final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -36,9 +37,12 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
     );
     if (imageList != null) {
       print(imageList);
-      emit(state.copyWith(isLoading: false, imageList: imageList));
+      emit(state.copyWith(
+          isLoading: false,
+          imageList: imageList,
+          currentAlbumId: album.albumId));
     }
-    emit(state.copyWith(isLoading: false));
+    emit(state.copyWith(isLoading: false, currentAlbumId: album.albumId));
   }
 
   FutureOr<void> onLogImageSetAswallpaperEvent(
@@ -47,5 +51,15 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
       "imageId": event.image.imageId,
       "title": event.image.title
     });
+  }
+
+  FutureOr<void> onAddImageListFromRefreshIndicator(
+      AddImageListFromRefreshIndicator event, Emitter<ImageState> emit) {
+    print('object');
+    var tempList = event.imageList;
+    int tempCount = tempList.length + 1;
+    tempList
+        .sort((a, b) => (a.index ?? tempCount).compareTo(b.index ?? tempCount));
+    emit(state.copyWith(imageList: event.imageList));
   }
 }

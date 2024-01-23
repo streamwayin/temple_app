@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/modals/app_update_model.dart';
 import 'package:temple_app/modals/banner_model.dart';
 import 'package:temple_app/modals/ebook_model.dart';
+import 'package:temple_app/modals/image_album_model.dart';
 import 'package:temple_app/repositories/home_repository.dart';
 
 import '../../../constants.dart';
@@ -27,6 +28,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       emit(state.copyWith(onPlayAudioScreen: event.onPlayAudioScreen));
     });
     on<CarouselPageIndexChanged>(onCarouselPageIndexChanged);
+    on<AddStateEbookDataFromRefreshIndicator>(
+        onAddStateEbookDataFromRefreshIndicator);
   }
 
   void _initilize() async {
@@ -69,5 +72,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> onCarouselPageIndexChanged(
       CarouselPageIndexChanged event, Emitter<HomeState> emit) {
     emit(state.copyWith(cauraselPageIndex: event.newIndex));
+  }
+
+  FutureOr<void> onAddStateEbookDataFromRefreshIndicator(
+      AddStateEbookDataFromRefreshIndicator event, Emitter<HomeState> emit) {
+    emit(state.copyWith(booksList: event.bookList));
   }
 }

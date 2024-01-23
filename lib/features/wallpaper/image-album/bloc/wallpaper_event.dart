@@ -10,3 +10,9 @@ class WallpaperEvent extends Equatable {
 class WallpaperInitialEvent extends WallpaperEvent {}
 
 class FetchImagesListFromDbEvent extends WallpaperEvent {}
+
+class AddImageAlbumModelFromRefreshIndicator extends WallpaperEvent {
+  final List<ImageAlbumModel> imageAlbumModel;
+
+  AddImageAlbumModelFromRefreshIndicator({required this.imageAlbumModel});
+}

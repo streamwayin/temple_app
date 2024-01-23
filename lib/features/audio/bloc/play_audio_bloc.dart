@@ -2,7 +2,6 @@
 
 import 'dart:async';
 import 'dart:convert';
-import 'dart:developer';
 
 import 'dart:io';
 import 'package:equatable/equatable.dart';
@@ -10,7 +9,6 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
@@ -67,7 +65,10 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       PlayAudioEventInitial event, Emitter<PlayAudioState> emit) async {
     emit(state.copyWith(albumsPageLoading: true));
     final list = await audioRepository.getAlbumListFromDb();
-    final artistsList = await audioRepository.getAritstsListFromDb();
+    var artistsList = await audioRepository.getAritstsListFromDb();
+    if (artistsList != null) {
+      artistsList.sort((a, b) => (a.index).compareTo(b.index));
+    }
     Map<String, String> downloadedSongsMap = {};
     if (list != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -102,7 +103,9 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
         if (list != null && list.isNotEmpty && list[0].index != null) {
           // Create a copy of the list before sorting
           List<AlbumModel> tempTracks = List.from(list);
-          tempTracks.sort((a, b) => (a.index ?? 0).compareTo(b.index ?? 0));
+          int listLength = tempTracks.length + 1;
+          tempTracks.sort((a, b) =>
+              (a.index ?? listLength).compareTo(b.index ?? listLength));
           shortedAlubmList = tempTracks;
         }
         emit(
@@ -432,6 +435,8 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       albumsPageLoading: true,
     ));
     String artistIdToFind = state.artistList[event.index].artistId;
+    print(event.index);
+    print(artistIdToFind);
     List<AlbumModel>? tracks =
         await audioRepository.getAlbumByArtist(artistIdToFind);
     emit(state.copyWith(albumsPageLoading: false, albums: tracks));

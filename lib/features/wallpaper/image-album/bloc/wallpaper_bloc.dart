@@ -15,6 +15,8 @@ class WallpaperBloc extends Bloc<WallpaperEvent, WallpaperState> {
   WallpaperBloc() : super(WallpaperInitial()) {
     // init();
     on<WallpaperInitialEvent>(onWallpaperInitialEvent);
+    on<AddImageAlbumModelFromRefreshIndicator>(
+        onAddImageAlbumModelFromRefreshIndicator);
   }
   // void init() {
   //   final uid = FirebaseAuth.instance.currentUser?.uid;
@@ -31,5 +33,11 @@ class WallpaperBloc extends Bloc<WallpaperEvent, WallpaperState> {
       emit(state.copyWith(imageAlbumList: imageAlbumList, isLoading: false));
     }
     emit(state.copyWith(isLoading: false));
+  }
+
+  FutureOr<void> onAddImageAlbumModelFromRefreshIndicator(
+      AddImageAlbumModelFromRefreshIndicator event,
+      Emitter<WallpaperState> emit) {
+    emit(state.copyWith(imageAlbumList: event.imageAlbumModel));
   }
 }

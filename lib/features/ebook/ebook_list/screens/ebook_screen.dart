@@ -155,7 +155,7 @@ class EbookScreen extends StatelessWidget {
                         height: 100,
                         width: 80,
                         child: CachedNetworkImage(
-                          imageUrl: item.thumbnailUrl,
+                          imageUrl: item.thumbnail,
                           fit: BoxFit.cover,
                           placeholder: (context, url) =>
                               const Center(child: CircularProgressIndicator()),
