@@ -66,7 +66,6 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
         videoAlbumModelList
             .add(VideoAlbumModel.fromJson(mapForVideoAlbumModel));
       }
-
       emit(state.copyWith(
           isLoading: false, videoAlbumModelList: videoAlbumModelList));
     } else {

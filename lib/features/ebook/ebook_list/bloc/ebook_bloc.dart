@@ -40,12 +40,14 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
       DownloadBookEventEbookList event, Emitter<EbookState> emit) async {
     emit(state.copyWith(loading: true));
     EbookModel epubBook = event.book;
+    print(epubBook.toJson());
     firebaseAnalytics.logEvent(
         name: "book_read",
         parameters: {"bookId": epubBook.id, "book_name": epubBook.title});
     try {
       String? downloadedPath;
       var map = {...state.downloadEbookMap};
+      print(map);
       if (map.containsKey(epubBook.id)) {
         final path = map[epubBook.id];
         emit(state.copyWith(
@@ -55,8 +57,8 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
       if (Platform.isIOS) {
         final PermissionStatus status = await Permission.storage.request();
         if (status == PermissionStatus.granted) {
-          Map<String, dynamic> map =
-              await startDownload(epubBook.url, epubBook.title);
+          Map<String, dynamic> map = await startDownload(
+              epubBook.url, epubBook.title, epubBook.fileType);
           if (map['success'] == true) {
             downloadedPath = map['path'];
           }
@@ -64,7 +66,8 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
           await Permission.storage.request();
         }
       } else if (Platform.isAndroid) {
-        final map = await startDownload(epubBook.url, epubBook.title);
+        final map = await startDownload(
+            epubBook.url, epubBook.title, epubBook.fileType);
         if (map['success'] == true) {
           downloadedPath = map['path'];
         }
@@ -91,13 +94,14 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
     emit(state.copyWith(loading: false));
   }
 
-  Future<Map<String, dynamic>> startDownload(String url, String name) async {
+  Future<Map<String, dynamic>> startDownload(
+      String url, String name, String fileType) async {
     Map<String, dynamic> map = {"success": false, "path": ""};
     Directory? appDocDir = Platform.isAndroid
         ? await getExternalStorageDirectory()
         : await getApplicationDocumentsDirectory();
 
-    String path = '${appDocDir!.path}/$name.epub';
+    String path = '${appDocDir!.path}/$name.$fileType';
     File file = File(path);
 
     Dio dio = Dio();

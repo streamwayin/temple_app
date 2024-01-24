@@ -1,6 +1,6 @@
 class ImageAlbumModel {
   final String albumId;
-  final String index;
+  final int index;
   final String? thumbnail;
   final String title;
   ImageAlbumModel({
@@ -22,7 +22,7 @@ class ImageAlbumModel {
   factory ImageAlbumModel.fromJson(Map<String, dynamic> map) {
     return ImageAlbumModel(
       albumId: map['albumId'] ?? '',
-      index: map['index'] ?? '',
+      index: map['index'],
       thumbnail: map['thumbnail'],
       title: map['title'] ?? '',
     );

@@ -65,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       children: [
                         CarouselImage(
                           cauraselIndex: state.cauraselPageIndex,
-                          list: state.bannerText,
+                          carouselList: state.carouselList,
                         ),
                         _gap(10),
                         CatagoryComponent(),

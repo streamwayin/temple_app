@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:temple_app/main.dart';
@@ -101,7 +103,12 @@ class FirebaseNotificatonService {
   Future<void> initNotification() async {
     await _firebaseMessenging.requestPermission();
     final fCMTOKEN = await _firebaseMessenging.getToken();
-    // print(fCMTOKEN);
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final dataRef =
+          FirebaseFirestore.instance.collection("users").doc(user.uid);
+      dataRef.update({"deviceToken": fCMTOKEN});
+    }
     initPushNotifications();
     FirebaseMessaging.onMessage.listen((message) {
       if (Platform.isAndroid) {

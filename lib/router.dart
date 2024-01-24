@@ -114,12 +114,12 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => const SigntseenScreen(),
       );
-    case PdfScreenScreen.routeName:
-      final EbookModel book = routeSettings.arguments as EbookModel;
-      return MaterialPageRoute(
-        settings: routeSettings,
-        builder: (_) => PdfScreenScreen(book: book),
-      );
+    // case PdfScreenScreen.routeName:
+    //   final EbookModel book = routeSettings.arguments as EbookModel;
+    //   return MaterialPageRoute(
+    //     settings: routeSettings,
+    //     builder: (_) => PdfScreenScreen(book: book),
+    //   );
     case SingleSightseenScreen.routeName:
       var index = routeSettings.arguments as int;
       return MaterialPageRoute(

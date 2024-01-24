@@ -64,8 +64,6 @@ class AlbumScreen extends StatelessWidget {
                                     vertical: 5.0, horizontal: 24),
                               ),
                               onSelected: (value) {
-                                print(value);
-                                print('+===============');
                                 context
                                     .read<PlayAudioBloc>()
                                     .add(GetAlbumsByArtistEvent(index: value));

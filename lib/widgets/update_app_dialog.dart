@@ -24,8 +24,8 @@ class UpdateAppDialog extends StatelessWidget {
                 child: Text.rich(
                   TextSpan(
                       text:
-                          'You are not using the latest version update your app to continue'),
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                          'आप का एप पुराना हो गया है कृपया नया एप अपडेट करे ।'),
+                  style: TextStyle(fontSize: 18, color: Colors.black),
                 ),
               ),
               // Text('You are not using the latest version',style: TextStyle(fontSize: 18,color: Colors.white),),

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,9 +7,11 @@ import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 
 class PdfScreenScreen extends StatefulWidget {
-  const PdfScreenScreen({super.key, required this.book});
+  const PdfScreenScreen(
+      {super.key, required this.book, required this.bookPath});
   static const String routeName = "/pdf-view-screen";
   final EbookModel book;
+  final String bookPath;
 
   @override
   State<PdfScreenScreen> createState() => _PdfScreenScreenState();
@@ -71,13 +75,13 @@ class _PdfScreenScreenState extends State<PdfScreenScreen> {
       body: Column(
         children: [
           Expanded(
-            child: SfPdfViewer.network(
+            child: SfPdfViewer.file(
               controller: pdfViewerController,
               scrollDirection: PdfScrollDirection.horizontal,
               pageLayoutMode: PdfPageLayoutMode.single,
               maxZoomLevel: 10,
               initialZoomLevel: pdfSize,
-              'https://cdn.syncfusion.com/content/PDFViewer/flutter-succinctly.pdf',
+              File(widget.bookPath),
               key: pdfViewerKey,
             ),
           ),

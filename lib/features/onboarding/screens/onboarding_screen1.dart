@@ -45,7 +45,7 @@ class OnboardingScreen extends StatelessWidget {
                   color: const Color(0xfff5a352).withOpacity(0.6),
                 ),
                 Positioned(
-                  child: Image.asset("assets/images/onbaording1.png"),
+                  child: Image.asset("assets/images/onboarding.png"),
                 ),
                 PageView.builder(
                   onPageChanged: (value) {

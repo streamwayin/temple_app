@@ -28,7 +28,10 @@ class WallpaperRepository {
   Future<List<ImageModel>?> getImageFromDb(String albumId) async {
     List<ImageModel> wallpaperList = [];
     try {
-      final data = await firestore.collection("images").get(
+      final data = await firestore
+          .collection("images")
+          .where("albumId", isEqualTo: albumId)
+          .get(
             const GetOptions(source: Source.serverAndCache),
           );
       final listOfMap = data.docs;

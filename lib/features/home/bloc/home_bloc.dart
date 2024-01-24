@@ -7,6 +7,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/modals/app_update_model.dart';
 import 'package:temple_app/modals/banner_model.dart';
+import 'package:temple_app/modals/carousel_model.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/modals/image_album_model.dart';
 import 'package:temple_app/repositories/home_repository.dart';
@@ -52,6 +53,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     final list = await bookRepository.getEpubListFromWeb();
+    final carouselList = await homeRepository.getCarouselImagesFromDB();
     Map<String, String> downloadedEbookMap = {};
 
     String? offlineBooks =
@@ -66,7 +68,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         booksList: list,
         downloadEbookMap: downloadedEbookMap,
         booksLoading: false,
-        bannerText: quotes));
+        bannerText: quotes,
+        carouselList: carouselList));
   }
 
   FutureOr<void> onCarouselPageIndexChanged(

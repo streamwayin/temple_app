@@ -57,6 +57,7 @@ class EbookScreen extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => PdfScreenScreen(
                             book: state.selectedBook!,
+                            bookPath: state.pathString!,
                           )));
             }
           } else {

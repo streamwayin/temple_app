@@ -1,14 +1,16 @@
 part of 'home_bloc.dart';
 
 class HomeState extends Equatable {
-  const HomeState(
-      {this.onPlayAudioScreen = false,
-      this.updateMandatory = false,
-      this.cauraselPageIndex = 0,
-      this.booksList = const [],
-      this.downloadEbookMap = const {},
-      this.booksLoading = false,
-      this.bannerText});
+  const HomeState({
+    this.onPlayAudioScreen = false,
+    this.updateMandatory = false,
+    this.cauraselPageIndex = 0,
+    this.booksList = const [],
+    this.downloadEbookMap = const {},
+    this.booksLoading = false,
+    this.bannerText,
+    this.carouselList = const [],
+  });
   final bool onPlayAudioScreen;
   final bool updateMandatory;
   final int cauraselPageIndex;
@@ -16,6 +18,7 @@ class HomeState extends Equatable {
   final Map<String, String> downloadEbookMap;
   final bool booksLoading;
   final BannerModel? bannerText;
+  final List<CarouselModel> carouselList;
   @override
   List<Object?> get props => [
         onPlayAudioScreen,
@@ -32,15 +35,18 @@ class HomeState extends Equatable {
     Map<String, String>? downloadEbookMap,
     bool? booksLoading,
     BannerModel? bannerText,
+    List<CarouselModel>? carouselList,
   }) {
     return HomeState(
-        onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
-        updateMandatory: updateMandatory ?? this.updateMandatory,
-        cauraselPageIndex: cauraselPageIndex ?? this.cauraselPageIndex,
-        booksList: booksList ?? this.booksList,
-        downloadEbookMap: downloadEbookMap ?? this.downloadEbookMap,
-        booksLoading: booksLoading ?? this.booksLoading,
-        bannerText: bannerText ?? this.bannerText);
+      onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
+      updateMandatory: updateMandatory ?? this.updateMandatory,
+      cauraselPageIndex: cauraselPageIndex ?? this.cauraselPageIndex,
+      booksList: booksList ?? this.booksList,
+      downloadEbookMap: downloadEbookMap ?? this.downloadEbookMap,
+      booksLoading: booksLoading ?? this.booksLoading,
+      bannerText: bannerText ?? this.bannerText,
+      carouselList: carouselList ?? this.carouselList,
+    );
   }
 }
 

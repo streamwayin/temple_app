@@ -95,21 +95,13 @@ class _SplashScreenState extends State<SplashScreen> {
               child: Image.asset("assets/images/bottom_mandir.png"),
             ),
             Positioned(
-              bottom: 130.h,
+              bottom: 110.h,
               left: 0,
               right: 0,
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Ram Prasad Ji',
-                    style: TextStyle(
-                      fontFamily: 'Champagne',
-                      fontSize: 70,
-                      color: Colors.white,
-                    ),
-                  ),
-                ],
+              child: SizedBox(
+                height: 100,
+                width: size.width - 100,
+                child: Image.asset("assets/figma/shree_bada_ramdwara.png"),
               ),
             ),
           ],

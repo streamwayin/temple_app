@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:temple_app/modals/banner_model.dart';
+import 'package:temple_app/modals/carousel_model.dart';
 
 import '../modals/app_update_model.dart';
 
@@ -65,5 +66,19 @@ class HomeRepository {
       }
     }
     return signtseenList[0];
+  }
+
+  Future<List<CarouselModel>?> getCarouselImagesFromDB() async {
+    final data =
+        await FirebaseFirestore.instance.collection("carousel-images").get();
+
+    List<QueryDocumentSnapshot<Map<String, dynamic>>> a = data.docs;
+    List<CarouselModel> carouselList = [];
+    for (var b in a) {
+      if (b.exists) {
+        carouselList.add(CarouselModel.fromJson(b.data()));
+      }
+    }
+    return carouselList;
   }
 }
