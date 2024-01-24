@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class YataraModel {
   String title;
   String yataraId;
-  String index;
+  int index;
   String description;
   String image;
   String artistId;
@@ -48,7 +48,7 @@ class YataraModel {
     return YataraModel(
       title: map['title'] ?? '',
       yataraId: map['yataraId'] ?? '',
-      index: map['index'] ?? '',
+      index: map['index'],
       description: map['description'] ?? '',
       image: map['image'] ?? '',
       artistId: map['artistId'] ?? '',

@@ -15,6 +15,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/constants.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 import '../../ebook_view/bloc/epub_viewer_bloc.dart';
@@ -32,6 +33,9 @@ class SearchBookScreen extends StatelessWidget {
         if (state.pathString != null) {
           context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
               path: state.pathString!, book: state.selectedBook!));
+          FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+              name: "screen_view",
+              parameters: {"TITLE": EpubViwerScreen.routeName});
           Navigator.push(context,
               MaterialPageRoute(builder: (context) => EpubViwerScreen()));
           // Navigator.pushNamed(context, EpubViwerScreen.routeName);

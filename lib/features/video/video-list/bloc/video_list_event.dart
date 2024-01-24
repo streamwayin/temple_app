@@ -14,3 +14,9 @@ class AddVideoAlbumListFromRefreshIndicator extends VideoListEvent {
 
   AddVideoAlbumListFromRefreshIndicator({required this.videoList});
 }
+
+class FetchVideoModelList extends VideoListEvent {
+  final String playlistId;
+
+  FetchVideoModelList({required this.playlistId});
+}

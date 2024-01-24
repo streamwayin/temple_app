@@ -13,6 +13,7 @@ import 'package:temple_app/features/ebook/search/bloc/search_book_bloc.dart';
 import 'package:temple_app/features/ebook/search/screens/search_book_screen.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/widgets/common_background_component.dart';
 import 'package:temple_app/widgets/utils.dart';
 
@@ -46,12 +47,19 @@ class EbookScreen extends StatelessWidget {
             if (state.selectedBook!.fileType == "ebook") {
               context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
                   path: state.pathString!, book: state.selectedBook!));
+              //     arguments: index);
+              FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+                  name: "screen_view",
+                  parameters: {"TITLE": EpubViwerScreen.routeName});
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => EpubViwerScreen()));
               // Navigator.pushNamed(context, EpubViwerScreen.routeName);
             } else {
               // Navigator.pushNamed(context, PdfScreenScreen.routeName,
               //     arguments: state.selectedBook);
+              FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+                  name: "screen_view",
+                  parameters: {"TITLE": PdfScreenScreen.routeName});
               Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -75,21 +83,24 @@ class EbookScreen extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        return RefreshIndicator(
-          onRefresh: () async {
-            EpubRepository epubRepository = EpubRepository();
-            List<EbookModel>? list = await epubRepository.getEpubListFromWeb();
-            print(list);
-            if (list != null) {
-              context
-                  .read<EbookBloc>()
-                  .add(AddEbookListFromRefreshIndicatorEvent(bookList: list));
-            }
-            return;
-          },
-          child: Scaffold(
-            appBar: Utils.buildAppBarNoBackButton(),
-            body: Stack(
+        return Scaffold(
+          appBar: Utils.buildAppBarNoBackButton(),
+          body: RefreshIndicator(
+            onRefresh: () async {
+              EpubRepository epubRepository = EpubRepository();
+              List<EbookModel>? list =
+                  await epubRepository.getEpubListFromWeb();
+              if (list != null) {
+                var tempList = list;
+                int length = tempList.length + 1;
+                tempList.sort(
+                    (a, b) => (a.index ?? length).compareTo(b.index ?? length));
+                context.read<EbookBloc>().add(
+                    AddEbookListFromRefreshIndicatorEvent(bookList: tempList));
+              }
+              return;
+            },
+            child: Stack(
               children: [
                 _templeBackground(),
                 Padding(

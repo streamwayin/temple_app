@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:temple_app/features/sightseen/bloc/sightseen_bloc.dart';
 import 'package:temple_app/features/sightseen/screens/single_sightseen_screen.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 class SigntseenScreen extends StatelessWidget {
@@ -16,16 +17,14 @@ class SigntseenScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: const Text("sightseen").tr(),
-          ),
+          appBar: Utils.buildAppBarWithBackButton(),
           body: state.sightseenList.isNotEmpty
               ? Column(
                   children: [
                     SizedBox(
-                      height: size.height - 80,
+                      height: 560.h,
                       child: GridView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
+                        // physics: const NeverScrollableScrollPhysics(),
                         itemCount: state.sightseenList.length,
                         gridDelegate:
                             const SliverGridDelegateWithFixedCrossAxisCount(
@@ -36,9 +35,19 @@ class SigntseenScreen extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final sant = state.sightseenList[index];
                           return InkWell(
-                            onTap: () => Navigator.pushNamed(
-                                context, SingleSightseenScreen.routeName,
-                                arguments: index),
+                            onTap: () {
+                              FirebaseAnalyticsService.firebaseAnalytics!
+                                  .logEvent(name: "screen_view", parameters: {
+                                "TITLE": SingleSightseenScreen.routeName
+                              });
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          SingleSightseenScreen(
+                                            index: index,
+                                          )));
+                            },
                             child: Column(
                               children: [
                                 Container(

@@ -19,6 +19,7 @@ import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/modals/image_album_model.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
 import 'package:temple_app/repositories/wallpaper_repository.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/services/notification_service.dart';
 import 'package:temple_app/widgets/utils.dart';
 import '../../../constants.dart';
@@ -152,6 +153,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   // context.read<BottomBarBloc>().add(ChangeCurrentPageIndex(
                   //     newIndex: 3,
                   //     navigationString: ImageAlbumScreen.routeName));
+                  FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+                      name: "screen_view",
+                      parameters: {"TITLE": ImageAlbumScreen.routeName});
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -216,6 +220,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Padding _bookListHomeComponent(Size size, HomeState state) {
+    List<EbookModel> tempList = List.from(state.booksList);
+    tempList.sort((a, b) => (a.index).compareTo(b.index));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14.0),
       child: Column(
@@ -229,9 +235,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    itemCount: state.booksList.length,
+                    itemCount: tempList.length,
                     itemBuilder: (context, index) {
-                      var item = state.booksList[index];
+                      var item = tempList[index];
                       return Container(
                         decoration: BoxDecoration(
                           border: Border.all(
@@ -370,6 +376,12 @@ class _HomeScreenState extends State<HomeScreen> {
                                   context.read<ImageBloc>().add(ImageInitialEvent(
                                       albumModel:
                                           item)); //     navigationString: ImageAlbumScreen.routeName));
+                                  FirebaseAnalyticsService.firebaseAnalytics!
+                                      .logEvent(
+                                          name: "screen_view",
+                                          parameters: {
+                                        "TITLE": ImageScreen.routeName
+                                      });
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -428,15 +440,22 @@ class _HomeScreenState extends State<HomeScreen> {
     List<ImageAlbumModel>? imageAlbumList =
         await wallpaperRepo.getImageAlbumFromDb();
     if (imageAlbumList != null) {
-      context.read<WallpaperBloc>().add(AddImageAlbumModelFromRefreshIndicator(
-          imageAlbumModel: imageAlbumList));
+      var tempList = imageAlbumList;
+      int length = tempList.length + 1;
+      tempList.sort((a, b) => (a.index ?? length).compareTo(b.index ?? length));
+
+      context.read<WallpaperBloc>().add(
+          AddImageAlbumModelFromRefreshIndicator(imageAlbumModel: tempList));
     }
     if (bookList != null) {
+      var tempList2 = bookList;
+      int length = tempList2.length + 1;
+      tempList2.sort((a, b) => (a.index).compareTo(b.index));
       context
           .read<HomeBloc>()
-          .add(AddStateEbookDataFromRefreshIndicator(bookList: bookList));
+          .add(AddStateEbookDataFromRefreshIndicator(bookList: tempList2));
     }
-    print(imageAlbumList);
+
     return;
   }
 }

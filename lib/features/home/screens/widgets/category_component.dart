@@ -6,6 +6,7 @@ import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/yatara/yatara_screen.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 
 import '../../../../constants.dart';
 
@@ -32,6 +33,9 @@ class CatagoryComponent extends StatelessWidget {
           }
         case YataraScreen.routeName:
           {
+            FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+                name: "screen_view",
+                parameters: {"TITLE": YataraScreen.routeName});
             Navigator.push(context,
                 MaterialPageRoute(builder: (context) => YataraScreen()));
           }

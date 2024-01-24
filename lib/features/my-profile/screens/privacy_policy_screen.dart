@@ -5,7 +5,7 @@ import 'package:temple_app/widgets/utils.dart';
 
 class PrivacyPolicyScreen extends StatelessWidget {
   const PrivacyPolicyScreen({super.key});
-
+  static const String routeName = "/privicy-policy-screen";
   @override
   Widget build(BuildContext context) {
     double textSize1 = 20;

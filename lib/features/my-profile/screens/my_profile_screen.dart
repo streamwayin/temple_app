@@ -8,6 +8,8 @@ import 'package:temple_app/constants.dart';
 import 'package:temple_app/features/about-us/screens/about_us_screen.dart';
 import 'package:temple_app/features/contact-us/screens/contact_us_screen.dart';
 import 'package:temple_app/features/my-profile/screens/privacy_policy_screen.dart';
+import 'package:temple_app/features/sightseen/screens/sightseen_screen.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 class MyProfileScreen extends StatelessWidget {
@@ -27,21 +29,18 @@ class MyProfileScreen extends StatelessWidget {
               child: ListView(
             children: [
               InkWell(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => PrivacyPolicyScreen(),
-                      ));
-                },
-                child: _buildCardButton(
-                  'Privacy',
-                  Icons.privacy_tip_sharp,
-                ),
-              ),
+                  onTap: () async {
+                    Share.share(
+                        "https://play.google.com/store/apps/details?id=in.streamway.temple_app",
+                        subject: "Check out this app ");
+                  },
+                  child: _buildCardButton("Share app", Icons.share)),
               _gap(10),
               InkWell(
                 onTap: () {
+                  FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+                      name: "screen_view",
+                      parameters: {"TITLE": AboutUsScreen.routeName});
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -49,22 +48,57 @@ class MyProfileScreen extends StatelessWidget {
                       ));
                 },
                 child: _buildCardButton(
-                  "About Us",
+                  "हमारे बारे में",
                   Icons.privacy_tip_sharp,
                 ),
               ),
               _gap(10),
               InkWell(
                 onTap: () {
+                  FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+                      name: "screen_view",
+                      parameters: {"TITLE": ContactUsScreen.routeName});
                   Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => ContactUsScreen(),
                       ));
                 },
-                child: _buildCardButton("Contact Us", Icons.help_outline),
+                child: _buildCardButton("संपर्क करें", Icons.help_outline),
               ),
               _gap(10),
+              InkWell(
+                onTap: () {
+                  FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+                      name: "screen_view",
+                      parameters: {"TITLE": SigntseenScreen.routeName});
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SigntseenScreen(),
+                      ));
+                },
+                child: _buildCardButton("दर्शनीय स्थल", Icons.wallpaper),
+              ),
+              _gap(10),
+              InkWell(
+                onTap: () {
+                  FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+                      name: "screen_view",
+                      parameters: {"TITLE": PrivacyPolicyScreen.routeName});
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PrivacyPolicyScreen(),
+                      ));
+                },
+                child: _buildCardButton(
+                  'गोपनीयता',
+                  Icons.privacy_tip_sharp,
+                ),
+              ),
+              _gap(10),
+
               InkWell(
                   onTap: () async {
                     SharedPreferences sharedPreferences =
@@ -74,16 +108,9 @@ class MyProfileScreen extends StatelessWidget {
                         context: context, message: "Sucessfully logged out !!");
                     sharedPreferences.setBool(IS_USER_LOGGED_IN, false);
                   },
-                  child: _buildCardButton("Log Out", Icons.logout)),
+                  child: _buildCardButton("लॉग आउट", Icons.logout)),
               _gap(10),
-              InkWell(
-                  onTap: () async {
-                    Share.share(
-                        "https://play.google.com/store/apps/details?id=in.streamway.temple_app",
-                        subject: "Check out this app ");
-                  },
-                  child: _buildCardButton("Share app", Icons.share)),
-              _gap(10),
+
               ///////////////////////////////////////////
               //////////////////////////////////////////
               // Card(

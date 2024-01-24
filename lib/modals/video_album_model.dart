@@ -12,7 +12,7 @@ class VideoAlbumModel {
   String? author;
   int? videoCount;
 
-  List<VideoModel> videosList;
+  // List<VideoModel> videosList;
   VideoAlbumModel({
     required this.albumId,
     required this.index,
@@ -22,7 +22,7 @@ class VideoAlbumModel {
     required this.thumbnail,
     this.author,
     this.videoCount,
-    required this.videosList,
+    // required this.videosList,
   });
 
   Map<String, dynamic> toJson() {
@@ -32,7 +32,7 @@ class VideoAlbumModel {
       'name': title,
       'playlistId': playlistId,
       'description': description,
-      'videosList': videosList.map((x) => x.toJson()).toList(),
+      // 'videosList': videosList.map((x) => x.toJson()).toList(),
       'thumbnail': thumbnail
     };
   }
@@ -45,11 +45,11 @@ class VideoAlbumModel {
       playlistId: map['playlistId'] ?? '',
       description: map['description'] ?? '',
       thumbnail: map['thumbnail'] ?? '',
-      videosList: (map['videosList'] != null)
-          ? List<VideoModel>.from(
-              (json.decode(map['videosList']) as List<dynamic>)
-                  .map((item) => VideoModel.fromJson(item)))
-          : [],
+      // videosList: (map['videosList'] != null)
+      //     ? List<VideoModel>.from(
+      //         (json.decode(map['videosList']) as List<dynamic>)
+      //             .map((item) => VideoModel.fromJson(item)))
+      //     : [],
       videoCount:
           map['videoCount'] == null ? null : int.parse(map['videoCount']),
       author: map['author'] == null ? null : map['author'],

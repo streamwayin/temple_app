@@ -1,7 +1,7 @@
 class SightseenModel {
   final String title;
   final String sightseenId;
-  final String index;
+  final int index;
   final String? image;
   final List<String> description;
 

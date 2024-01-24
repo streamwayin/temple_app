@@ -3,11 +3,13 @@ class VideoAlbumModelDb {
   int index;
   String name;
   String playlistId;
+  String thumbnail;
   VideoAlbumModelDb({
     required this.albumId,
     required this.index,
     required this.name,
     required this.playlistId,
+    required this.thumbnail,
   });
 
   Map<String, dynamic> toJson() {
@@ -16,6 +18,7 @@ class VideoAlbumModelDb {
       'index': index,
       'name': name,
       'playlistId': playlistId,
+      'thumbnail': thumbnail,
     };
   }
 
@@ -25,6 +28,7 @@ class VideoAlbumModelDb {
       index: map['index'],
       name: map['name'] ?? '',
       playlistId: map['playlistId'] ?? '',
+      thumbnail: map['thumbnail'] ?? '',
     );
   }
 }

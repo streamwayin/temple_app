@@ -55,9 +55,11 @@ class _ImageScreenState extends State<ImageScreen> {
     List<ImageModel>? imageList =
         await wallpaperRepository.getImageFromDb(albumId);
     if (imageList != null) {
+      var tempList = imageList;
+      tempList.sort((a, b) => (a.index).compareTo(b.index));
       context
           .read<ImageBloc>()
-          .add(AddImageListFromRefreshIndicator(imageList: imageList));
+          .add(AddImageListFromRefreshIndicator(imageList: tempList));
     }
   }
 }

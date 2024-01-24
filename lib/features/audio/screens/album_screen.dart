@@ -8,6 +8,7 @@ import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/modals/album_model.dart';
 import 'package:temple_app/repositories/audo_repository.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 import '../bloc/play_audio_bloc.dart';
@@ -34,9 +35,14 @@ class AlbumScreen extends StatelessWidget {
               List<AlbumModel>? list =
                   await audioRepository.getAlbumListFromDb();
               if (list != null) {
+                var tempList = list;
+                int length = tempList.length + 1;
+                tempList.sort(
+                    (a, b) => (a.index ?? length).compareTo(b.index ?? length));
+
                 context
                     .read<PlayAudioBloc>()
-                    .add(AddAlubmDateFromRefreshIndicator(list: list));
+                    .add(AddAlubmDateFromRefreshIndicator(list: tempList));
               }
               return;
             },
@@ -107,6 +113,12 @@ class AlbumScreen extends StatelessWidget {
                                   // Navigator.pushNamed(
                                   //     context, AudioScreen.routeName,
                                   //     arguments: index);
+                                  FirebaseAnalyticsService.firebaseAnalytics!
+                                      .logEvent(
+                                          name: "screen_view",
+                                          parameters: {
+                                        "TITLE": AudioScreen.routeName
+                                      });
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(

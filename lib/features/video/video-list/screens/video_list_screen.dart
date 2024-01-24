@@ -10,6 +10,7 @@ import 'package:temple_app/features/video/video-screen/video_screen.dart';
 import 'package:temple_app/modals/video_album_model.dart';
 import 'package:temple_app/modals/video_album_model_db.dart';
 import 'package:temple_app/repositories/video_repository.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/widgets/utils.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -21,7 +22,21 @@ class VideoListScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    return BlocBuilder<VideoListBloc, VideoListState>(
+    return BlocConsumer<VideoListBloc, VideoListState>(
+      listener: (context, state) {
+        if (state.navigateToVideoScreen != null) {
+          FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+              name: "screen_view",
+              parameters: {"TITLE": VideoScreen.routeName});
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      VideoScreen(videoList: state.currnetVideoList
+                          // .videosList,
+                          )));
+        }
+      },
       builder: (context, state) {
         return Scaffold(
           appBar: Utils.buildAppBarNoBackButton(),
@@ -44,15 +59,11 @@ class VideoListScreen extends StatelessWidget {
                                     state.videoAlbumModelList[index];
                                 return InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => VideoScreen(
-                                                    videoList: state
-                                                        .videoAlbumModelList[
-                                                            index]
-                                                        .videosList,
-                                                  )));
+                                      context.read<VideoListBloc>().add(
+                                          FetchVideoModelList(
+                                              playlistId:
+                                                  videoAlbum.playlistId));
+
                                       // Navigator.of(context)
                                       //     .pushNamed(VideoScreen.routeName);
                                     },
@@ -98,8 +109,10 @@ class VideoListScreen extends StatelessWidget {
                                                                     .ellipsis),
                                                       ),
                                                     ),
-                                                    Text(
-                                                        "${videoAlbum.author}"),
+                                                    Text(videoAlbum.author !=
+                                                            null
+                                                        ? "${videoAlbum.author}"
+                                                        : ''),
                                                   ],
                                                 ),
                                               )
@@ -114,6 +127,9 @@ class VideoListScreen extends StatelessWidget {
                           ),
                         ],
                       ),
+                      (state.navigateToVideoScreenLoading == true)
+                          ? Utils.showLoadingOnSceeen()
+                          : const SizedBox(),
                       // Positioned(
                       //   bottom: 0,
                       //   child: ElevatedButton(
@@ -163,45 +179,26 @@ class VideoListScreen extends StatelessWidget {
       var yt = YoutubeExplode();
       for (var a in videoList) {
         Map<String, String> mapForVideoAlbumModel = {};
+
         mapForVideoAlbumModel["albumId"] = a.playlistId;
         mapForVideoAlbumModel["index"] = '${a.index}';
-        log(a.playlistId);
-        var playlist = await yt.playlists.get(a.playlistId);
-        mapForVideoAlbumModel["title"] = playlist.title;
+
+        mapForVideoAlbumModel["title"] = a.name;
         mapForVideoAlbumModel["playlistId"] = a.playlistId;
         mapForVideoAlbumModel["albumId"] = a.albumId;
-        mapForVideoAlbumModel["description"] = playlist.description;
-        mapForVideoAlbumModel["author"] = playlist.author;
-        mapForVideoAlbumModel["videoCount"] = playlist.videoCount.toString();
+        mapForVideoAlbumModel["thumbnail"] = a.thumbnail;
         List<Map<String, String>> loalVideoList = [];
-        await for (var video in yt.playlists.getVideos(a.playlistId)) {
-          Map<String, String> localVideoMap = {};
-          localVideoMap["id"] = video.id.value;
-          localVideoMap["title"] = video.title;
-          localVideoMap["description"] = video.description;
-          localVideoMap["url"] = video.url;
 
-          localVideoMap["duration"] = "${video.duration!.inMilliseconds}";
-
-          localVideoMap["thumbnail"] =
-              "https://i.ytimg.com/vi/${video.id}/sddefault.jpg";
-          loalVideoList.add(localVideoMap);
-        }
-        mapForVideoAlbumModel["videosList"] = json.encode(loalVideoList);
-        if (loalVideoList.length != 0) {
-          mapForVideoAlbumModel["thumbnail"] =
-              loalVideoList[0]["thumbnail"] != null
-                  ? loalVideoList[0]["thumbnail"]!
-                  : '';
-        }
         videoAlbumModelList
             .add(VideoAlbumModel.fromJson(mapForVideoAlbumModel));
       }
-
       if (videoAlbumModelList.isNotEmpty) {
+        var tempList = videoAlbumModelList;
+        tempList.sort((a, b) => (a.index).compareTo(b.index));
         print(videoAlbumModelList);
-        context.read<VideoListBloc>().add(AddVideoAlbumListFromRefreshIndicator(
-            videoList: videoAlbumModelList));
+        context
+            .read<VideoListBloc>()
+            .add(AddVideoAlbumListFromRefreshIndicator(videoList: tempList));
       }
     } else {}
     return;

@@ -31,6 +31,7 @@ import 'package:temple_app/repositories/audo_repository.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
 import 'package:temple_app/router.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/services/firebase_notification_service.dart';
 import 'package:temple_app/widgets/custom_stack_with_bottom_player.dart';
 
@@ -57,6 +58,7 @@ void main() async {
     ]),
   ]);
   await EasyLocalization.ensureInitialized();
+  FirebaseAnalyticsService().init();
   runApp(
     EasyLocalization(
       supportedLocales: const [

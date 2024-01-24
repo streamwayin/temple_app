@@ -7,13 +7,18 @@ import '../bloc/auth_bloc.dart';
 
 final submitNumberKey = GlobalKey<FormState>();
 
-class LoginWithPhone extends StatelessWidget {
+class LoginWithPhone extends StatefulWidget {
   const LoginWithPhone({super.key});
 
   @override
+  State<LoginWithPhone> createState() => _LoginWithPhoneState();
+}
+
+class _LoginWithPhoneState extends State<LoginWithPhone> {
+  FlCountryCodePicker countryPicker = FlCountryCodePicker();
+  final _phoneNoController = TextEditingController();
+  @override
   Widget build(BuildContext context) {
-    const countryPicker = FlCountryCodePicker();
-    final _phoneNoController = TextEditingController();
     CountryCode code =
         const CountryCode(name: 'India', code: 'IN', dialCode: '+91');
     return BlocBuilder<AuthBloc, AuthState>(
@@ -98,6 +103,7 @@ class LoginWithPhone extends StatelessWidget {
                           phoneNumber:
                               '${code.dialCode}${_phoneNoController.text}'),
                     );
+                    print(_phoneNoController.text);
                   }
                 },
                 child: const Text(

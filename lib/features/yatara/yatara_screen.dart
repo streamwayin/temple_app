@@ -21,15 +21,15 @@ class YataraScreen extends StatelessWidget {
               ? Center(child: CircularProgressIndicator())
               : RefreshIndicator(
                   onRefresh: () async {
-                    print('object');
                     YataraRepository yataraRepository = YataraRepository();
                     List<YataraModel>? yataraList =
                         await yataraRepository.getYatraDetilsFromDb();
                     if (yataraList != null) {
-                      print(yataraList);
+                      var tempList = yataraList;
+                      tempList.sort((a, b) => (a.index).compareTo(b.index));
                       context.read<YataraBloc>().add(
                           AddYataraListFromRefreshIndicator(
-                              yataraList: yataraList));
+                              yataraList: tempList));
                     }
                     return;
                   },

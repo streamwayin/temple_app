@@ -10,6 +10,7 @@ import 'package:temple_app/features/audio/play-audio-screen/play_audio_screen.da
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/modals/track_model.dart';
 import 'package:temple_app/repositories/audo_repository.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 
 import '../../../constants.dart';
 import '../../../widgets/utils.dart';
@@ -46,9 +47,14 @@ class AudioScreen extends StatelessWidget {
                 List<TrackModel>? trackList = await audioRepository
                     .getTracksListFromDb(state.currentAlbumId!);
                 if (trackList != null) {
+                  var tempList = trackList;
+                  int length = tempList.length + 1;
+                  tempList.sort((a, b) =>
+                      (a.index ?? length).compareTo(b.index ?? length));
+
                   context
                       .read<PlayAudioBloc>()
-                      .add(AddTrackDateFromRefreshIndicator(list: trackList));
+                      .add(AddTrackDateFromRefreshIndicator(list: tempList));
                 }
               },
               child: Stack(
@@ -236,6 +242,10 @@ class AudioScreen extends StatelessWidget {
                 changeShowBottomMusicController: true),
           );
       // Navigator.pushNamed(context, PlayAudioScreen.routeName);
+      //     arguments: index);
+      FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+          name: "screen_view",
+          parameters: {"TITLE": PlayAudioScreen.routeName});
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => PlayAudioScreen()));
 

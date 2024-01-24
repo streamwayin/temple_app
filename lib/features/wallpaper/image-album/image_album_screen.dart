@@ -8,6 +8,7 @@ import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/image_screen.dart';
 import 'package:temple_app/modals/image_album_model.dart';
 import 'package:temple_app/repositories/wallpaper_repository.dart';
+import 'package:temple_app/services/firebase_analytics_service.dart';
 
 import 'package:temple_app/widgets/utils.dart';
 
@@ -46,6 +47,10 @@ class ImageAlbumScreen extends StatelessWidget {
                             context.read<ImageBloc>().add(ImageInitialEvent(
                                 albumModel:
                                     album)); //     navigationString: ImageAlbumScreen.routeName));
+                            FirebaseAnalyticsService.firebaseAnalytics!
+                                .logEvent(name: "screen_view", parameters: {
+                              "TITLE": ImageScreen.routeName
+                            });
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -70,8 +75,10 @@ class ImageAlbumScreen extends StatelessWidget {
     List<ImageAlbumModel>? imageAlbumList =
         await wallpaperRepo.getImageAlbumFromDb();
     if (imageAlbumList != null) {
-      context.read<WallpaperBloc>().add(AddImageAlbumModelFromRefreshIndicator(
-          imageAlbumModel: imageAlbumList));
+      var tempList = imageAlbumList;
+      tempList.sort((a, b) => (a.index).compareTo(b.index));
+      context.read<WallpaperBloc>().add(
+          AddImageAlbumModelFromRefreshIndicator(imageAlbumModel: tempList));
     }
   }
 }
