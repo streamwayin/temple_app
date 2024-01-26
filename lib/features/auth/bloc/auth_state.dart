@@ -8,16 +8,24 @@ class AuthState extends Equatable {
   final bool isLoggedIn;
   final bool navigateToAskNameScreen;
   final bool watingForOtp;
+  final bool ifUserExists;
   const AuthState({
     // this.authType = AuthType.signinWithEmail,
     this.code = const CountryCode(name: 'India', code: 'IN', dialCode: '+91'),
     this.isLoggedIn = false,
     this.navigateToAskNameScreen = false,
     this.watingForOtp = false,
+    this.ifUserExists = false,
   });
   @override
-  List<Object?> get props =>
-      [code, isLoggedIn, navigateToAskNameScreen, watingForOtp];
+  List<Object?> get props => [
+        code,
+        isLoggedIn,
+        navigateToAskNameScreen,
+        watingForOtp,
+        ifUserExists,
+        ifUserExists
+      ];
 
   AuthState copyWith({
     // AuthType? authType,
@@ -25,6 +33,7 @@ class AuthState extends Equatable {
     bool? isLoggedIn,
     bool? navigateToAskNameScreen,
     bool? watingForOtp,
+    bool? ifUserExists,
   }) {
     return AuthState(
       // authType: authType ?? this.authType,
@@ -33,6 +42,7 @@ class AuthState extends Equatable {
       navigateToAskNameScreen:
           navigateToAskNameScreen ?? this.navigateToAskNameScreen,
       watingForOtp: watingForOtp ?? this.watingForOtp,
+      ifUserExists: ifUserExists ?? this.ifUserExists,
     );
   }
 }

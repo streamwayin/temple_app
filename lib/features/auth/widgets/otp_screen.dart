@@ -27,9 +27,12 @@ class _OtpWidgetState extends State<OtpWidget> {
       listener: (context, state) {
         if (state.navigateToAskNameScreen != null &&
             state.navigateToAskNameScreen == true) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => AskNameScreen()));
-          // Navigator.pop(context);
+          if (state.ifUserExists == true) {
+            Navigator.pop(context);
+          } else {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => AskNameScreen()));
+          }
         }
       },
       child: Form(

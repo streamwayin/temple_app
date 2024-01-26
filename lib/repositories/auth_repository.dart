@@ -116,4 +116,16 @@ class AuthRepository {
       "uid": user.uid,
     });
   }
+
+  Future<bool> checkIdUserAvaliable(String uid) async {
+    bool isUserAvailable = false;
+
+    final docRef = FirebaseFirestore.instance.collection("users").doc(uid);
+
+    final data = await docRef.get();
+    if (data.exists) {
+      isUserAvailable = true;
+    }
+    return isUserAvailable;
+  }
 }

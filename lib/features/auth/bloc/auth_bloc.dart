@@ -126,12 +126,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       await FirebaseAuth.instance
           .signInWithCredential(event.credential)
-          .then((user) {
+          .then((user) async {
         if (user.user != null) {
+          // check if user already exists
+          bool isUserAvailable =
+              await authRepository.checkIdUserAvaliable(user.user!.uid);
           sharedPreferences.setBool(IS_USER_LOGGED_IN, true);
           emit(state.copyWith(
-              // authType: AuthType.signinWithEmail,
-              navigateToAskNameScreen: true));
+            // authType: AuthType.signinWithEmail,
+            ifUserExists: isUserAvailable,
+            navigateToAskNameScreen: true,
+          ));
         }
       });
     } on FirebaseAuthException catch (e) {
