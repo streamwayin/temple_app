@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,16 +23,16 @@ class SigntseenScreen extends StatelessWidget {
               ? Column(
                   children: [
                     SizedBox(
-                      height: 560.h,
+                      height: 565.h,
                       child: GridView.builder(
                         // physics: const NeverScrollableScrollPhysics(),
                         itemCount: state.sightseenList.length,
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                mainAxisSpacing: 8,
-                                crossAxisSpacing: 8,
-                                crossAxisCount: 2,
-                                childAspectRatio: 10 / 16),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          mainAxisSpacing: 8.h,
+                          crossAxisSpacing: 8.w,
+                          crossAxisCount: 2,
+                          childAspectRatio: 10.w / 16.h,
+                        ),
                         itemBuilder: (context, index) {
                           final sant = state.sightseenList[index];
                           return InkWell(
@@ -46,14 +47,22 @@ class SigntseenScreen extends StatelessWidget {
                                       builder: (context) =>
                                           SingleSightseenScreen(
                                             index: index,
+                                            image: sant.image!,
                                           )));
                             },
                             child: Column(
                               children: [
                                 Container(
                                   height: 240.h,
+                                  width: double.infinity,
                                   decoration: const BoxDecoration(
                                     color: Color.fromARGB(255, 240, 198, 134),
+                                  ),
+                                  child: CachedNetworkImage(
+                                    imageUrl: sant.image!,
+                                    fit: BoxFit.cover,
+                                    errorWidget: (context, url, error) =>
+                                        const Icon(Icons.error),
                                   ),
                                 ),
                                 Text(

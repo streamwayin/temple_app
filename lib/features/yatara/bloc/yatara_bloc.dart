@@ -22,8 +22,14 @@ class YataraBloc extends Bloc<YataraEvent, YataraState> {
 
     List<YataraModel>? yataraList =
         await yataraRepository.getYatraDetilsFromDb();
+    List<YataraModel> filteredList = [];
     if (yataraList != null) {
-      var tempList = yataraList;
+      for (var a in yataraList) {
+        if (a.isYatara == true) {
+          filteredList.add(a);
+        }
+      }
+      var tempList = filteredList;
       tempList.sort((a, b) => (a.index).compareTo(b.index));
       emit(state.copyWith(isLoading: false, yataraList: tempList));
     } else {

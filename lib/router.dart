@@ -124,7 +124,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       var index = routeSettings.arguments as int;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => SingleSightseenScreen(index: index),
+        builder: (_) => SingleSightseenScreen(index: index, image: ''),
       );
     case NotificationSereen.routeName:
       var remoteMessage = routeSettings.arguments as RemoteMessage;

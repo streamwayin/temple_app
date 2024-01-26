@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:temple_app/constants.dart';
 
@@ -30,15 +31,15 @@ class Utils {
         ),
       ),
       title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        // mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Spacer(),
           Container(
-            height: 50.h,
-            child: Image.asset(
-              "assets/figma/shree_bada_ramdwara.png",
-              fit: BoxFit.fitHeight,
-            ),
-          ),
+              height: 50.h,
+              child: SvgPicture.asset("assets/svg/app_bar.svg",
+                  colorFilter:
+                      ColorFilter.mode(Colors.white, BlendMode.srcIn))),
+          Spacer(),
           Container(
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(30)),
@@ -66,12 +67,14 @@ class Utils {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Container(
-            height: 50.h,
-            child: Image.asset(
-              "assets/figma/shree_bada_ramdwara.png",
-              fit: BoxFit.fitHeight,
-            ),
-          ),
+              height: 50.h,
+              child: SvgPicture.asset("assets/svg/app_bar.svg",
+                  colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn))
+              // Image.asset(
+              //   "assets/figma/shree_bada_ramdwara.png",
+              //   fit: BoxFit.fitHeight,
+              // ),
+              ),
           Container(
             decoration: BoxDecoration(
                 color: Colors.white, borderRadius: BorderRadius.circular(30)),

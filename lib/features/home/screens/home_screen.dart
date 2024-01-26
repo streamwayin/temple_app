@@ -15,9 +15,11 @@ import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.da
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/image_screen.dart';
+import 'package:temple_app/modals/carousel_model.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/modals/image_album_model.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
+import 'package:temple_app/repositories/home_repository.dart';
 import 'package:temple_app/repositories/wallpaper_repository.dart';
 import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/services/notification_service.dart';
@@ -287,6 +289,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
                                       fontSize: 12,
+                                      height: 2,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -455,7 +458,19 @@ class _HomeScreenState extends State<HomeScreen> {
           .read<HomeBloc>()
           .add(AddStateEbookDataFromRefreshIndicator(bookList: tempList2));
     }
-
+    HomeRepository homeRepository = HomeRepository();
+    final carouselList = await homeRepository.getCarouselImagesFromDB();
+    List<CarouselModel> tempListWithVisible = [];
+    if (carouselList != null) {
+      for (var a in carouselList) {
+        if (a.visibility == true) {
+          tempListWithVisible.add(a);
+        }
+      }
+    }
+    tempListWithVisible.sort((a, b) => (a.index).compareTo(b.index));
+    context.read<HomeBloc>().add(
+        AddCarouslDataFromRefreshIndicator(carouslList: tempListWithVisible));
     return;
   }
 }

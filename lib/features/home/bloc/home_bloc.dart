@@ -31,6 +31,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<CarouselPageIndexChanged>(onCarouselPageIndexChanged);
     on<AddStateEbookDataFromRefreshIndicator>(
         onAddStateEbookDataFromRefreshIndicator);
+    on<AddCarouslDataFromRefreshIndicator>(
+        onAddCarouslDataFromRefreshIndicator);
   }
 
   void _initilize() async {
@@ -43,7 +45,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       HomeEventInitial event, Emitter<HomeState> emit) async {
     emit(state.copyWith(booksLoading: true));
     AppUpdateModel? appUpdateModel = await homeRepository.getMetadata();
+
     final quotes = await homeRepository.getQuotes();
+
     if (appUpdateModel != null) {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       if (packageInfo.version != '${appUpdateModel.version}' &&
@@ -53,7 +57,17 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
 
     final list = await bookRepository.getEpubListFromWeb();
+    // get banner data fileter them
     final carouselList = await homeRepository.getCarouselImagesFromDB();
+    List<CarouselModel> tempListWithVisible = [];
+    if (carouselList != null) {
+      for (var a in carouselList) {
+        if (a.visibility == true) {
+          tempListWithVisible.add(a);
+        }
+      }
+    }
+    tempListWithVisible.sort((a, b) => (a.index).compareTo(b.index));
     Map<String, String> downloadedEbookMap = {};
 
     String? offlineBooks =
@@ -69,7 +83,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         downloadEbookMap: downloadedEbookMap,
         booksLoading: false,
         bannerText: quotes,
-        carouselList: carouselList));
+        carouselList: tempListWithVisible));
   }
 
   FutureOr<void> onCarouselPageIndexChanged(
@@ -80,5 +94,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> onAddStateEbookDataFromRefreshIndicator(
       AddStateEbookDataFromRefreshIndicator event, Emitter<HomeState> emit) {
     emit(state.copyWith(booksList: event.bookList));
+  }
+
+  FutureOr<void> onAddCarouslDataFromRefreshIndicator(
+      AddCarouslDataFromRefreshIndicator event, Emitter<HomeState> emit) {
+    emit(state.copyWith(carouselList: event.carouslList));
   }
 }

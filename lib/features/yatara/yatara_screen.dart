@@ -25,7 +25,13 @@ class YataraScreen extends StatelessWidget {
                     List<YataraModel>? yataraList =
                         await yataraRepository.getYatraDetilsFromDb();
                     if (yataraList != null) {
-                      var tempList = yataraList;
+                      List<YataraModel> filteredList = [];
+                      for (var a in yataraList) {
+                        if (a.isYatara == true) {
+                          filteredList.add(a);
+                        }
+                      }
+                      var tempList = filteredList;
                       tempList.sort((a, b) => (a.index).compareTo(b.index));
                       context.read<YataraBloc>().add(
                           AddYataraListFromRefreshIndicator(

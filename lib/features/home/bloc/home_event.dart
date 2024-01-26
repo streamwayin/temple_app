@@ -30,3 +30,11 @@ class AddStateEbookDataFromRefreshIndicator extends HomeEvent {
     // required this.imageAlbum,
   });
 }
+
+class AddCarouslDataFromRefreshIndicator extends HomeEvent {
+  final List<CarouselModel> carouslList;
+
+  AddCarouslDataFromRefreshIndicator({
+    required this.carouslList,
+  });
+}
