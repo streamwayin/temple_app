@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
@@ -105,6 +104,10 @@ class AudioRepository {
           albumModel.add(AlbumModel.fromJson(b.data()));
         }
       }
+      int length = albumModel.length + 1;
+
+      albumModel
+          .sort((a, b) => (a.index ?? length).compareTo(b.index ?? length));
       return albumModel;
     } catch (e) {
       log('$e');
@@ -130,6 +133,9 @@ class AudioRepository {
           albumModel.add(AlbumModel.fromJson(b.data()));
         }
       }
+      int length = albumModel.length + 1;
+      albumModel
+          .sort((a, b) => (a.index ?? length).compareTo(b.index ?? length));
       return albumModel;
     } catch (e) {
       log('$e');
@@ -177,6 +183,9 @@ class AudioRepository {
           trackModelList.add(TrackModel.fromJson(b.data()));
         }
       }
+      int length = trackModelList.length + 1;
+      trackModelList
+        ..sort((a, b) => (a.index ?? length).compareTo(b.index ?? length));
       return trackModelList;
     } catch (e) {
       log('$e');

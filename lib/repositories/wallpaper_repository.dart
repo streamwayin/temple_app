@@ -19,6 +19,7 @@ class WallpaperRepository {
           albumModel.add(ImageAlbumModel.fromJson(b.data()));
         }
       }
+      albumModel.sort((a, b) => (a.index).compareTo(b.index));
       return albumModel;
     } catch (e) {
       return null;
@@ -40,6 +41,7 @@ class WallpaperRepository {
           wallpaperList.add(ImageModel.fromJson(a.data()));
         }
       }
+      wallpaperList.sort((a, b) => (a.index).compareTo(b.index));
       return wallpaperList;
     } catch (e) {
       return null;

@@ -43,13 +43,28 @@ class _OtpWidgetState extends State<OtpWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                'A verification code has been sent to ${widget.phoneNo} ',
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  maxLines: 2,
+                  'A verification code has been sent to ${widget.phoneNo} ',
+                  style: TextStyle(fontSize: 18),
+                ),
               ),
-              SizedBox(height: 60.h),
+              SizedBox(height: 20.h),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  maxLines: 2,
+                  'एक  OTP भेज दिया गया है ${widget.phoneNo} ',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+              SizedBox(height: 90.h),
               Pinput(
                 length: 6,
                 controller: codeController,
+                closeKeyboardWhenCompleted: false,
                 defaultPinTheme: PinTheme(
                   width: 56,
                   height: 56,
@@ -69,9 +84,9 @@ class _OtpWidgetState extends State<OtpWidget> {
               Center(
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(
-                          255, 255, 225, 225), // background
-                      // foregroundColor: Colors.white, // foreground
+                      backgroundColor:
+                          Color.fromARGB(255, 241, 133, 44), // background
+                      foregroundColor: Colors.white, // foreground
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(18.0),
                       )),
@@ -82,14 +97,17 @@ class _OtpWidgetState extends State<OtpWidget> {
                           otp: codeController.text.toString());
                     }
                   },
-                  child: SizedBox(
-                    width: 150.w,
-                    height: 40.h,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
                       children: [
                         Text(
                           "ओटीपी सत्यापित करें",
+                          style: TextStyle(
+                              fontFamily: "KRDEV020", fontSize: 14.sp),
+                        ),
+                        Text(
+                          "Verify OTP",
                           style: TextStyle(
                               fontFamily: "KRDEV020", fontSize: 14.sp),
                         ),

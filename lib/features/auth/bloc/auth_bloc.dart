@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:fl_country_code_picker/fl_country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +16,7 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
+  final _firebaseMessenging = FirebaseMessaging.instance;
   AuthBloc({required this.authRepository}) : super(const AuthState()) {
     on<AuthEventInitial>(onAuthEventInitial);
     // on<SignInWithGoogelEvent>(onSignInWithGoogelEvent);
@@ -132,6 +134,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           bool isUserAvailable =
               await authRepository.checkIdUserAvaliable(user.user!.uid);
           sharedPreferences.setBool(IS_USER_LOGGED_IN, true);
+          final fCMTOKEN = await _firebaseMessenging.getToken();
+          await authRepository.addDeviceTokenToDB(user.user!.uid, "$fCMTOKEN");
           emit(state.copyWith(
             // authType: AuthType.signinWithEmail,
             ifUserExists: isUserAvailable,

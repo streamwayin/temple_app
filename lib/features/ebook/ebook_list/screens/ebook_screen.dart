@@ -14,7 +14,6 @@ import 'package:temple_app/features/ebook/search/screens/search_book_screen.dart
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
 import 'package:temple_app/services/firebase_analytics_service.dart';
-import 'package:temple_app/widgets/common_background_component.dart';
 import 'package:temple_app/widgets/utils.dart';
 
 import '../../../../constants.dart';
@@ -44,7 +43,7 @@ class EbookScreen extends StatelessWidget {
           bool? isUserLoggedIn = sharedPreferences.getBool(IS_USER_LOGGED_IN);
 
           if (isUserLoggedIn != null && isUserLoggedIn == true) {
-            if (state.selectedBook!.fileType == "ebook") {
+            if (state.selectedBook!.fileType == "epub") {
               context.read<EpubViewerBloc>().add(EpubViewerInitialEvent(
                   path: state.pathString!, book: state.selectedBook!));
               //     arguments: index);

@@ -1,10 +1,6 @@
-import 'dart:convert';
-
-import 'package:temple_app/modals/video_model.dart';
-
 class VideoAlbumModel {
   String albumId;
-  String index;
+  int index;
   String title;
   String playlistId;
   String description;
@@ -40,7 +36,7 @@ class VideoAlbumModel {
   factory VideoAlbumModel.fromJson(Map<String, dynamic> map) {
     return VideoAlbumModel(
       albumId: map['albumId'] ?? '',
-      index: map['index'] ?? '',
+      index: map['index'] != null ? int.parse(map['index']) : 1000,
       title: map['title'] ?? '',
       playlistId: map['playlistId'] ?? '',
       description: map['description'] ?? '',

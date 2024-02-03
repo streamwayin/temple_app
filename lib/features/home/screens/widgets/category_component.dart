@@ -45,7 +45,11 @@ class CatagoryComponent extends StatelessWidget {
           }
         case "kariyakram":
           {
-            showDialogCoomingDiaogBox(context, "Kariyakram");
+            FirebaseAnalyticsService.firebaseAnalytics!.logEvent(
+                name: "screen_view", parameters: {"TITLE": '/yatara-screen'});
+            Navigator.push(context,
+                MaterialPageRoute(builder: (context) => YataraScreen()));
+            // showDialogCoomingDiaogBox(context, "Kariyakram");
           }
         case "calander":
           {

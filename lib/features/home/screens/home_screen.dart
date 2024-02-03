@@ -469,6 +469,11 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     }
     tempListWithVisible.sort((a, b) => (a.index).compareTo(b.index));
+    // print(tempListWithVisible.length);
+    for (var a in tempListWithVisible) {
+      print(a.imageUrl);
+    }
+    ;
     context.read<HomeBloc>().add(
         AddCarouslDataFromRefreshIndicator(carouslList: tempListWithVisible));
     return;

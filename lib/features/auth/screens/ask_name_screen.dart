@@ -62,14 +62,17 @@ class _AskNameScreenState extends State<AskNameScreen> {
                           .addNameToUserCollection(nameController.text.trim());
                       Navigator.of(context).pop();
                     },
-                    child: SizedBox(
-                      width: 150.w,
-                      height: 40.h,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
                         children: [
                           Text(
                             "आगे बड़े",
+                            style:
+                                TextStyle(fontFamily: "KRDEV020", fontSize: 16),
+                          ),
+                          Text(
+                            "Done",
                             style:
                                 TextStyle(fontFamily: "KRDEV020", fontSize: 16),
                           ),

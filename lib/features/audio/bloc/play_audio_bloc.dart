@@ -170,7 +170,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
       LoadCurrentPlaylistEvent event, Emitter<PlayAudioState> emit) async {
     List<AudioSource> audioSourceList = state.tracks!
         .map(
-          (e) => (!state.downloadedSongsMap.containsKey('trackid'))
+          (e) => (!state.downloadedSongsMap.containsKey(e.trackId))
               ? AudioSource.uri(
                   Uri.parse(e.songUrl),
                   tag: MediaItem(
@@ -181,7 +181,7 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
                   ),
                 )
               : AudioSource.file(
-                  state.downloadedSongsMap['trackid']!,
+                  state.downloadedSongsMap[e.trackId]!,
                   tag: MediaItem(
                     id: '1',
                     title: e.translated.hi,
@@ -325,9 +325,9 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   FutureOr<void> onPlaySinglesongEvent(
       PlaySinglesongEvent event, Emitter<PlayAudioState> emit) {
     audioRepository.playSingleSong(event.index);
-    String alumId = state.tracks![event.index].albumId;
+    String trackId = state.tracks![event.index].trackId;
     firebaseAnalytics
-        .logEvent(name: "play_track", parameters: {"trackId": alumId});
+        .logEvent(name: "play_track", parameters: {"trackId": trackId});
     emit(state.copyWith(singleSongIndex: event.index));
   }
 

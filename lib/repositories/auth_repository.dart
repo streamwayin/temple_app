@@ -128,4 +128,9 @@ class AuthRepository {
     }
     return isUserAvailable;
   }
+
+  Future<void> addDeviceTokenToDB(String uid, String fCMTOKEN) async {
+    final dataRef = FirebaseFirestore.instance.collection("users").doc(uid);
+    dataRef.update({"deviceToken": fCMTOKEN});
+  }
 }

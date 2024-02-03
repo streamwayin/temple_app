@@ -28,15 +28,17 @@ class ImageAlbumScreen extends StatelessWidget {
               height: double.infinity,
               child: Stack(
                 children: [
+                  Utils.templeBackground(),
                   Padding(
                     padding: const EdgeInsets.all(24.0),
                     child: GridView.builder(
                       itemCount: state.imageAlbumList.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        mainAxisExtent: 100.h,
+                        mainAxisExtent: 220.h,
+                        // childAspectRatio: 9 / 16,
                         mainAxisSpacing: 10,
                         crossAxisSpacing: 10,
-                        crossAxisCount: 3,
+                        crossAxisCount: 2,
                       ),
                       itemBuilder: (context, index) {
                         final album = state.imageAlbumList[index];
@@ -60,7 +62,6 @@ class ImageAlbumScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  Utils.templeBackground(),
                 ],
               ),
             ),
@@ -100,21 +101,29 @@ class ImageAlbumComponent extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
-          border: Border.all(),
+          color: Color.fromARGB(166, 245, 214, 168),
+          // border: Border.all(color: const Color.fromARGB(255, 133, 80, 2)),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
           children: [
             Container(
-              height: 70.h,
-              width: 70.w,
-              child: CachedNetworkImage(imageUrl: imagePath),
+              height: 170.h,
+              width: 110.w,
+              child: CachedNetworkImage(
+                imageUrl: imagePath,
+                fit: BoxFit.cover,
+              ),
               decoration:
                   BoxDecoration(borderRadius: BorderRadius.circular(10)),
             ),
             Text(
               name,
-              style: const TextStyle(fontFamily: "KRDEV020"),
+              maxLines: 2,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: "KRDEV020",
+              ),
             ).tr()
           ],
         ),

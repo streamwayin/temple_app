@@ -86,6 +86,13 @@ class _LoginWithPhoneState extends State<LoginWithPhone> {
                 fontFamily: "KRDEV020",
               ),
             ),
+            const Text(
+              'We will send a code to verify your number.',
+              maxLines: 2,
+              style: TextStyle(
+                fontFamily: "KRDEV020",
+              ),
+            ),
             SizedBox(height: 40.h),
             Center(
               child: ElevatedButton(
@@ -106,8 +113,18 @@ class _LoginWithPhoneState extends State<LoginWithPhone> {
                     print(_phoneNoController.text);
                   }
                 },
-                child: const Text(
-                  'Send otp',
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      const Text(
+                        'OTP भेजें',
+                      ),
+                      const Text(
+                        'Send otp',
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

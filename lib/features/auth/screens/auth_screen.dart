@@ -47,7 +47,16 @@ class AuthScreen extends StatelessWidget {
                       .copyWith(top: 24.0),
                   child: Column(
                     children: [
-                      _gap(50),
+                      _gap(20),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Login",
+                          style: TextStyle(
+                              fontSize: 24.sp, fontWeight: FontWeight.w500),
+                        ),
+                      ),
+                      _gap(40),
                       Text(
                         "हर सुविधा का आनंद लेना शुरू करने के लिए लॉग इन करें ।",
                         style: TextStyle(
