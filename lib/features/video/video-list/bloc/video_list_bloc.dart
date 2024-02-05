@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -20,6 +18,8 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
     on<AddVideoAlbumListFromRefreshIndicator>(
         onAddVideoAlbumListFromRefreshIndicator);
     on<FetchVideoModelList>(onFetchVideoModelList);
+    on<NavigateFromNotificaionVidoeAlbumEvent>(
+        onNavigateFromNotificaionVidoeAlbumEvent);
   }
   VideoRepository videoRepository = VideoRepository();
   FutureOr<void> onVideoInitialEvent(
@@ -111,5 +111,11 @@ class VideoListBloc extends Bloc<VideoListEvent, VideoListState> {
       navigateToVideoScreenLoading: false,
     ));
     print(loalVideoList);
+  }
+
+  FutureOr<void> onNavigateFromNotificaionVidoeAlbumEvent(
+      NavigateFromNotificaionVidoeAlbumEvent event,
+      Emitter<VideoListState> emit) {
+    emit(state.copyWith(navigateFromNotification: true));
   }
 }

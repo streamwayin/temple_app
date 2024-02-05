@@ -20,3 +20,5 @@ class FetchVideoModelList extends VideoListEvent {
 
   FetchVideoModelList({required this.playlistId});
 }
+
+class NavigateFromNotificaionVidoeAlbumEvent extends VideoListEvent {}

@@ -3,6 +3,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:temple_app/features/audio/play-audio-screen/play_audio_screen.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/modals/album_model.dart';
 import 'package:temple_app/repositories/audo_repository.dart';
@@ -22,6 +24,22 @@ class AlbumScreen extends StatelessWidget {
       listener: (context, state) {
         if (state.isTracksAvailable != null) {
           // context.read<PlayAudioBloc>().add(const LoadCurrentPlaylistEvent());
+        }
+        if (state.navigateFromNotification == true) {
+          PersistentNavBarNavigator.pushNewScreen(
+            context,
+            screen: AudioScreen(),
+            withNavBar: true, // OPTIONAL VALUE. True by default.
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+        }
+        if (state.navigateFromNotificationToPlayAudioScreen == true) {
+          PersistentNavBarNavigator.pushNewScreen(
+            context,
+            screen: PlayAudioScreen(),
+            withNavBar: true, // OPTIONAL VALUE. True by default.
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
         }
       },
       builder: (context, state) {

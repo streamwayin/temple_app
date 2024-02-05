@@ -33,6 +33,8 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         onAddStateEbookDataFromRefreshIndicator);
     on<AddCarouslDataFromRefreshIndicator>(
         onAddCarouslDataFromRefreshIndicator);
+    on<NavigateFromNotificaionToImageFromHomeEvent>(
+        onNavigateFromNotificaionToImageFromHomeEvent);
   }
 
   void _initilize() async {
@@ -99,5 +101,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> onAddCarouslDataFromRefreshIndicator(
       AddCarouslDataFromRefreshIndicator event, Emitter<HomeState> emit) {
     emit(state.copyWith(carouselList: event.carouslList));
+  }
+
+  FutureOr<void> onNavigateFromNotificaionToImageFromHomeEvent(
+      NavigateFromNotificaionToImageFromHomeEvent event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(navigateToImageFromNotification: true));
   }
 }

@@ -27,6 +27,7 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
     on<DownloadBookEventEbookList>(onDownloadBookEventEbookList);
     on<AddEbookListFromRefreshIndicatorEvent>(
         onAddEbookListFromRefreshIndicatorEvent);
+    on<NavigateFromNotificaionBookEvent>(onNavigateFromNotificaionBookEvent);
   }
   void init() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -160,5 +161,10 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
   FutureOr<void> onAddEbookListFromRefreshIndicatorEvent(
       AddEbookListFromRefreshIndicatorEvent event, Emitter<EbookState> emit) {
     emit(state.copyWith(booksList: event.bookList));
+  }
+
+  FutureOr<void> onNavigateFromNotificaionBookEvent(
+      NavigateFromNotificaionBookEvent event, Emitter<EbookState> emit) {
+    emit(state.copyWith(navigateFromNotificaionBook: true));
   }
 }

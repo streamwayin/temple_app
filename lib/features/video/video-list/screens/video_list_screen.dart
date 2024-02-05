@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import 'package:temple_app/features/video/video-list/bloc/video_list_bloc.dart';
 import 'package:temple_app/features/video/video-screen/video_screen.dart';
 import 'package:temple_app/modals/video_album_model.dart';
@@ -36,6 +37,14 @@ class VideoListScreen extends StatelessWidget {
                           // .videosList,
                           )));
         }
+        if (state.navigateFromNotification == true) {
+          PersistentNavBarNavigator.pushNewScreen(
+            context,
+            screen: VideoListScreen(),
+            withNavBar: true, // OPTIONAL VALUE. True by default.
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+          );
+        }
       },
       builder: (context, state) {
         return Scaffold(
@@ -59,6 +68,8 @@ class VideoListScreen extends StatelessWidget {
                                     state.videoAlbumModelList[index];
                                 return InkWell(
                                     onTap: () {
+                                      print('${videoAlbum.playlistId}');
+                                      print(videoAlbum.albumId);
                                       context.read<VideoListBloc>().add(
                                           FetchVideoModelList(
                                               playlistId:

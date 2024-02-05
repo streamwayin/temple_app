@@ -49,6 +49,11 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<SavePlayingTracksEvent>(onSavePlayingTracksEvent);
     on<AddAlubmDateFromRefreshIndicator>(onAddAlubmDateFromRefreshIndicator);
     on<AddTrackDateFromRefreshIndicator>(onAddTrackDateFromRefreshIndicator);
+    on<NavigateFromNotificaionScreen>(onNavigateFromNotificaionScreen);
+    on<NavigateFromNotificaionScreenToPlayAudioScreen>(
+        onNavigateFromNotificaionScreenToPlayAudioScreen);
+    on<PlaySingleSongFromNotificationEvent>(
+        onPlaySingleSongFromNotificationEvent);
     // on<ToggleLoopMode>(onToggleLoopMode);
     // on<ToggleSuffleMode>(onToggleSuffleMode);
   }
@@ -214,6 +219,28 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
             musicPlayerDataModel: data);
       },
     );
+  }
+
+  FutureOr<void> onPlaySingleSongFromNotificationEvent(
+      PlaySingleSongFromNotificationEvent event,
+      Emitter<PlayAudioState> emit) async {
+    audioRepository.setUrl(event.trackModel.songUrl);
+    await emit.forEach(
+      audioRepository.musicPlayerDataStream,
+      onData: (data) {
+        // int? index = audioRepository.currentSongIndex();
+        // int duration = data.positionData.position.inSeconds;
+        // if (index != null) {
+        // sharedPreferences.setInt(PLAYLIST_CURRENT_SONG_INDEX, index);
+        // sharedPreferences.setInt(PLAYLIST_CURRENT_SONG_DURATION, duration);
+        // }
+        return state.copyWith(
+            // currentAlbumIndex: event.albumIndex,
+            // singleSongIndex: index,
+            musicPlayerDataModel: data);
+      },
+    );
+    emit(state.copyWith(navigateFromNotificationToPlayAudioScreen: true));
   }
 
   FutureOr<void> onDownloadSongEvent(
@@ -479,5 +506,16 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
   FutureOr<void> onAddTrackDateFromRefreshIndicator(
       AddTrackDateFromRefreshIndicator event, Emitter<PlayAudioState> emit) {
     emit(state.copyWith(tracks: event.list));
+  }
+
+  FutureOr<void> onNavigateFromNotificaionScreen(
+      NavigateFromNotificaionScreen event, Emitter<PlayAudioState> emit) {
+    emit(state.copyWith(navigateFromNotification: true));
+  }
+
+  FutureOr<void> onNavigateFromNotificaionScreenToPlayAudioScreen(
+      NavigateFromNotificaionScreenToPlayAudioScreen event,
+      Emitter<PlayAudioState> emit) {
+    emit(state.copyWith(navigateFromNotificationToPlayAudioScreen: true));
   }
 }

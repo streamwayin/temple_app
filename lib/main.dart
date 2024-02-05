@@ -35,18 +35,12 @@ import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/services/firebase_notification_service.dart';
 import 'package:temple_app/widgets/custom_stack_with_bottom_player.dart';
 
+int id = 0;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-@pragma('vm:entry-point')
-Future<void> _firebaseMessengingBackgroundHandler(
-    RemoteMessage remoteMessage) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-}
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  await FirebaseNotificatonService().initNotification();
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessengingBackgroundHandler);
+
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
     androidNotificationChannelName: 'Audio playback',

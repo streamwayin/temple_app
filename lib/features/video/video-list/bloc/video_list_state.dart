@@ -7,6 +7,7 @@ class VideoListState extends Equatable {
     this.currnetVideoList = const [],
     this.navigateToVideoScreen,
     this.navigateToVideoScreenLoading = false,
+    this.navigateFromNotification = false,
     // this.vidoePlaylistList = const [],
   });
   final List<VideoAlbumModel> videoAlbumModelList;
@@ -14,12 +15,13 @@ class VideoListState extends Equatable {
   final List<VideoModel> currnetVideoList;
   final bool? navigateToVideoScreen;
   final bool navigateToVideoScreenLoading;
+  final bool navigateFromNotification;
   // final List<Playlist> vidoePlaylistList;
   @override
   List<Object?> get props => [
         videoAlbumModelList,
         isLoading, currnetVideoList, navigateToVideoScreen,
-        navigateToVideoScreenLoading
+        navigateToVideoScreenLoading, navigateFromNotification,
         // vidoePlaylistList,
       ];
 
@@ -30,6 +32,7 @@ class VideoListState extends Equatable {
     List<VideoModel>? currnetVideoList,
     bool? navigateToVideoScreen,
     bool? navigateToVideoScreenLoading,
+    bool? navigateFromNotification,
   }) {
     return VideoListState(
       videoAlbumModelList: videoAlbumModelList ?? this.videoAlbumModelList,
@@ -38,6 +41,7 @@ class VideoListState extends Equatable {
       navigateToVideoScreen: navigateToVideoScreen,
       navigateToVideoScreenLoading:
           navigateToVideoScreenLoading ?? this.navigateToVideoScreenLoading,
+      navigateFromNotification: navigateFromNotification ?? false,
       // vidoePlaylistList: vidoePlaylistList ?? this.vidoePlaylistList,
     );
   }

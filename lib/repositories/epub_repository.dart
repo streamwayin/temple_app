@@ -22,4 +22,19 @@ class EpubRepository {
       return null;
     }
   }
+
+  // get single book from db
+  Future<EbookModel?> getSingleBookDataFromDbForNotification(
+      {required String docId}) async {
+    try {
+      final data =
+          await FirebaseFirestore.instance.collection("books").doc(docId).get();
+      if (data.exists) {
+        return EbookModel.fromJson(data.data()!);
+      }
+    } catch (e) {
+      return null;
+    }
+    return null;
+  }
 }

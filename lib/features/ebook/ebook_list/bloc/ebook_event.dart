@@ -24,3 +24,5 @@ class AddEbookListFromRefreshIndicatorEvent extends EbookEvent {
 
   AddEbookListFromRefreshIndicatorEvent({required this.bookList});
 }
+
+class NavigateFromNotificaionBookEvent extends EbookEvent {}

@@ -90,6 +90,9 @@ class AudioRepository {
     }
   }
 
+  // playing from notification
+  void setUrl(String url) => _player.setUrl(url);
+
   // get all albums from web
   Future<List<AlbumModel>?> getAlbumListFromDb() async {
     try {
@@ -194,6 +197,22 @@ class AudioRepository {
     }
   }
 
+  // get single track data and make model for notifications
+  Future<TrackModel?> getTrackDataFromDbForNotifications(
+      {required String docId}) async {
+    try {
+      final data = await FirebaseFirestore.instance
+          .collection('tracks')
+          .doc(docId)
+          .get();
+      if (data.exists) {
+        return TrackModel.fromJson(data.data()!);
+      }
+    } catch (e) {
+      return null;
+    }
+    return null;
+  }
   // Future<List<AlbumModel>?> getAudioListFromweb() async {
   //   try {
   //     List<AlbumModel> albumModel = [];

@@ -10,6 +10,7 @@ class HomeState extends Equatable {
     this.booksLoading = false,
     this.bannerText,
     this.carouselList = const [],
+    this.navigateToImageFromNotification = false,
   });
   final bool onPlayAudioScreen;
   final bool updateMandatory;
@@ -19,13 +20,15 @@ class HomeState extends Equatable {
   final bool booksLoading;
   final BannerModel? bannerText;
   final List<CarouselModel> carouselList;
+  final bool navigateToImageFromNotification;
   @override
   List<Object?> get props => [
         onPlayAudioScreen,
         cauraselPageIndex,
         updateMandatory,
         booksLoading,
-        bannerText
+        bannerText,
+        navigateToImageFromNotification
       ];
   HomeState copyWith({
     bool? onPlayAudioScreen,
@@ -36,6 +39,7 @@ class HomeState extends Equatable {
     bool? booksLoading,
     BannerModel? bannerText,
     List<CarouselModel>? carouselList,
+    bool? navigateToImageFromNotification,
   }) {
     return HomeState(
       onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
@@ -46,6 +50,7 @@ class HomeState extends Equatable {
       booksLoading: booksLoading ?? this.booksLoading,
       bannerText: bannerText ?? this.bannerText,
       carouselList: carouselList ?? this.carouselList,
+      navigateToImageFromNotification: navigateToImageFromNotification ?? false,
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/retry.dart';
 import 'package:temple_app/modals/video_album_model_db.dart';
 
 class VideoRepository {
@@ -16,5 +17,21 @@ class VideoRepository {
       }
     }
     return videoList;
+  }
+
+  Future<VideoAlbumModelDb?> getSingleVideoAlubmFromDbForNotification(
+      String docId) async {
+    try {
+      final data = await FirebaseFirestore.instance
+          .collection('video-albums')
+          .doc(docId)
+          .get();
+      if (data.exists) {
+        return VideoAlbumModelDb.fromJson(data.data()!);
+      }
+    } catch (e) {
+      return null;
+    }
+    return null;
   }
 }

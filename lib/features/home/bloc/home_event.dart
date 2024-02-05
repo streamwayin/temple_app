@@ -38,3 +38,5 @@ class AddCarouslDataFromRefreshIndicator extends HomeEvent {
     required this.carouslList,
   });
 }
+
+class NavigateFromNotificaionToImageFromHomeEvent extends HomeEvent {}
