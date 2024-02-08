@@ -139,12 +139,14 @@ class AddTrackDateFromRefreshIndicator extends PlayAudioEvent {
   AddTrackDateFromRefreshIndicator({required this.list});
 }
 
-class NavigateFromNotificaionScreen extends PlayAudioEvent {}
-
-class NavigateFromNotificaionScreenToPlayAudioScreen extends PlayAudioEvent {}
-
 class PlaySingleSongFromNotificationEvent extends PlayAudioEvent {
   final TrackModel trackModel;
+  // final String notiNaviString;
 
-  PlaySingleSongFromNotificationEvent({required this.trackModel});
+  PlaySingleSongFromNotificationEvent({
+    required this.trackModel,
+    // required this.notiNaviString
+  });
 }
+
+class ReplaySongEvent extends PlayAudioEvent {}

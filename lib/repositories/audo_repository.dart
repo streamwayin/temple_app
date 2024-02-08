@@ -70,9 +70,24 @@ class AudioRepository {
   void play() => _player.play();
 
   void pause() => _player.pause();
-  void next() => _player.seekToNext();
+
+  void next() {
+    if (_player.hasNext) {
+      _player.seekToNext();
+    }
+  }
+
+  void replay() {
+    _player.seek(Duration.zero);
+  }
+
   int? currentSongIndex() => _player.currentIndex;
-  void previous() => _player.seekToPrevious();
+  void previous() {
+    if (_player.hasPrevious) {
+      _player.seekToPrevious();
+    }
+  }
+
   void setSeekDuration(Duration duration) => _player.seek(duration);
   void playSingleSong(int index) async {
     await _player.seek(Duration.zero, index: index);

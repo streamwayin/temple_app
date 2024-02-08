@@ -48,6 +48,14 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
     try {
       String? downloadedPath;
       var map = {...state.downloadEbookMap};
+
+      final downlodedBookStringNew = await sharedPreferences
+          .getString(OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY);
+      if (downlodedBookStringNew != null) {
+        final downlodedBookMapNew = json.decode(downlodedBookStringNew);
+        map = {...downlodedBookMapNew};
+      }
+
       print(map);
       if (map.containsKey(epubBook.id)) {
         final path = map[epubBook.id];

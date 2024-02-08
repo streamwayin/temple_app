@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:temple_app/features/audio/play-audio-screen/bloc/play_audio_screen_bloc.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
@@ -38,7 +39,7 @@ class FirebaseNotificatonService {
     if (message == null) return;
     Map<String, dynamic> map = {
       "type": "tracks",
-      "id": "07Y36T491UdbDZjosua8",
+      "id": "0HlUtsNON64jkxjVQK4Y",
       "index": 5,
       'title': "This is title",
       'body': "This is title  body"
@@ -54,41 +55,39 @@ class FirebaseNotificatonService {
       // );
       case 'tracks':
         {
-          print("indide case");
           AudioRepository audioRepository = AudioRepository();
           TrackModel? trackModel = await audioRepository
               .getTrackDataFromDbForNotifications(docId: notificationModel.id);
           if (trackModel == null) break;
           context
               .read<BottomBarBloc>()
-              .add(ChangeCurrentPageIndex(newIndex: 2));
-          // context
-          //     .read<PlayAudioBloc>()
-          //     .add(NavigateFromNotificaionScreenToPlayAudioScreen());
-          // go to play song
-
+              .add(ChangeCurrentPageIndex(newIndex: 0));
           context
               .read<PlayAudioBloc>()
               .add(PlaySingleSongFromNotificationEvent(trackModel: trackModel));
-          print("indide case finish");
+          context
+              .read<HomeBloc>()
+              .add(NavigateFromNotificaionFromHomeEventPlayAudioScreen());
           break;
         }
       case 'albums':
         {
-          print("indide case");
           context
               .read<BottomBarBloc>()
-              .add(ChangeCurrentPageIndex(newIndex: 2));
-          context.read<PlayAudioBloc>().add(NavigateFromNotificaionScreen());
+              .add(ChangeCurrentPageIndex(newIndex: 0));
+          // context
+          //     .read<PlayAudioBloc>()
+          //     .add(NavigateFromNotificaionScreen(notiNaviString: ''));
+          context
+              .read<HomeBloc>()
+              .add(NavigateFromNotificationScreenToAlbumsEvent());
           context
               .read<PlayAudioBloc>()
               .add(FetchSongsOfAlbum(albumId: notificationModel.id));
-          print("indide case finish");
           break;
         }
-      case 'video-album':
+      case 'video-albums':
         {
-          print("indide case");
           context
               .read<BottomBarBloc>()
               .add(ChangeCurrentPageIndex(newIndex: 1));
@@ -103,8 +102,6 @@ class FirebaseNotificatonService {
           context
               .read<VideoListBloc>()
               .add(FetchVideoModelList(playlistId: videoAlbumModel.playlistId));
-
-          print("indide case finish");
           break;
         }
       case 'books':
@@ -121,8 +118,6 @@ class FirebaseNotificatonService {
           context
               .read<EbookBloc>()
               .add((DownloadBookEventEbookList(book: ebookModel)));
-
-          print("indide case finish");
           break;
         }
       case 'image-albums':
@@ -144,7 +139,6 @@ class FirebaseNotificatonService {
               albumModel:
                   imageAlbumModel)); //     navigationString: ImageAlbumScreen.routeName));
 
-          print("indide case finish");
           break;
         }
     }

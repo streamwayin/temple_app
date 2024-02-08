@@ -251,6 +251,10 @@ class SongPlayingIndicator extends StatelessWidget {
                                                 return CustomIconButton(
                                                     icon: Icons.replay,
                                                     onTap: () {
+                                                      context
+                                                          .read<PlayAudioBloc>()
+                                                          .add(
+                                                              ReplaySongEvent());
                                                       // player.seek(Duration.zero)
                                                     });
                                               }
@@ -346,6 +350,9 @@ class SongPlayingIndicator extends StatelessWidget {
                         top: 0,
                         child: InkWell(
                           onTap: () {
+                            // context
+                            //     .read<PlayAudioBloc>()
+                            //     .add(PlayOrPauseSongEvent(play: false));
                             context.read<PlayAudioBloc>().add(
                                 ChangeShowBottomMusicController(
                                     changeShowBottomMusicController: false));

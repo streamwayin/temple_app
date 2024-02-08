@@ -9,7 +9,6 @@ import 'package:temple_app/modals/app_update_model.dart';
 import 'package:temple_app/modals/banner_model.dart';
 import 'package:temple_app/modals/carousel_model.dart';
 import 'package:temple_app/modals/ebook_model.dart';
-import 'package:temple_app/modals/image_album_model.dart';
 import 'package:temple_app/repositories/home_repository.dart';
 
 import '../../../constants.dart';
@@ -35,6 +34,16 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         onAddCarouslDataFromRefreshIndicator);
     on<NavigateFromNotificaionToImageFromHomeEvent>(
         onNavigateFromNotificaionToImageFromHomeEvent);
+    on<ToggleNavigateFromNotificaionToImageFromHomeEvent>(
+        onToggleNavigateFromNotificaionToImageFromHomeEvent);
+    on<NavigateFromNotificationScreenToAlbumsEvent>(
+        onNavigateFromNotificationScreenToAlbumsEvent);
+    on<ToggleNavigateFromNotificationScreenToAlbumsEvent>(
+        onToggleNavigateFromNotificationScreenToAlbumsEvent);
+    on<NavigateFromNotificaionFromHomeEventPlayAudioScreen>(
+        onNavigateFromNotificaionFromHomeEventPlayAudioScreen);
+    on<ToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen>(
+        onToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen);
   }
 
   void _initilize() async {
@@ -107,5 +116,36 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       NavigateFromNotificaionToImageFromHomeEvent event,
       Emitter<HomeState> emit) {
     emit(state.copyWith(navigateToImageFromNotification: true));
+  }
+
+  FutureOr<void> onToggleNavigateFromNotificaionToImageFromHomeEvent(
+      ToggleNavigateFromNotificaionToImageFromHomeEvent event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(navigateToImageFromNotification: event.toogleNaviBool));
+  }
+
+  FutureOr<void> onNavigateFromNotificationScreenToAlbumsEvent(
+      NavigateFromNotificationScreenToAlbumsEvent event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(navigateToImageFromNotificationToAlbum: true));
+  }
+
+  FutureOr<void> onToggleNavigateFromNotificationScreenToAlbumsEvent(
+      ToggleNavigateFromNotificationScreenToAlbumsEvent event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(
+        navigateToImageFromNotificationToAlbum: event.toogleAlbumNavi));
+  }
+
+  FutureOr<void> onNavigateFromNotificaionFromHomeEventPlayAudioScreen(
+      NavigateFromNotificaionFromHomeEventPlayAudioScreen event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(navigateToFromNotificationToPlayAudioScreen: true));
+  }
+
+  FutureOr<void> onToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen(
+      ToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(navigateToFromNotificationToPlayAudioScreen: false));
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:temple_app/repositories/audo_repository.dart';
 
 part 'play_audio_screen_event.dart';
@@ -14,6 +14,9 @@ class PlayAudioScreenBloc
       : super(PlayAudioScreenInitial()) {
     on<ToggleLoopMode>(onToggleLoopMode);
     on<ToggleSuffleMode>(onToggleSuffleMode);
+    on<ChangeNavigateFromNotificationEvent>(
+        onChangeNavigateFromNotificationEvent);
+    on<NavigateFromNotificationEvent>(onNavigateFromNotificationEvent);
   }
   FutureOr<void> onToggleLoopMode(
       ToggleLoopMode event, Emitter<PlayAudioScreenState> emit) async {
@@ -27,5 +30,23 @@ class PlayAudioScreenBloc
       ToggleSuffleMode event, Emitter<PlayAudioScreenState> emit) {
     audioRepository.suffle(event.suffle);
     emit(state.copyWith(isSuffling: event.suffle));
+  }
+
+  FutureOr<void> onChangeNavigateFromNotificationEvent(
+      ChangeNavigateFromNotificationEvent event,
+      Emitter<PlayAudioScreenState> emit) {
+    print('-----------------------------------------------');
+    print("onChangeNavigateFromNotificationEvent");
+    emit(state.copyWith(
+      navigateFromNotification: event.navigateFromNotification,
+    ));
+  }
+
+  FutureOr<void> onNavigateFromNotificationEvent(
+      NavigateFromNotificationEvent event, Emitter<PlayAudioScreenState> emit) {
+    emit(state.copyWith(
+      navigateFromNotification: event.navigateFromNotification,
+      notiNaviString: event.notiNaviString,
+    ));
   }
 }

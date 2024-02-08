@@ -49,11 +49,11 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     on<SavePlayingTracksEvent>(onSavePlayingTracksEvent);
     on<AddAlubmDateFromRefreshIndicator>(onAddAlubmDateFromRefreshIndicator);
     on<AddTrackDateFromRefreshIndicator>(onAddTrackDateFromRefreshIndicator);
-    on<NavigateFromNotificaionScreen>(onNavigateFromNotificaionScreen);
-    on<NavigateFromNotificaionScreenToPlayAudioScreen>(
-        onNavigateFromNotificaionScreenToPlayAudioScreen);
+
     on<PlaySingleSongFromNotificationEvent>(
         onPlaySingleSongFromNotificationEvent);
+
+    on<ReplaySongEvent>(onReplaySongEvent);
     // on<ToggleLoopMode>(onToggleLoopMode);
     // on<ToggleSuffleMode>(onToggleSuffleMode);
   }
@@ -219,28 +219,6 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
             musicPlayerDataModel: data);
       },
     );
-  }
-
-  FutureOr<void> onPlaySingleSongFromNotificationEvent(
-      PlaySingleSongFromNotificationEvent event,
-      Emitter<PlayAudioState> emit) async {
-    audioRepository.setUrl(event.trackModel.songUrl);
-    await emit.forEach(
-      audioRepository.musicPlayerDataStream,
-      onData: (data) {
-        // int? index = audioRepository.currentSongIndex();
-        // int duration = data.positionData.position.inSeconds;
-        // if (index != null) {
-        // sharedPreferences.setInt(PLAYLIST_CURRENT_SONG_INDEX, index);
-        // sharedPreferences.setInt(PLAYLIST_CURRENT_SONG_DURATION, duration);
-        // }
-        return state.copyWith(
-            // currentAlbumIndex: event.albumIndex,
-            // singleSongIndex: index,
-            musicPlayerDataModel: data);
-      },
-    );
-    emit(state.copyWith(navigateFromNotificationToPlayAudioScreen: true));
   }
 
   FutureOr<void> onDownloadSongEvent(
@@ -508,14 +486,51 @@ class PlayAudioBloc extends Bloc<PlayAudioEvent, PlayAudioState> {
     emit(state.copyWith(tracks: event.list));
   }
 
-  FutureOr<void> onNavigateFromNotificaionScreen(
-      NavigateFromNotificaionScreen event, Emitter<PlayAudioState> emit) {
-    emit(state.copyWith(navigateFromNotification: true));
+  FutureOr<void> onPlaySingleSongFromNotificationEvent(
+      PlaySingleSongFromNotificationEvent event,
+      Emitter<PlayAudioState> emit) async {
+    var audioUri = AudioSource.uri(Uri.parse(event.trackModel.songUrl),
+        tag: MediaItem(
+            id: event.trackModel.trackId,
+            title: event.trackModel.translated.hi,
+            artist: event.trackModel.artistName,
+            artUri: Uri.tryParse(event.trackModel.thumbnail!)));
+    List<AudioSource> audioSourceList = [audioUri];
+
+    final playlist = ConcatenatingAudioSource(
+      // Start loading next item just before reaching it
+      useLazyPreparation: true,
+      // Customise the shuffle algorithm
+      shuffleOrder: DefaultShuffleOrder(),
+
+      children: audioSourceList,
+    );
+
+    Duration initialPosition = Duration.zero;
+
+    audioRepository.addPlaylist(
+        playList: playlist,
+        initialIndex: state.savedInitialEvent,
+        initialPosition: initialPosition);
+    audioRepository.play();
+    ////////////////////////////
+    ///check down
+    ////////////////////////////
+    ////////////////////////////
+    emit(state.copyWith(onPlayAudioScreen: false));
+    await emit.forEach(
+      audioRepository.musicPlayerDataStream,
+      onData: (data) {
+        return state.copyWith(
+          musicPlayerDataModel: data,
+          showBottomMusicController: true,
+        );
+      },
+    );
   }
 
-  FutureOr<void> onNavigateFromNotificaionScreenToPlayAudioScreen(
-      NavigateFromNotificaionScreenToPlayAudioScreen event,
-      Emitter<PlayAudioState> emit) {
-    emit(state.copyWith(navigateFromNotificationToPlayAudioScreen: true));
+  FutureOr<void> onReplaySongEvent(
+      ReplaySongEvent event, Emitter<PlayAudioState> emit) {
+    audioRepository.replay();
   }
 }

@@ -26,8 +26,7 @@ class PlayAudioState extends Equatable {
   final bool isLooping;
   final bool isSuffling;
   final int? currentAlbumIndex;
-  final bool navigateFromNotification;
-  final bool navigateFromNotificationToPlayAudioScreen;
+
   const PlayAudioState({
     this.albums = const [],
     this.concatenatingAudioSource,
@@ -54,8 +53,6 @@ class PlayAudioState extends Equatable {
     this.isLooping = false,
     this.isSuffling = false,
     this.currentAlbumIndex,
-    this.navigateFromNotification = false,
-    this.navigateFromNotificationToPlayAudioScreen = false,
   });
   @override
   List<Object?> get props => [
@@ -84,8 +81,6 @@ class PlayAudioState extends Equatable {
         isLooping,
         isSuffling,
         currentAlbumIndex,
-        navigateFromNotification,
-        navigateFromNotificationToPlayAudioScreen,
       ];
 
   PlayAudioState copyWith({
@@ -114,8 +109,6 @@ class PlayAudioState extends Equatable {
     bool? isLooping,
     bool? isSuffling,
     int? currentAlbumIndex,
-    bool? navigateFromNotification,
-    bool? navigateFromNotificationToPlayAudioScreen,
   }) {
     return PlayAudioState(
       albums: albums ?? this.albums,
@@ -149,9 +142,6 @@ class PlayAudioState extends Equatable {
       isLooping: isLooping ?? false,
       isSuffling: isSuffling ?? false,
       currentAlbumIndex: currentAlbumIndex ?? this.currentAlbumIndex,
-      navigateFromNotification: navigateFromNotification ?? false,
-      navigateFromNotificationToPlayAudioScreen:
-          navigateFromNotificationToPlayAudioScreen ?? false,
     );
   }
 }
@@ -163,18 +153,3 @@ class PlayAudioErrorState extends PlayAudioState {
 
   const PlayAudioErrorState({required this.errorMesssage});
 }
-
-// class PlayAudioPlaylistState extends PlayAudioState {
-//   final ConcatenatingAudioSource playlist = ConcatenatingAudioSource(
-//     // Start loading next item just before reaching it
-//     useLazyPreparation: true,
-//     // Customise the shuffle algorithm
-//     shuffleOrder: DefaultShuffleOrder(),
-//     // Specify the playlist items
-//     children: [
-//       AudioSource.uri(Uri.parse('https://example.com/track1.mp3')),
-//       AudioSource.uri(Uri.parse('https://example.com/track2.mp3')),
-//       AudioSource.uri(Uri.parse('https://example.com/track3.mp3')),
-//     ],
-//   );
-// }

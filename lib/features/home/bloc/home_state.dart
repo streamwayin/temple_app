@@ -11,6 +11,8 @@ class HomeState extends Equatable {
     this.bannerText,
     this.carouselList = const [],
     this.navigateToImageFromNotification = false,
+    this.navigateToImageFromNotificationToAlbum = false,
+    this.navigateToFromNotificationToPlayAudioScreen = false,
   });
   final bool onPlayAudioScreen;
   final bool updateMandatory;
@@ -21,6 +23,8 @@ class HomeState extends Equatable {
   final BannerModel? bannerText;
   final List<CarouselModel> carouselList;
   final bool navigateToImageFromNotification;
+  final bool navigateToImageFromNotificationToAlbum;
+  final bool navigateToFromNotificationToPlayAudioScreen;
   @override
   List<Object?> get props => [
         onPlayAudioScreen,
@@ -28,7 +32,9 @@ class HomeState extends Equatable {
         updateMandatory,
         booksLoading,
         bannerText,
-        navigateToImageFromNotification
+        navigateToImageFromNotification,
+        navigateToImageFromNotificationToAlbum,
+        navigateToFromNotificationToPlayAudioScreen
       ];
   HomeState copyWith({
     bool? onPlayAudioScreen,
@@ -40,6 +46,8 @@ class HomeState extends Equatable {
     BannerModel? bannerText,
     List<CarouselModel>? carouselList,
     bool? navigateToImageFromNotification,
+    bool? navigateToImageFromNotificationToAlbum,
+    bool? navigateToFromNotificationToPlayAudioScreen,
   }) {
     return HomeState(
       onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
@@ -50,7 +58,14 @@ class HomeState extends Equatable {
       booksLoading: booksLoading ?? this.booksLoading,
       bannerText: bannerText ?? this.bannerText,
       carouselList: carouselList ?? this.carouselList,
-      navigateToImageFromNotification: navigateToImageFromNotification ?? false,
+      navigateToImageFromNotification: navigateToImageFromNotification ??
+          this.navigateToImageFromNotification,
+      navigateToImageFromNotificationToAlbum:
+          navigateToImageFromNotificationToAlbum ??
+              this.navigateToImageFromNotificationToAlbum,
+      navigateToFromNotificationToPlayAudioScreen:
+          navigateToFromNotificationToPlayAudioScreen ??
+              this.navigateToFromNotificationToPlayAudioScreen,
     );
   }
 }

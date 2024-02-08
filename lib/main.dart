@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,10 +31,8 @@ import 'package:temple_app/repositories/auth_repository.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
 import 'package:temple_app/router.dart';
 import 'package:temple_app/services/firebase_analytics_service.dart';
-import 'package:temple_app/services/firebase_notification_service.dart';
 import 'package:temple_app/widgets/custom_stack_with_bottom_player.dart';
 
-int id = 0;
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

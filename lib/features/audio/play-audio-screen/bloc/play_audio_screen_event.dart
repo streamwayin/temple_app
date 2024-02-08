@@ -18,3 +18,24 @@ class ToggleSuffleMode extends PlayAudioScreenEvent {
 
   ToggleSuffleMode({required this.suffle});
 }
+
+class ChangeNavigateFromNotificationEvent extends PlayAudioScreenEvent {
+  final bool navigateFromNotification;
+  // final String notiNaviString;
+
+  ChangeNavigateFromNotificationEvent({
+    required this.navigateFromNotification,
+    // required this.notiNaviString,
+  });
+  List<Object> get props => [navigateFromNotification];
+}
+
+class NavigateFromNotificationEvent extends PlayAudioScreenEvent {
+  final bool navigateFromNotification;
+  final String notiNaviString;
+
+  NavigateFromNotificationEvent(
+      {required this.navigateFromNotification, required this.notiNaviString});
+  @override
+  List<Object> get props => [navigateFromNotification, notiNaviString];
+}

@@ -40,3 +40,29 @@ class AddCarouslDataFromRefreshIndicator extends HomeEvent {
 }
 
 class NavigateFromNotificaionToImageFromHomeEvent extends HomeEvent {}
+
+class ToggleNavigateFromNotificaionToImageFromHomeEvent extends HomeEvent {
+  final bool toogleNaviBool;
+
+  ToggleNavigateFromNotificaionToImageFromHomeEvent(
+      {required this.toogleNaviBool});
+}
+
+class NavigateFromNotificationScreenToAlbumsEvent extends HomeEvent {}
+
+class ToggleNavigateFromNotificationScreenToAlbumsEvent extends HomeEvent {
+  final bool toogleAlbumNavi;
+
+  ToggleNavigateFromNotificationScreenToAlbumsEvent(
+      {required this.toogleAlbumNavi});
+}
+
+class NavigateFromNotificaionFromHomeEventPlayAudioScreen extends HomeEvent {}
+
+class ToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen
+    extends HomeEvent {
+  final bool togglePlayAudioScreenNavi;
+
+  ToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen(
+      {required this.togglePlayAudioScreenNavi});
+}

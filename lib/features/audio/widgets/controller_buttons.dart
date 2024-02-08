@@ -80,8 +80,9 @@ class ControlButtons extends StatelessWidget {
                     } else {
                       return IconButton(
                         icon: const Icon(Icons.replay),
-                        iconSize: 60.0,
+                        iconSize: 40.0,
                         onPressed: () {
+                          context.read<PlayAudioBloc>().add(ReplaySongEvent());
                           // player.seek(Duration.zero)
                         },
                       );
