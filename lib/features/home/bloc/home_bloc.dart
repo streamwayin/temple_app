@@ -9,7 +9,9 @@ import 'package:temple_app/modals/app_update_model.dart';
 import 'package:temple_app/modals/banner_model.dart';
 import 'package:temple_app/modals/carousel_model.dart';
 import 'package:temple_app/modals/ebook_model.dart';
+import 'package:temple_app/modals/video_model.dart';
 import 'package:temple_app/repositories/home_repository.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 import '../../../constants.dart';
 import '../../../repositories/epub_repository.dart';
@@ -44,6 +46,14 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         onNavigateFromNotificaionFromHomeEventPlayAudioScreen);
     on<ToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen>(
         onToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen);
+    on<NavigateFromNotificaionFromHomeEventImageScreen>(
+        onNavigateFromNotificaionFromHomeEventImageScreen);
+    on<ToggleNavigateFromNotificaionFromHomeEventImageScreen>(
+        onToggleNavigateFromNotificaionFromHomeEventImageScreen);
+    on<NavigateFromNotificaionFromHomeEventVidoeScreen>(
+        onNavigateFromNotificaionFromHomeEventVidoeScreen);
+    on<ToggleNavigateFromNotificaionFromHomeEventVidoeScreen>(
+        onToggleNavigateFromNotificaionFromHomeEventVidoeScreen);
   }
 
   void _initilize() async {
@@ -147,5 +157,49 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       ToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen event,
       Emitter<HomeState> emit) {
     emit(state.copyWith(navigateToFromNotificationToPlayAudioScreen: false));
+  }
+
+  FutureOr<void> onNavigateFromNotificaionFromHomeEventImageScreen(
+      NavigateFromNotificaionFromHomeEventImageScreen event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(navigateToFromNotificationToImageScreen: true));
+  }
+
+  FutureOr<void> onToggleNavigateFromNotificaionFromHomeEventImageScreen(
+      ToggleNavigateFromNotificaionFromHomeEventImageScreen event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(
+        navigateToFromNotificationToImageScreen: event.toggleImageScreenNavi));
+  }
+
+  FutureOr<void> onNavigateFromNotificaionFromHomeEventVidoeScreen(
+      NavigateFromNotificaionFromHomeEventVidoeScreen event,
+      Emitter<HomeState> emit) async {
+    var yt = YoutubeExplode();
+    var video = await yt.videos.get(event.youtubeVideoId);
+    Map<String, String> localVideoMap = {};
+    localVideoMap["id"] = video.id.value;
+    localVideoMap["title"] = video.title;
+    localVideoMap["description"] = video.description;
+    localVideoMap["url"] = video.url;
+
+    localVideoMap["duration"] = "${video.duration!.inMilliseconds}";
+
+    localVideoMap["thumbnail"] =
+        "https://i.ytimg.com/vi/${video.id}/sddefault.jpg";
+    VideoModel videoModel = VideoModel.fromJson(localVideoMap);
+    print(" navigateToFromNotificationToYoutubeScreen: true,");
+    print(videoModel.toJson());
+    emit(state.copyWith(
+        navigateToFromNotificationToYoutubeScreen: true,
+        youtubeVidoeIdForNoification: [videoModel]));
+  }
+
+  FutureOr<void> onToggleNavigateFromNotificaionFromHomeEventVidoeScreen(
+      ToggleNavigateFromNotificaionFromHomeEventVidoeScreen event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(
+        navigateToFromNotificationToYoutubeScreen:
+            event.toggleYoutubVideoScreenNavi));
   }
 }

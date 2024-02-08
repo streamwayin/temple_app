@@ -13,6 +13,9 @@ class HomeState extends Equatable {
     this.navigateToImageFromNotification = false,
     this.navigateToImageFromNotificationToAlbum = false,
     this.navigateToFromNotificationToPlayAudioScreen = false,
+    this.navigateToFromNotificationToImageScreen = false,
+    this.navigateToFromNotificationToYoutubeScreen = false,
+    this.youtubeVidoeIdForNoification = const [],
   });
   final bool onPlayAudioScreen;
   final bool updateMandatory;
@@ -25,16 +28,27 @@ class HomeState extends Equatable {
   final bool navigateToImageFromNotification;
   final bool navigateToImageFromNotificationToAlbum;
   final bool navigateToFromNotificationToPlayAudioScreen;
+  final bool navigateToFromNotificationToImageScreen;
+  final bool navigateToFromNotificationToYoutubeScreen;
+
+  /// when we send a youtube video id from notification we tempreraly store it here
+  final List<VideoModel> youtubeVidoeIdForNoification;
   @override
   List<Object?> get props => [
         onPlayAudioScreen,
-        cauraselPageIndex,
         updateMandatory,
+        cauraselPageIndex,
+        booksList,
+        downloadEbookMap,
         booksLoading,
         bannerText,
+        carouselList,
         navigateToImageFromNotification,
         navigateToImageFromNotificationToAlbum,
-        navigateToFromNotificationToPlayAudioScreen
+        navigateToFromNotificationToPlayAudioScreen,
+        navigateToFromNotificationToImageScreen,
+        navigateToFromNotificationToYoutubeScreen,
+        youtubeVidoeIdForNoification,
       ];
   HomeState copyWith({
     bool? onPlayAudioScreen,
@@ -48,6 +62,9 @@ class HomeState extends Equatable {
     bool? navigateToImageFromNotification,
     bool? navigateToImageFromNotificationToAlbum,
     bool? navigateToFromNotificationToPlayAudioScreen,
+    bool? navigateToFromNotificationToImageScreen,
+    bool? navigateToFromNotificationToYoutubeScreen,
+    List<VideoModel>? youtubeVidoeIdForNoification,
   }) {
     return HomeState(
       onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
@@ -66,6 +83,14 @@ class HomeState extends Equatable {
       navigateToFromNotificationToPlayAudioScreen:
           navigateToFromNotificationToPlayAudioScreen ??
               this.navigateToFromNotificationToPlayAudioScreen,
+      navigateToFromNotificationToImageScreen:
+          navigateToFromNotificationToImageScreen ??
+              this.navigateToFromNotificationToImageScreen,
+      navigateToFromNotificationToYoutubeScreen:
+          navigateToFromNotificationToYoutubeScreen ??
+              this.navigateToFromNotificationToYoutubeScreen,
+      youtubeVidoeIdForNoification:
+          youtubeVidoeIdForNoification ?? this.youtubeVidoeIdForNoification,
     );
   }
 }

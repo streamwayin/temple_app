@@ -17,6 +17,7 @@ import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/home/screens/widgets/carousel_image.dart';
 import 'package:temple_app/features/home/screens/widgets/category_component.dart';
+import 'package:temple_app/features/video/video-screen/video_screen.dart';
 import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.dart';
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
@@ -95,7 +96,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return BlocConsumer<HomeBloc, HomeState>(
       listener: (context, state) {
-        print(state.navigateToFromNotificationToPlayAudioScreen);
         if (state.navigateToImageFromNotification == true &&
             state.booksLoading == false) {
           Navigator.push(
@@ -120,94 +120,107 @@ class _HomeScreenState extends State<HomeScreen> {
           context
               .read<HomeBloc>()
               .add(const ChangeOnPlayAudioSreenOrNot(onPlayAudioScreen: true));
+        } else if (state.navigateToFromNotificationToImageScreen == true &&
+            state.booksLoading == false) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => ImageScreen()));
+          context.read<HomeBloc>().add(
+              ToggleNavigateFromNotificaionFromHomeEventImageScreen(
+                  toggleImageScreenNavi: false));
+        } else if (state.navigateToFromNotificationToYoutubeScreen == true &&
+            state.booksLoading == false) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => VideoScreen(
+                        videoList: state.youtubeVidoeIdForNoification,
+                      )));
+          context.read<HomeBloc>().add(
+              ToggleNavigateFromNotificaionFromHomeEventVidoeScreen(
+                  toggleYoutubVideoScreenNavi: false));
         }
       },
       builder: (context, state) {
         return Scaffold(
           appBar: Utils.buildAppBarNoBackButton(),
           backgroundColor: scaffoldBackground,
-          body: Stack(
-            children: [
-              RefreshIndicator(
-                onRefresh: () => onRefresh(),
-                child: SizedBox(
-                  width: size.width,
-                  height: size.height * 0.83,
-                  child: Stack(
-                    children: [
-                      _templeBackground(),
-                      SingleChildScrollView(
-                        child: Column(
-                          children: [
-                            CarouselImage(
-                              cauraselIndex: state.cauraselPageIndex,
-                              carouselList: state.carouselList,
-                            ),
-                            _gap(10),
-                            CatagoryComponent(),
-                            _gap(10),
-                            _booksSeeAllText(),
-                            _bookListHomeComponent(size, state),
-                            _buildWallpaperText(context),
-                            _buildHomeWalpapersComponent(size),
-                          ],
+          body: RefreshIndicator(
+            onRefresh: () => onRefresh(),
+            child: SizedBox(
+              width: size.width,
+              height: size.height * 0.83,
+              child: Stack(
+                children: [
+                  _templeBackground(),
+                  SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        CarouselImage(
+                          cauraselIndex: state.cauraselPageIndex,
+                          carouselList: state.carouselList,
                         ),
-                      ),
-                      // ElevatedButton(
-                      //   onPressed: () {
-                      //     print('object');
-                      //     final db = FirebaseFirestore.instance;
-                      //     db.settings = const Settings(
-                      //       persistenceEnabled: true,
-                      //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-                      //     );
-                      //   },
-                      //   child: const Text("enable presistance"),
-                      // ),
-                      // Positioned(
-                      //   bottom: 10,
-                      //   child: ElevatedButton(
-                      //     onPressed: () {
-                      //       notificationService.sendNotification("hello", "hi");
-                      //     },
-                      //     child: const Text("send notification"),
-                      //   ),
-                      // ),
-                      // Positioned(
-                      //   bottom: 50,
-                      //   child: ElevatedButton(
-                      //     onPressed: () {
-                      //       notificationService.showBigPictureNotification();
-                      //     },
-                      //     child: const Text("send notification"),
-                      //   ),
-                      // ),
-                      // Positioned(
-                      //   bottom: 50,
-                      //   child: ElevatedButton(
-                      //     onPressed: () {
-                      //       AudioRepository audioRepository = AudioRepository();
-                      //       audioRepository.uploadImageToFirebase();
-                      //     },
-                      //     child: const Text("upload imges"),
-                      //   ),
-                      // ),
-                      // Positioned(
-                      //   bottom: 50,
-                      //   child: ElevatedButton(
-                      //     onPressed: () {
-                      //       AudioRepository audioRepository = AudioRepository();
-                      //       audioRepository.uploadYatarasDataToFirebase();
-                      //     },
-                      //     child: const Text("upload imges"),
-                      //   ),
-                      // ),
-                    ],
+                        _gap(10),
+                        CatagoryComponent(),
+                        _gap(10),
+                        _booksSeeAllText(),
+                        _bookListHomeComponent(size, state),
+                        _buildWallpaperText(context),
+                        _buildHomeWalpapersComponent(size),
+                      ],
+                    ),
                   ),
-                ),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     print('object');
+                  //     final db = FirebaseFirestore.instance;
+                  //     db.settings = const Settings(
+                  //       persistenceEnabled: true,
+                  //       cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+                  //     );
+                  //   },
+                  //   child: const Text("enable presistance"),
+                  // ),
+                  // Positioned(
+                  //   bottom: 10,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       notificationService.sendNotification("hello", "hi");
+                  //     },
+                  //     child: const Text("send notification"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       notificationService.showBigPictureNotification();
+                  //     },
+                  //     child: const Text("send notification"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       AudioRepository audioRepository = AudioRepository();
+                  //       audioRepository.uploadImageToFirebase();
+                  //     },
+                  //     child: const Text("upload imges"),
+                  //   ),
+                  // ),
+                  // Positioned(
+                  //   bottom: 50,
+                  //   child: ElevatedButton(
+                  //     onPressed: () {
+                  //       AudioRepository audioRepository = AudioRepository();
+                  //       audioRepository.uploadYatarasDataToFirebase();
+                  //     },
+                  //     child: const Text("upload imges"),
+                  //   ),
+                  // ),
+                ],
               ),
-              Text('${state.navigateToFromNotificationToPlayAudioScreen}')
-            ],
+            ),
           ),
         );
       },

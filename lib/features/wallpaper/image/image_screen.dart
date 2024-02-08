@@ -51,15 +51,18 @@ class _ImageScreenState extends State<ImageScreen> {
   }
 
   Future<void> onRefresh(String albumId) async {
-    WallpaperRepository wallpaperRepository = WallpaperRepository();
-    List<ImageModel>? imageList =
-        await wallpaperRepository.getImageFromDb(albumId);
-    if (imageList != null) {
-      var tempList = imageList;
-      tempList.sort((a, b) => (a.index).compareTo(b.index));
-      context
-          .read<ImageBloc>()
-          .add(AddImageListFromRefreshIndicator(imageList: tempList));
+    /// album id is notification that means we do not have a valid album id and we have notificatinon which means we are here form nortification's navigations
+    if (albumId != 'notification') {
+      WallpaperRepository wallpaperRepository = WallpaperRepository();
+      List<ImageModel>? imageList =
+          await wallpaperRepository.getImageFromDb(albumId);
+      if (imageList != null) {
+        var tempList = imageList;
+        tempList.sort((a, b) => (a.index).compareTo(b.index));
+        context
+            .read<ImageBloc>()
+            .add(AddImageListFromRefreshIndicator(imageList: tempList));
+      }
     }
   }
 }

@@ -66,3 +66,27 @@ class ToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen
   ToggleNavigateFromNotificaionFromHomeEventPlayAudioScreen(
       {required this.togglePlayAudioScreenNavi});
 }
+
+class NavigateFromNotificaionFromHomeEventImageScreen extends HomeEvent {}
+
+class ToggleNavigateFromNotificaionFromHomeEventImageScreen extends HomeEvent {
+  final bool toggleImageScreenNavi;
+
+  ToggleNavigateFromNotificaionFromHomeEventImageScreen(
+      {required this.toggleImageScreenNavi});
+}
+
+// for youtube video from notifications
+class NavigateFromNotificaionFromHomeEventVidoeScreen extends HomeEvent {
+  final String youtubeVideoId;
+
+  NavigateFromNotificaionFromHomeEventVidoeScreen(
+      {required this.youtubeVideoId});
+}
+
+class ToggleNavigateFromNotificaionFromHomeEventVidoeScreen extends HomeEvent {
+  final bool toggleYoutubVideoScreenNavi;
+
+  ToggleNavigateFromNotificaionFromHomeEventVidoeScreen(
+      {required this.toggleYoutubVideoScreenNavi});
+}

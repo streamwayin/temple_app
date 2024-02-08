@@ -24,3 +24,9 @@ class AddImageListFromRefreshIndicator extends ImageEvent {
 
   AddImageListFromRefreshIndicator({required this.imageList});
 }
+
+class ImageInitialNotificationEvent extends ImageEvent {
+  final ImageModel imageModel;
+
+  ImageInitialNotificationEvent({required this.imageModel});
+}

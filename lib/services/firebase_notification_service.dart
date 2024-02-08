@@ -7,19 +7,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-import 'package:temple_app/features/audio/play-audio-screen/bloc/play_audio_screen_bloc.dart';
-import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
-import 'package:temple_app/features/notification/screens/notification_screen.dart';
 import 'package:temple_app/features/video/video-list/bloc/video_list_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/yatara/yatara_screen.dart';
-import 'package:temple_app/main.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/modals/image_album_model.dart';
+import 'package:temple_app/modals/image_model.dart';
 import 'package:temple_app/modals/notification_model.dart';
 import 'package:temple_app/modals/track_model.dart';
 import 'package:temple_app/modals/video_album_model_db.dart';
@@ -38,8 +34,8 @@ class FirebaseNotificatonService {
   void handleMessage(BuildContext context, RemoteMessage? message) async {
     if (message == null) return;
     Map<String, dynamic> map = {
-      "type": "tracks",
-      "id": "0HlUtsNON64jkxjVQK4Y",
+      "type": "youtube-video",
+      "id": "WtGyrBJKZu4",
       "index": 5,
       'title': "This is title",
       'body': "This is title  body"
@@ -138,6 +134,47 @@ class FirebaseNotificatonService {
           context.read<ImageBloc>().add(ImageInitialEvent(
               albumModel:
                   imageAlbumModel)); //     navigationString: ImageAlbumScreen.routeName));
+
+          break;
+        }
+      case 'images':
+        {
+          context
+              .read<BottomBarBloc>()
+              .add(ChangeCurrentPageIndex(newIndex: 0));
+          WallpaperRepository wallpaperRepository = WallpaperRepository();
+          ImageModel? imageModel = await wallpaperRepository
+              .getSingleImageFromDbForNorification(docId: notificationModel.id);
+          if (imageModel == null) break;
+
+          context
+              .read<HomeBloc>()
+              .add(NavigateFromNotificaionFromHomeEventImageScreen());
+
+          context.read<ImageBloc>().add(ImageInitialNotificationEvent(
+              imageModel:
+                  imageModel)); //     navigationString: ImageAlbumScreen.routeName));
+
+          break;
+        }
+      case 'youtube-video':
+        {
+          context
+              .read<BottomBarBloc>()
+              .add(ChangeCurrentPageIndex(newIndex: 0));
+
+          // WallpaperRepository wallpaperRepository = WallpaperRepository();
+          // ImageModel? imageModel = await wallpaperRepository
+          //     .getSingleImageFromDbForNorification(docId: notificationModel.id);
+          // if (imageModel == null) break;
+
+          context.read<HomeBloc>().add(
+              NavigateFromNotificaionFromHomeEventVidoeScreen(
+                  youtubeVideoId: notificationModel.id));
+
+          // context.read<ImageBloc>().add(ImageInitialNotificationEvent(
+          //     imageModel:
+          //         imageModel)); //     navigationString: ImageAlbumScreen.routeName));
 
           break;
         }

@@ -65,4 +65,22 @@ class WallpaperRepository {
     }
     return null;
   }
+
+  // get single image album for notificatons
+  Future<ImageModel?> getSingleImageFromDbForNorification(
+      {required String docId}) async {
+    try {
+      final data = await FirebaseFirestore.instance
+          .collection('images')
+          .doc(docId)
+          .get();
+
+      if (data.exists) {
+        return ImageModel.fromJson(data.data()!);
+      }
+    } catch (e) {
+      return null;
+    }
+    return null;
+  }
 }
