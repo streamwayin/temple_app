@@ -102,7 +102,7 @@ class VideoListScreen extends StatelessWidget {
                                               SizedBox(width: 10.w),
                                               SizedBox(
                                                 width: size.width * .65,
-                                                height: 65.h,
+                                                height: 68.h,
                                                 child: Column(
                                                   mainAxisAlignment:
                                                       MainAxisAlignment.start,

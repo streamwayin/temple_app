@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,18 +27,39 @@ import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.da
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/yatara/bloc/yatara_bloc.dart';
 import 'package:temple_app/firebase_options.dart';
+import 'package:temple_app/modals/notification_model.dart';
 import 'package:temple_app/repositories/audo_repository.dart';
 import 'package:temple_app/repositories/auth_repository.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
 import 'package:temple_app/router.dart';
 import 'package:temple_app/services/firebase_analytics_service.dart';
+import 'package:temple_app/services/firebase_notification_service.dart';
 import 'package:temple_app/widgets/custom_stack_with_bottom_player.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+@pragma('vm:entry-point')
+Future<void> _firebaseMessengingBackgroundHandler(
+    RemoteMessage remoteMessage) async {
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  FirebaseNotificatonService firebaseNotificatonService =
+      FirebaseNotificatonService();
+  Map<String, dynamic> map = {
+    "type": "audio-track",
+    "id": "",
+    "index": 5,
+    'title': "This is title",
+    'body': "This is title  body"
+  };
+  NotificationModel notificationModel = NotificationModel.fromJson(map);
+
+  firebaseNotificatonService.customSoundSwitchCase(
+      notificationModel: notificationModel);
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessengingBackgroundHandler);
   await JustAudioBackground.init(
     androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
     androidNotificationChannelName: 'Audio playback',

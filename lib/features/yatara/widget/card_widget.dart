@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:temple_app/features/about-us/screens/saints_screen.dart';
 import 'package:temple_app/features/yatara/bloc/yatara_bloc.dart';
 import 'package:temple_app/features/yatara/widget/yatara_carousel.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../modals/yatara_model.dart';
 
@@ -56,9 +58,72 @@ class CardWidget extends StatelessWidget {
                     Text(
                       textAlign: TextAlign.center,
                       maxLines: 1,
-                      "समय  ${DateFormat('h:mm a', 'hi').format(yataraModel.fromTime!)} से ${DateFormat('h:mm a').format(yataraModel.toTime!)}  तक ",
+                      "समय  ${DateFormat('h:mm a', 'hi').format(yataraModel.fromDate!)} से ${DateFormat('h:mm a').format(yataraModel.toDate!)}  तक ",
                       style: TextStyle(fontSize: 14.sp),
                     ),
+                    Divider(),
+                    Container(
+                        // color: Colors.green,
+                        height:
+                            (30.h * 2) * yataraModel.contactList!.length + 10.h,
+                        child: ListView.builder(
+                          itemCount: yataraModel.contactList!.length,
+                          itemBuilder: (context, index) {
+                            ContactListModel contactListModel =
+                                yataraModel.contactList![index];
+                            // YataraModel yataraModel = yataraModel.contactList![index]
+                            return Row(
+                              children: [
+                                Text(
+                                  contactListModel.name,
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                                SizedBox(width: 50.w),
+                                Container(
+                                  // color: Colors.red,
+                                  height: 38.h *
+                                      contactListModel.mobileNumbers.length,
+                                  width: 230.w,
+                                  // 30.h,
+
+                                  child: ListView.builder(
+                                    physics: NeverScrollableScrollPhysics(),
+                                    itemCount:
+                                        contactListModel.mobileNumbers.length,
+                                    itemBuilder: (context, index2) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            Text(
+                                                '${contactListModel.mobileNumbers[index2]}'),
+                                            SizedBox(width: 20.w),
+                                            InkWell(
+                                              onTap: () async {
+                                                final Uri url = Uri(
+                                                    scheme: 'tel',
+                                                    path:
+                                                        '${contactListModel.mobileNumbers[index2]}');
+                                                if (await canLaunchUrl(url)) {
+                                                  launchUrl(url);
+                                                }
+                                              },
+                                              child: const AboutUsContactButton(
+                                                  logoPath:
+                                                      "assets/images/call1.png"),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        )),
                   ],
                 ),
               ),
@@ -165,6 +230,25 @@ class CardWidget extends StatelessWidget {
                 : YataraCarousel(carouselList: yataraModel.imageArray!),
           )
         ],
+      ),
+    );
+  }
+}
+
+class AboutUsContactButton extends StatelessWidget {
+  const AboutUsContactButton({
+    super.key,
+    required this.logoPath,
+  });
+  final String logoPath;
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 30.h,
+      width: 30.h,
+      child: Image.asset(
+        logoPath,
+        fit: BoxFit.cover,
       ),
     );
   }

@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:rxdart/rxdart.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_app/constants.dart';
@@ -11,6 +10,7 @@ import 'package:temple_app/features/my-profile/screens/privacy_policy_screen.dar
 import 'package:temple_app/features/sightseen/screens/sightseen_screen.dart';
 import 'package:temple_app/services/firebase_analytics_service.dart';
 import 'package:temple_app/widgets/utils.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyProfileScreen extends StatelessWidget {
   @override
@@ -99,6 +99,18 @@ class MyProfileScreen extends StatelessWidget {
               ),
               _gap(10),
 
+              InkWell(
+                  onTap: () async {
+                    Uri link =
+                        Uri.parse('https://support.streamway.in/contact/');
+                    if (await canLaunchUrl(link)) {
+                      launchUrl(link, mode: LaunchMode.externalApplication);
+                    } else {
+                      print('failed to https://support.streamway.in/contact/');
+                    }
+                  },
+                  child: _buildCardButton("ऐप डेवलपर्स", Icons.people_alt)),
+              _gap(10),
               InkWell(
                   onTap: () async {
                     SharedPreferences sharedPreferences =

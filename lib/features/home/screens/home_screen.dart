@@ -1,15 +1,11 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:temple_app/features/audio/bloc/play_audio_bloc.dart';
 import 'package:temple_app/features/audio/play-audio-screen/play_audio_screen.dart';
-import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/audio/screens/audio_screen.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
@@ -22,11 +18,9 @@ import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.da
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/image_screen.dart';
-import 'package:temple_app/firebase_options.dart';
 import 'package:temple_app/modals/carousel_model.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/modals/image_album_model.dart';
-import 'package:temple_app/modals/notification_model.dart';
 import 'package:temple_app/repositories/epub_repository.dart';
 import 'package:temple_app/repositories/home_repository.dart';
 import 'package:temple_app/repositories/wallpaper_repository.dart';
@@ -35,26 +29,6 @@ import 'package:temple_app/services/firebase_notification_service.dart';
 import 'package:temple_app/services/notification_service.dart';
 import 'package:temple_app/widgets/utils.dart';
 import '../../../constants.dart';
-
-@pragma('vm:entry-point')
-Future<void> _firebaseMessengingBackgroundHandler(
-    RemoteMessage remoteMessage) async {
-  FirebaseNotificatonService firebaseNotificatonService =
-      FirebaseNotificatonService();
-  Map<String, dynamic> map = {
-    "type": "audio-track",
-    "id": "",
-    "index": 5,
-    'title': "This is title",
-    'body': "This is title  body"
-  };
-  NotificationModel notificationModel = NotificationModel.fromJson(map);
-
-  firebaseNotificatonService.customSoundSwitchCase(
-      notificationModel: notificationModel);
-
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-}
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -73,21 +47,24 @@ class _HomeScreenState extends State<HomeScreen> {
       FlutterLocalNotificationsPlugin();
   FirebaseNotificatonService firebaseNotificatonService =
       FirebaseNotificatonService();
+
   @override
   void initState() {
     // setuped initally not using corrently
-    _requestPermissions();
+    // _requestPermissions();
     // setuped initally not using corrently
-    notificationService.initiliseNotifications();
+    // notificationService.initiliseNotifications();
     // handle firebase message while in background or terminated
+    firebaseNotificatonService.requestNotificationPermission();
+    firebaseNotificatonService.firebaseInit(context);
+
     firebaseNotificatonService.setupInteractMessage(context);
     firebaseMessingInit();
     super.initState();
   }
 
   firebaseMessingInit() async {
-    await FirebaseNotificatonService().initNotification(context);
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessengingBackgroundHandler);
+    // await FirebaseNotificatonService().initNotification(context);
   }
 
   @override

@@ -27,7 +27,7 @@ class YataraScreen extends StatelessWidget {
                     if (yataraList != null) {
                       List<YataraModel> filteredList = [];
                       for (var a in yataraList) {
-                        if (a.isYatara == true) {
+                        if (a.visibility == true) {
                           filteredList.add(a);
                         }
                       }

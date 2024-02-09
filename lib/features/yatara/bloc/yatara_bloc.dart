@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:temple_app/modals/yatara_model.dart';
 import 'package:temple_app/repositories/yatara_repository.dart';
 
@@ -25,7 +24,7 @@ class YataraBloc extends Bloc<YataraEvent, YataraState> {
     List<YataraModel> filteredList = [];
     if (yataraList != null) {
       for (var a in yataraList) {
-        if (a.isYatara == true) {
+        if (a.visibility == true) {
           filteredList.add(a);
         }
       }

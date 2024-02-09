@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class YataraModel {
@@ -15,24 +13,25 @@ class YataraModel {
   DateTime? toTime;
   DateTime? fromTime;
   String call;
-  bool isYatara;
+  bool visibility;
   List<ImageArrayModel>? imageArray;
-  YataraModel({
-    required this.title,
-    required this.yataraId,
-    required this.index,
-    required this.description,
-    this.image,
-    required this.artistId,
-    this.location,
-    this.fromDate,
-    this.toDate,
-    this.fromTime,
-    this.toTime,
-    required this.call,
-    required this.isYatara,
-    this.imageArray,
-  });
+  List<ContactListModel>? contactList;
+  YataraModel(
+      {required this.title,
+      required this.yataraId,
+      required this.index,
+      required this.description,
+      this.image,
+      required this.artistId,
+      this.location,
+      this.fromDate,
+      this.toDate,
+      this.fromTime,
+      this.toTime,
+      required this.call,
+      required this.visibility,
+      this.imageArray,
+      this.contactList});
 
   Map<String, dynamic> toJson() {
     return {
@@ -50,8 +49,9 @@ class YataraModel {
       'toTime': toDate?.millisecondsSinceEpoch,
       'fromTime': toDate?.millisecondsSinceEpoch,
       'call': call,
-      'isYatara': isYatara,
-      'imageArray': imageArray?.map((image) => image.toJson()).toList()
+      'visibility': visibility,
+      'imageArray': imageArray?.map((image) => image.toJson()).toList(),
+      'contactList': contactList?.map((e) => e.toJson()).toList(),
     };
   }
 
@@ -77,10 +77,15 @@ class YataraModel {
             ? (map['toTime'] as Timestamp).toDate()
             : null,
         call: map['call'] ?? '',
-        isYatara: map['isYatara'],
+        visibility: map['visibility'],
         imageArray: (map['imageArray'] as List<dynamic>?)
             ?.map((imageMap) => ImageArrayModel.fromJson(imageMap))
-            .toList());
+            .toList(),
+        contactList: map['contactList'] != null
+            ? (map['contactList'] as List<dynamic>?)!
+                .map((e) => ContactListModel.fromJson(e))
+                .toList()
+            : null);
   }
 }
 
@@ -103,6 +108,29 @@ class ImageArrayModel {
     return ImageArrayModel(
       image: map['image'] ?? '',
       imageId: map['imageId'] ?? '',
+    );
+  }
+}
+
+class ContactListModel {
+  List<String> mobileNumbers;
+  String name;
+  ContactListModel({
+    required this.mobileNumbers,
+    required this.name,
+  });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'mobileNumbers': mobileNumbers,
+      'name': name,
+    };
+  }
+
+  factory ContactListModel.fromJson(Map<String, dynamic> map) {
+    return ContactListModel(
+      mobileNumbers: List<String>.from(map['mobileNumbers']),
+      name: map['name'] ?? '',
     );
   }
 }

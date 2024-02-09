@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,6 +32,8 @@ class FirebaseNotificatonService {
       FlutterLocalNotificationsPlugin();
   void handleMessage(BuildContext context, RemoteMessage? message) async {
     if (message == null) return;
+    NotificationModel? notificationModel;
+
     Map<String, dynamic> map = {
       "type": "youtube-video",
       "id": "WtGyrBJKZu4",
@@ -40,15 +41,12 @@ class FirebaseNotificatonService {
       'title': "This is title",
       'body': "This is title  body"
     };
-    NotificationModel notificationModel = NotificationModel.fromJson(map);
-    print(notificationModel.type);
+    if (message.notification == null) {
+      notificationModel = NotificationModel.fromJson(message.data);
+    } else {
+      notificationModel = NotificationModel.fromJson(map);
+    }
     switch (notificationModel.type) {
-      // PersistentNavBarNavigator.pushNewScreen(
-      //   context,
-      //   screen: AudioScreen(),
-      //   withNavBar: true, // OPTIONAL VALUE. True by default.
-      //   pageTransitionAnimation: PageTransitionAnimation.cupertino,
-      // );
       case 'tracks':
         {
           AudioRepository audioRepository = AudioRepository();
@@ -162,19 +160,9 @@ class FirebaseNotificatonService {
           context
               .read<BottomBarBloc>()
               .add(ChangeCurrentPageIndex(newIndex: 0));
-
-          // WallpaperRepository wallpaperRepository = WallpaperRepository();
-          // ImageModel? imageModel = await wallpaperRepository
-          //     .getSingleImageFromDbForNorification(docId: notificationModel.id);
-          // if (imageModel == null) break;
-
           context.read<HomeBloc>().add(
               NavigateFromNotificaionFromHomeEventVidoeScreen(
                   youtubeVideoId: notificationModel.id));
-
-          // context.read<ImageBloc>().add(ImageInitialNotificationEvent(
-          //     imageModel:
-          //         imageModel)); //     navigationString: ImageAlbumScreen.routeName));
 
           break;
         }
@@ -190,7 +178,7 @@ class FirebaseNotificatonService {
   void initLocalNotifications(
       BuildContext context, RemoteMessage message) async {
     var androidInitializationSettings =
-        AndroidInitializationSettings('@drawable/app_logo');
+        AndroidInitializationSettings('@mipmap/launcher_icon');
     var iosInitializationSettings = DarwinInitializationSettings();
     var initializationSetting = InitializationSettings(
         android: androidInitializationSettings, iOS: iosInitializationSettings);
@@ -216,8 +204,8 @@ class FirebaseNotificatonService {
     customSoundSwitchCase(notificationModel: notificationModel);
   }
 
-  Future<void> initNotification(BuildContext context) async {
-    await _firebaseMessenging.requestPermission();
+  Future<void> firebaseInit(BuildContext context) async {
+    // await _firebaseMessenging.requestPermission();
     // await requestNotificationPermission();
     final fCMTOKEN = await _firebaseMessenging.getToken();
     User? user = FirebaseAuth.instance.currentUser;
@@ -306,24 +294,24 @@ class FirebaseNotificatonService {
         await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
       // print("hereeeeeeeeeeeeeee");
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => YataraScreen()));
+      // Navigator.of(context)
+      //     .push(MaterialPageRoute(builder: (context) => YataraScreen()));
       handleMessage(context, initialMessage);
     }
     //when app ins inbackground
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      print("notification from background");
       handleMessage(context, event);
     });
   }
 
   void customSoundSwitchCase({required NotificationModel notificationModel}) {
     int index = notificationModel.index;
-    String channelId = Random.secure().nextInt(100000).toString();
     switch (index) {
       case 0:
         {
           swithchCaseShowNotification(
-              channelId: channelId,
+              channelId: 'notification_sound_0',
               notificationModel: notificationModel,
               notificationSound: 'notification_sound_0');
           break;
@@ -331,7 +319,7 @@ class FirebaseNotificatonService {
       case 1:
         {
           swithchCaseShowNotification(
-              channelId: channelId,
+              channelId: 'notification_sound_1',
               notificationModel: notificationModel,
               notificationSound: 'notification_sound_1');
           break;
@@ -339,7 +327,7 @@ class FirebaseNotificatonService {
       case 2:
         {
           swithchCaseShowNotification(
-              channelId: channelId,
+              channelId: 'notification_sound_2',
               notificationModel: notificationModel,
               notificationSound: 'notification_sound_2');
           break;
@@ -347,7 +335,7 @@ class FirebaseNotificatonService {
       case 3:
         {
           swithchCaseShowNotification(
-              channelId: channelId,
+              channelId: 'notification_sound_3',
               notificationModel: notificationModel,
               notificationSound: 'notification_sound_3');
           break;
@@ -355,7 +343,7 @@ class FirebaseNotificatonService {
       case 4:
         {
           swithchCaseShowNotification(
-              channelId: channelId,
+              channelId: 'notification_sound_4',
               notificationModel: notificationModel,
               notificationSound: 'notification_sound_4');
           break;
@@ -363,7 +351,7 @@ class FirebaseNotificatonService {
       case 5:
         {
           swithchCaseShowNotification(
-              channelId: channelId,
+              channelId: 'notification_sound_5',
               notificationModel: notificationModel,
               notificationSound: 'notification_sound_5');
           break;
@@ -371,7 +359,7 @@ class FirebaseNotificatonService {
       case 6:
         {
           swithchCaseShowNotification(
-              channelId: channelId,
+              channelId: 'notification_sound_6',
               notificationModel: notificationModel,
               notificationSound: 'notification_sound_6');
           break;
@@ -379,7 +367,7 @@ class FirebaseNotificatonService {
       default:
         {
           swithchCaseShowNotification(
-              channelId: channelId,
+              channelId: 'notification_sound_6',
               notificationModel: notificationModel,
               notificationSound: 'notification_sound_6');
           print("default");
