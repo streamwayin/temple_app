@@ -40,8 +40,8 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
   FutureOr<void> onDownloadBookEventEbookList(
       DownloadBookEventEbookList event, Emitter<EbookState> emit) async {
     emit(state.copyWith(loading: true));
+
     EbookModel epubBook = event.book;
-    print(epubBook.toJson());
     firebaseAnalytics.logEvent(
         name: "book_read",
         parameters: {"bookId": epubBook.id, "book_name": epubBook.title});
@@ -55,51 +55,48 @@ class EbookBloc extends Bloc<EbookEvent, EbookState> {
         final downlodedBookMapNew = json.decode(downlodedBookStringNew);
         map = {...downlodedBookMapNew};
       }
-
-      print(map);
       if (map.containsKey(epubBook.id)) {
         final path = map[epubBook.id];
         emit(state.copyWith(
             pathString: path, loading: false, selectedBook: epubBook));
-        return;
-      }
-      if (Platform.isIOS) {
-        final PermissionStatus status = await Permission.storage.request();
-        if (status == PermissionStatus.granted) {
-          Map<String, dynamic> map = await startDownload(
+      } else {
+        if (Platform.isIOS) {
+          final PermissionStatus status = await Permission.storage.request();
+          if (status == PermissionStatus.granted) {
+            Map<String, dynamic> map = await startDownload(
+                epubBook.url, epubBook.title, epubBook.fileType);
+            if (map['success'] == true) {
+              downloadedPath = map['path'];
+            }
+          } else {
+            await Permission.storage.request();
+          }
+        } else if (Platform.isAndroid) {
+          final map = await startDownload(
               epubBook.url, epubBook.title, epubBook.fileType);
           if (map['success'] == true) {
             downloadedPath = map['path'];
           }
         } else {
-          await Permission.storage.request();
+          state.copyWith(message: "Unable to download", loading: false);
         }
-      } else if (Platform.isAndroid) {
-        final map = await startDownload(
-            epubBook.url, epubBook.title, epubBook.fileType);
-        if (map['success'] == true) {
-          downloadedPath = map['path'];
+        if (downloadedPath != null) {
+          map[epubBook.id] = downloadedPath;
+          var encodedData = jsonEncode(map);
+          sharedPreferences.setString(
+              OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY, encodedData);
+
+          emit(state.copyWith(
+              downloadEbookMap: map,
+              pathString: downloadedPath,
+              loading: false,
+              selectedBook: epubBook));
         }
-      } else {
-        state.copyWith(message: "Unable to download", loading: false);
       }
-      if (downloadedPath == null) {
-        return;
-      }
-
-      map[epubBook.id] = downloadedPath;
-      var encodedData = jsonEncode(map);
-      sharedPreferences.setString(
-          OFFLINE_DOWNLOADED_EPUB_BOOKS_LIST_KEY, encodedData);
-
-      emit(state.copyWith(
-          downloadEbookMap: map,
-          pathString: downloadedPath,
-          loading: false,
-          selectedBook: epubBook));
     } catch (e) {
       emit(state.copyWith(message: "Something went wrong", loading: false));
     }
+
     emit(state.copyWith(loading: false));
   }
 

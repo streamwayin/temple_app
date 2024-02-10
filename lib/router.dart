@@ -126,11 +126,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => SingleSightseenScreen(index: index, image: ''),
       );
-    case NotificationSereen.routeName:
-      var remoteMessage = routeSettings.arguments as RemoteMessage;
+    case NotificationScreen.routeName:
+      // var remoteMessage = routeSettings.arguments as RemoteMessage;
       return MaterialPageRoute(
         settings: routeSettings,
-        builder: (_) => NotificationSereen(remoteMessage: remoteMessage),
+        builder: (_) => NotificationScreen(),
       );
     case VideoListScreen.routeName:
       return MaterialPageRoute(

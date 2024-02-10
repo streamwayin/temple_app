@@ -27,8 +27,10 @@ class EpubRepository {
   Future<EbookModel?> getSingleBookDataFromDbForNotification(
       {required String docId}) async {
     try {
-      final data =
-          await FirebaseFirestore.instance.collection("books").doc(docId).get();
+      final data = await FirebaseFirestore.instance
+          .collection("books")
+          .doc(docId)
+          .get(GetOptions(source: Source.serverAndCache));
       if (data.exists) {
         return EbookModel.fromJson(data.data()!);
       }

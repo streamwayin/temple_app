@@ -26,7 +26,7 @@ class _AskNameScreenState extends State<AskNameScreen> {
         }
       },
       child: Scaffold(
-        appBar: Utils.buildAppBarNoBackButton(),
+        appBar: Utils.buildAppBarNoBackButton(context),
         body: Container(
           decoration: BoxDecoration(
             image: DecorationImage(

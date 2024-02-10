@@ -16,6 +16,7 @@ class HomeState extends Equatable {
     this.navigateToFromNotificationToImageScreen = false,
     this.navigateToFromNotificationToYoutubeScreen = false,
     this.youtubeVidoeIdForNoification = const [],
+    this.navigateFromNotificationToEventScreen = false,
   });
   final bool onPlayAudioScreen;
   final bool updateMandatory;
@@ -30,6 +31,7 @@ class HomeState extends Equatable {
   final bool navigateToFromNotificationToPlayAudioScreen;
   final bool navigateToFromNotificationToImageScreen;
   final bool navigateToFromNotificationToYoutubeScreen;
+  final bool navigateFromNotificationToEventScreen;
 
   /// when we send a youtube video id from notification we tempreraly store it here
   final List<VideoModel> youtubeVidoeIdForNoification;
@@ -49,6 +51,7 @@ class HomeState extends Equatable {
         navigateToFromNotificationToImageScreen,
         navigateToFromNotificationToYoutubeScreen,
         youtubeVidoeIdForNoification,
+        navigateFromNotificationToEventScreen
       ];
   HomeState copyWith({
     bool? onPlayAudioScreen,
@@ -65,6 +68,7 @@ class HomeState extends Equatable {
     bool? navigateToFromNotificationToImageScreen,
     bool? navigateToFromNotificationToYoutubeScreen,
     List<VideoModel>? youtubeVidoeIdForNoification,
+    bool? navigateFromNotificationToEventScreen,
   }) {
     return HomeState(
       onPlayAudioScreen: onPlayAudioScreen ?? this.onPlayAudioScreen,
@@ -91,6 +95,9 @@ class HomeState extends Equatable {
               this.navigateToFromNotificationToYoutubeScreen,
       youtubeVidoeIdForNoification:
           youtubeVidoeIdForNoification ?? this.youtubeVidoeIdForNoification,
+      navigateFromNotificationToEventScreen:
+          navigateFromNotificationToEventScreen ??
+              this.navigateToFromNotificationToYoutubeScreen,
     );
   }
 }

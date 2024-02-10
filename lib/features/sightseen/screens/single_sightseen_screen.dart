@@ -19,7 +19,7 @@ class SingleSightseenScreen extends StatelessWidget {
       builder: (context, state) {
         SightseenModel sightseen = state.sightseenList[index];
         return Scaffold(
-          appBar: Utils.buildAppBarWithBackButton(),
+          appBar: Utils.buildAppBarWithBackButton(context),
           body: SafeArea(
             child: SingleChildScrollView(
               child: Container(

@@ -1,8 +1,13 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:temple_app/constants.dart';
+import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
+import 'package:temple_app/features/my-profile/bloc/profile_bloc.dart';
+import 'package:temple_app/features/notification/screens/notification_screen.dart';
 
 class Utils {
   static showSnackBar(
@@ -21,7 +26,7 @@ class Utils {
     );
   }
 
-  static AppBar buildAppBarNoBackButton() {
+  static AppBar buildAppBarNoBackButton(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
       // leading: BackButton(color: Colors.white),
@@ -40,14 +45,29 @@ class Utils {
                   colorFilter:
                       ColorFilter.mode(Colors.white, BlendMode.srcIn))),
           Spacer(),
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-            // height: 42,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Badge(
-              child: const Icon(Icons.notifications_sharp,
-                  color: Colors.black, size: 35),
+          InkWell(
+            onTap: () async {
+              context
+                  .read<BottomBarBloc>()
+                  .add(ChangeCurrentPageIndex(newIndex: 4));
+              await Future.delayed(Duration(milliseconds: 250));
+              context
+                  .read<ProfileBloc>()
+                  .add(GoToNotificationScreen(goToNotificationScreen: true));
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => NotificationSereen()));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              // height: 42,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Badge(
+                child: const Icon(Icons.notifications_sharp,
+                    color: Colors.black, size: 35),
+              ),
             ),
           ),
         ],
@@ -55,7 +75,7 @@ class Utils {
     );
   }
 
-  static AppBar buildAppBarWithBackButton() {
+  static AppBar buildAppBarWithBackButton(BuildContext context) {
     return AppBar(
       leading: BackButton(color: Colors.white),
       flexibleSpace: Container(
@@ -75,14 +95,24 @@ class Utils {
               //   fit: BoxFit.fitHeight,
               // ),
               ),
-          Container(
-            decoration: BoxDecoration(
-                color: Colors.white, borderRadius: BorderRadius.circular(30)),
-            // height: 42,
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            child: Badge(
-              child: const Icon(Icons.notifications_sharp,
-                  color: Colors.black, size: 35),
+          InkWell(
+            onTap: () {
+              context
+                  .read<BottomBarBloc>()
+                  .add(ChangeCurrentPageIndex(newIndex: 4));
+              context
+                  .read<ProfileBloc>()
+                  .add(GoToNotificationScreen(goToNotificationScreen: true));
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(30)),
+              // height: 42,
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              child: Badge(
+                child: const Icon(Icons.notifications_sharp,
+                    color: Colors.black, size: 35),
+              ),
             ),
           ),
         ],

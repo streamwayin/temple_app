@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:expandable_text/expandable_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:temple_app/features/about-us/screens/saints_screen.dart';
 import 'package:temple_app/features/yatara/bloc/yatara_bloc.dart';
 import 'package:temple_app/features/yatara/widget/yatara_carousel.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,10 +19,11 @@ class CardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       itemCount: state.yataraList.length,
-      physics: NeverScrollableScrollPhysics(),
+      // physics: NeverScrollableScrollPhysics(),
       itemBuilder: (context, index) {
         YataraModel yataraModel = state.yataraList[index];
         return Container(
+          margin: EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
             color: Color(0xfff8dbb5),
             borderRadius: BorderRadius.only(
@@ -38,6 +39,7 @@ class CardWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       textAlign: TextAlign.center,
@@ -61,69 +63,20 @@ class CardWidget extends StatelessWidget {
                       "समय  ${DateFormat('h:mm a', 'hi').format(yataraModel.fromDate!)} से ${DateFormat('h:mm a').format(yataraModel.toDate!)}  तक ",
                       style: TextStyle(fontSize: 14.sp),
                     ),
-                    Divider(),
-                    Container(
-                        // color: Colors.green,
-                        height:
-                            (30.h * 2) * yataraModel.contactList!.length + 10.h,
-                        child: ListView.builder(
-                          itemCount: yataraModel.contactList!.length,
-                          itemBuilder: (context, index) {
-                            ContactListModel contactListModel =
-                                yataraModel.contactList![index];
-                            // YataraModel yataraModel = yataraModel.contactList![index]
-                            return Row(
-                              children: [
-                                Text(
-                                  contactListModel.name,
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                                SizedBox(width: 50.w),
-                                Container(
-                                  // color: Colors.red,
-                                  height: 38.h *
-                                      contactListModel.mobileNumbers.length,
-                                  width: 230.w,
-                                  // 30.h,
-
-                                  child: ListView.builder(
-                                    physics: NeverScrollableScrollPhysics(),
-                                    itemCount:
-                                        contactListModel.mobileNumbers.length,
-                                    itemBuilder: (context, index2) {
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.end,
-                                          children: [
-                                            Text(
-                                                '${contactListModel.mobileNumbers[index2]}'),
-                                            SizedBox(width: 20.w),
-                                            InkWell(
-                                              onTap: () async {
-                                                final Uri url = Uri(
-                                                    scheme: 'tel',
-                                                    path:
-                                                        '${contactListModel.mobileNumbers[index2]}');
-                                                if (await canLaunchUrl(url)) {
-                                                  launchUrl(url);
-                                                }
-                                              },
-                                              child: const AboutUsContactButton(
-                                                  logoPath:
-                                                      "assets/images/call1.png"),
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        )),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                      child: ExpandableText(
+                        yataraModel.description,
+                        style: TextStyle(fontSize: 15.sp),
+                        expandText: 'और दिखाओ',
+                        collapseText: 'कम दिखाएं',
+                        maxLines: 2,
+                        linkColor: Colors.blue,
+                      ),
+                    ),
+                    _gap(15),
+                    // Divider(),
+                    _numbersComponent(yataraModel),
                   ],
                 ),
               ),
@@ -201,6 +154,41 @@ class CardWidget extends StatelessWidget {
     );
   }
 
+  SizedBox _gap(double height) => SizedBox(height: height.h);
+
+  Widget _numbersComponent(YataraModel yataraModel) {
+    List<DropdownMenuEntry<String>> dropDownList = [];
+    for (var i in yataraModel.contactList!) {
+      for (var j in i.mobileNumbers) {
+        dropDownList.add(DropdownMenuEntry(value: j, label: '${i.name} $j'));
+      }
+    }
+    return dropDownList.length != 0
+        ? Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "संपर्क करें",
+                style: TextStyle(fontSize: 18.sp),
+              ),
+              DropdownMenu(
+                  width: 200.w,
+                  onSelected: (value) async {
+                    print(value);
+                    if (value == null) return;
+                    final Uri url = Uri(scheme: 'tel', path: '$value');
+                    if (await canLaunchUrl(url)) {
+                      launchUrl(url);
+                    }
+                  },
+                  // initialSelection: dropDownList.first,
+                  label: Text("फ़ोन नंबर चुनें"),
+                  dropdownMenuEntries: dropDownList),
+            ],
+          )
+        : SizedBox();
+  }
+
   Widget _buildImage(YataraModel yataraModel, BuildContext context) {
     return Container(
       height: 160.h,
@@ -235,21 +223,21 @@ class CardWidget extends StatelessWidget {
   }
 }
 
-class AboutUsContactButton extends StatelessWidget {
-  const AboutUsContactButton({
-    super.key,
-    required this.logoPath,
-  });
-  final String logoPath;
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 30.h,
-      width: 30.h,
-      child: Image.asset(
-        logoPath,
-        fit: BoxFit.cover,
-      ),
-    );
-  }
-}
+// class AboutUsContactButton extends StatelessWidget {
+//   const AboutUsContactButton({
+//     super.key,
+//     required this.logoPath,
+//   });
+//   final String logoPath;
+//   @override
+//   Widget build(BuildContext context) {
+//     return SizedBox(
+//       height: 30.h,
+//       width: 30.h,
+//       child: Image.asset(
+//         logoPath,
+//         fit: BoxFit.cover,
+//       ),
+//     );
+//   }
+// }

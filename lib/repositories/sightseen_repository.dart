@@ -14,6 +14,7 @@ class SightseenRepository {
         signtseenList.add(SightseenModel.fromJson(b.data()));
       }
     }
+    signtseenList.sort((a, b) => a.index.compareTo(b.index));
     return signtseenList;
   }
 }

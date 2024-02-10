@@ -18,6 +18,7 @@ import 'package:temple_app/features/wallpaper/image-album/bloc/wallpaper_bloc.da
 import 'package:temple_app/features/wallpaper/image-album/image_album_screen.dart';
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/image_screen.dart';
+import 'package:temple_app/features/yatara/yatara_screen.dart';
 import 'package:temple_app/modals/carousel_model.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/modals/image_album_model.dart';
@@ -115,11 +116,17 @@ class _HomeScreenState extends State<HomeScreen> {
           context.read<HomeBloc>().add(
               ToggleNavigateFromNotificaionFromHomeEventVidoeScreen(
                   toggleYoutubVideoScreenNavi: false));
+        } else if (state.navigateToFromNotificationToYoutubeScreen) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => YataraScreen()));
+          context.read<HomeBloc>().add(
+              ToggleNavigateFromNotificationFromHomeEventEventsScreen(
+                  toggleEventScreenNavi: false));
         }
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: Utils.buildAppBarNoBackButton(),
+          appBar: Utils.buildAppBarNoBackButton(context),
           backgroundColor: scaffoldBackground,
           body: RefreshIndicator(
             onRefresh: () => onRefresh(),

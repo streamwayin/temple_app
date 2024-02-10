@@ -12,7 +12,7 @@ class PrivacyPolicyScreen extends StatelessWidget {
     double textSize2 = 15;
     double textSize = 16.0;
     return Scaffold(
-      appBar: Utils.buildAppBarWithBackButton(),
+      appBar: Utils.buildAppBarWithBackButton(context),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(

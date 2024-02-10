@@ -11,7 +11,6 @@ import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
 import 'package:temple_app/features/video/video-list/bloc/video_list_bloc.dart';
 import 'package:temple_app/features/wallpaper/image/bloc/image_bloc.dart';
-import 'package:temple_app/features/yatara/yatara_screen.dart';
 import 'package:temple_app/modals/ebook_model.dart';
 import 'package:temple_app/modals/image_album_model.dart';
 import 'package:temple_app/modals/image_model.dart';
@@ -35,7 +34,7 @@ class FirebaseNotificatonService {
     NotificationModel? notificationModel;
 
     Map<String, dynamic> map = {
-      "type": "youtube-video",
+      "type": "events",
       "id": "WtGyrBJKZu4",
       "index": 5,
       'title': "This is title",
@@ -166,6 +165,15 @@ class FirebaseNotificatonService {
 
           break;
         }
+      case "events":
+        {
+          context
+              .read<BottomBarBloc>()
+              .add(ChangeCurrentPageIndex(newIndex: 0));
+          context
+              .read<HomeBloc>()
+              .add(NavigateFromNotificationFromHomeEventEventsScreen());
+        }
     }
     // navigatorKey.currentState?.pushNamed(
     //   NotificationSereen.routeName,
@@ -192,14 +200,19 @@ class FirebaseNotificatonService {
 
   Future<void> showNotification(RemoteMessage message) async {
     // message.ti
+    NotificationModel? notificationModel;
     Map<String, dynamic> map = {
       "type": "audio-album",
       "id": "",
-      "index": 5,
+      "index": 4,
       'title': "This is title",
       'body': "This is title  body"
     };
-    NotificationModel notificationModel = NotificationModel.fromJson(map);
+    if (message.notification == null) {
+      notificationModel = NotificationModel.fromJson(message.data);
+    } else {
+      notificationModel = NotificationModel.fromJson(map);
+    }
 
     customSoundSwitchCase(notificationModel: notificationModel);
   }
@@ -296,11 +309,13 @@ class FirebaseNotificatonService {
       // print("hereeeeeeeeeeeeeee");
       // Navigator.of(context)
       //     .push(MaterialPageRoute(builder: (context) => YataraScreen()));
+      print("notification from background/ terminated");
+      await Future.delayed(Duration(seconds: 2));
       handleMessage(context, initialMessage);
     }
     //when app ins inbackground
+    print("notification from background");
     FirebaseMessaging.onMessageOpenedApp.listen((event) {
-      print("notification from background");
       handleMessage(context, event);
     });
   }

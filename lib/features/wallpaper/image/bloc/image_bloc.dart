@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:temple_app/modals/image_album_model.dart';
 import 'package:temple_app/modals/image_model.dart';
 import 'package:temple_app/repositories/wallpaper_repository.dart';
+import 'package:temple_app/services/notification_service.dart';
 
 part 'image_event.dart';
 part 'image_state.dart';
@@ -14,16 +15,20 @@ part 'image_state.dart';
 class ImageBloc extends Bloc<ImageEvent, ImageState> {
   final wallpaperRepo = WallpaperRepository();
   FirebaseAnalytics firebaseAnalytics = FirebaseAnalytics.instance;
+  final NotificationService _notificationService = NotificationService();
   ImageBloc() : super(ImageInitial()) {
     on<ImageInitialEvent>(onImageInitialEvent);
     on<LogImageSetAswallpaperEvent>(onLogImageSetAswallpaperEvent);
     on<AddImageListFromRefreshIndicator>(onAddImageListFromRefreshIndicator);
     on<ImageInitialNotificationEvent>(onImageInitialNotificationEvent);
+    on<ShowPictureDownloadingNotificationEvent>(
+        onShowPictureDownloadingNotificationEvent);
   }
   void init() {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     firebaseAnalytics.setAnalyticsCollectionEnabled(true);
     firebaseAnalytics.setUserId(id: uid);
+    _notificationService.initiliseNotifications();
   }
 
   FutureOr<void> onImageInitialEvent(
@@ -71,5 +76,13 @@ class ImageBloc extends Bloc<ImageEvent, ImageState> {
         isLoading: false,
         imageList: imageList,
         currentAlbumId: "notification"));
+  }
+
+  FutureOr<void> onShowPictureDownloadingNotificationEvent(
+      ShowPictureDownloadingNotificationEvent event, Emitter<ImageState> emit) {
+    _notificationService.progressNotification(
+        body: "Downloading image",
+        downloadedPercentage: event.downloadedPercentage.toInt(),
+        title: "Shree Badaramdawara");
   }
 }

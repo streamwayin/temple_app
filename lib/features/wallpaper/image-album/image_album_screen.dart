@@ -20,7 +20,7 @@ class ImageAlbumScreen extends StatelessWidget {
     return BlocBuilder<WallpaperBloc, WallpaperState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: Utils.buildAppBarWithBackButton(),
+          appBar: Utils.buildAppBarWithBackButton(context),
           body: RefreshIndicator(
             onRefresh: () => onRefresh(context),
             child: SizedBox(

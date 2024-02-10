@@ -22,6 +22,7 @@ class WallpaperRepository {
       albumModel.sort((a, b) => (a.index).compareTo(b.index));
       return albumModel;
     } catch (e) {
+      print('Error fetching: $e');
       return null;
     }
   }
@@ -55,12 +56,15 @@ class WallpaperRepository {
       final data = await FirebaseFirestore.instance
           .collection('image-albums')
           .doc(docId)
-          .get();
+          .get(
+            const GetOptions(source: Source.serverAndCache),
+          );
 
       if (data.exists) {
         return ImageAlbumModel.fromJson(data.data()!);
       }
     } catch (e) {
+      print('Error fetching images: $e');
       return null;
     }
     return null;
@@ -70,10 +74,10 @@ class WallpaperRepository {
   Future<ImageModel?> getSingleImageFromDbForNorification(
       {required String docId}) async {
     try {
-      final data = await FirebaseFirestore.instance
-          .collection('images')
-          .doc(docId)
-          .get();
+      final data =
+          await FirebaseFirestore.instance.collection('images').doc(docId).get(
+                const GetOptions(source: Source.serverAndCache),
+              );
 
       if (data.exists) {
         return ImageModel.fromJson(data.data()!);

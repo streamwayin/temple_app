@@ -52,7 +52,7 @@ class ContactUsScreen extends StatelessWidget {
     ];
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: Utils.buildAppBarWithBackButton(),
+      appBar: Utils.buildAppBarWithBackButton(context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: SingleChildScrollView(

@@ -54,6 +54,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         onNavigateFromNotificaionFromHomeEventVidoeScreen);
     on<ToggleNavigateFromNotificaionFromHomeEventVidoeScreen>(
         onToggleNavigateFromNotificaionFromHomeEventVidoeScreen);
+    on<NavigateFromNotificationFromHomeEventEventsScreen>(
+        onNavigateFromNotificationFromHomeEventEventsScreen);
+    on<ToggleNavigateFromNotificationFromHomeEventEventsScreen>(
+        onToggleNavigateFromNotificationFromHomeEventEventsScreen);
   }
 
   void _initilize() async {
@@ -201,5 +205,19 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     emit(state.copyWith(
         navigateToFromNotificationToYoutubeScreen:
             event.toggleYoutubVideoScreenNavi));
+  }
+
+  FutureOr<void> onNavigateFromNotificationFromHomeEventEventsScreen(
+      NavigateFromNotificationFromHomeEventEventsScreen event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(navigateToFromNotificationToYoutubeScreen: true));
+  }
+
+  FutureOr<void> onToggleNavigateFromNotificationFromHomeEventEventsScreen(
+      ToggleNavigateFromNotificationFromHomeEventEventsScreen event,
+      Emitter<HomeState> emit) {
+    emit(state.copyWith(
+        navigateToFromNotificationToYoutubeScreen:
+            event.toggleEventScreenNavi));
   }
 }

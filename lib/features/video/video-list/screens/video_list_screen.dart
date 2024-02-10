@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,7 +45,7 @@ class VideoListScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: Utils.buildAppBarNoBackButton(),
+          appBar: Utils.buildAppBarNoBackButton(context),
           body: state.isLoading
               ? Center(child: CircularProgressIndicator())
               : RefreshIndicator(

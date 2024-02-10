@@ -6,7 +6,10 @@ class YataraRepository {
   Future<List<YataraModel>?> getYatraDetilsFromDb() async {
     try {
       List<YataraModel> yatara = [];
-      final data = await FirebaseFirestore.instance.collection('events').get(
+      final data = await FirebaseFirestore.instance
+          .collection('events')
+          .orderBy("index", descending: false)
+          .get(
             const GetOptions(source: Source.serverAndCache),
           );
 
@@ -17,9 +20,9 @@ class YataraRepository {
           yatara.add(YataraModel.fromJson(b.data()));
         }
       }
-      print(yatara);
       return yatara;
     } catch (e) {
+      print('Error fetching images: $e');
       return null;
     }
   }

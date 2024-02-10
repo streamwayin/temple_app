@@ -16,7 +16,7 @@ class YataraScreen extends StatelessWidget {
     return BlocBuilder<YataraBloc, YataraState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: Utils.buildAppBarWithBackButton(),
+          appBar: Utils.buildAppBarWithBackButton(context),
           body: state.isLoading
               ? Center(child: CircularProgressIndicator())
               : RefreshIndicator(
@@ -39,22 +39,21 @@ class YataraScreen extends StatelessWidget {
                     }
                     return;
                   },
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 10,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: SizedBox(
+                          height: 560.h,
+                          // (size.height - 150).h,
+                          width: size.width,
+                          child: CardWidget(state: state),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                          child: SizedBox(
-                            height: size.height,
-                            width: size.width,
-                            child: CardWidget(state: state),
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
         );

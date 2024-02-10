@@ -64,24 +64,9 @@ const List<Map<String, String>> categoryImages = [
     "routeName": EbookScreen.routeName,
   },
   {
-    'title': 'यात्रा',
-    'image': 'assets/figma/yatra_logo.png',
-    "routeName": YataraScreen.routeName,
-  },
-  {
-    'title': 'पंचांग',
-    'image': 'assets/figma/panchag_logo.png',
-    "routeName": "panchang",
-  },
-  {
-    'title': 'कार्यक्रम ',
+    'title': 'कार्यक्रम',
     'image': 'assets/figma/karyakram_logo.png',
-    "routeName": "kariyakram",
-  },
-  {
-    'title': 'कलेंडर',
-    'image': 'assets/figma/calander_logo.png',
-    "routeName": "calander",
+    "routeName": YataraScreen.routeName,
   },
 ];
 List<Map<String, dynamic>> album = [

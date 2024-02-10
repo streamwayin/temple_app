@@ -15,7 +15,7 @@ class AboutUsScreen extends StatelessWidget {
       'प्रतिवर्ष पौष माह में यहां बरसी उत्सव का कार्यक्रम आयोजित होता है जिसमें स्थानीय व बाहर से सन्तों का आगमन अनेक स्थानों से होता है। सन्तों द्वारा प्रवचन, कथा, भजन कीर्तन का आयोजन विशेष रूप से होता है।',
     ];
     return Scaffold(
-      appBar: Utils.buildAppBarWithBackButton(),
+      appBar: Utils.buildAppBarWithBackButton(context),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: SingleChildScrollView(

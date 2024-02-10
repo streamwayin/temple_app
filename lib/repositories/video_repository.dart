@@ -16,6 +16,7 @@ class VideoRepository {
         videoList.add(VideoAlbumModelDb.fromJson(a.data()));
       }
     }
+    videoList.sort((a, b) => a.index.compareTo(b.index));
     return videoList;
   }
 
@@ -25,7 +26,9 @@ class VideoRepository {
       final data = await FirebaseFirestore.instance
           .collection('video-albums')
           .doc(docId)
-          .get();
+          .get(
+            const GetOptions(source: Source.serverAndCache),
+          );
       if (data.exists) {
         return VideoAlbumModelDb.fromJson(data.data()!);
       }

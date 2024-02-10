@@ -44,7 +44,7 @@ class SearchBookScreen extends StatelessWidget {
       builder: (context, state) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
-          appBar: Utils.buildAppBarWithBackButton(),
+          appBar: Utils.buildAppBarWithBackButton(context),
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Stack(

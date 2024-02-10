@@ -70,7 +70,9 @@ class HomeRepository {
 
   Future<List<CarouselModel>?> getCarouselImagesFromDB() async {
     final data =
-        await FirebaseFirestore.instance.collection("carousel-images").get();
+        await FirebaseFirestore.instance.collection("carousel-images").get(
+              const GetOptions(source: Source.serverAndCache),
+            );
 
     List<QueryDocumentSnapshot<Map<String, dynamic>>> a = data.docs;
     List<CarouselModel> carouselList = [];

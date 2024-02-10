@@ -19,6 +19,8 @@ import 'package:temple_app/features/ebook/ebook_list/bloc/ebook_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_view/bloc/epub_viewer_bloc.dart';
 import 'package:temple_app/features/ebook/search/bloc/search_book_bloc.dart';
 import 'package:temple_app/features/home/bloc/home_bloc.dart';
+import 'package:temple_app/features/my-profile/bloc/profile_bloc.dart';
+import 'package:temple_app/features/notification/bloc/notification_bloc.dart';
 import 'package:temple_app/features/onboarding/bloc/splash_bloc.dart';
 import 'package:temple_app/features/onboarding/screens/splash_screen.dart';
 import 'package:temple_app/features/sightseen/bloc/sightseen_bloc.dart';
@@ -43,6 +45,7 @@ Future<void> _firebaseMessengingBackgroundHandler(
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   FirebaseNotificatonService firebaseNotificatonService =
       FirebaseNotificatonService();
+  NotificationModel? notificationModel;
   Map<String, dynamic> map = {
     "type": "audio-track",
     "id": "",
@@ -50,8 +53,11 @@ Future<void> _firebaseMessengingBackgroundHandler(
     'title': "This is title",
     'body': "This is title  body"
   };
-  NotificationModel notificationModel = NotificationModel.fromJson(map);
-
+  if (remoteMessage.notification == null) {
+    notificationModel = NotificationModel.fromJson(remoteMessage.data);
+  } else {
+    notificationModel = NotificationModel.fromJson(map);
+  }
   firebaseNotificatonService.customSoundSwitchCase(
       notificationModel: notificationModel);
 }
@@ -146,10 +152,15 @@ class MyApp extends StatelessWidget {
                       EbookBloc()..add(FetchEpubListFromWebEvent())),
               BlocProvider(
                   create: (context) =>
-                      PlayAudioScreenBloc(audioRepository: audioRepository))
+                      PlayAudioScreenBloc(audioRepository: audioRepository)),
+              BlocProvider(
+                  create: (context) =>
+                      NotificationBloc()..add(NotificationEventInitial())),
+              BlocProvider(create: (context) => ProfileBloc()),
             ],
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
+              // showPerformanceOverlay: true,
               navigatorKey: navigatorKey,
               navigatorObservers: <NavigatorObserver>[observer],
               theme: ThemeData(

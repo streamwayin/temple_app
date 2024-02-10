@@ -23,20 +23,24 @@ class _ImageScreenState extends State<ImageScreen> {
     return BlocBuilder<ImageBloc, ImageState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: Utils.buildAppBarWithBackButton(),
+          appBar: Utils.buildAppBarWithBackButton(context),
           body: RefreshIndicator(
             onRefresh: () => onRefresh(state.currentAlbumId),
-            child: PageView.builder(
-              scrollDirection: Axis.vertical,
-              controller: _pageController,
-              itemCount: state.imageList.length,
-              itemBuilder: (context, index) {
-                final imageModel = state.imageList[index];
-                return SingleWallpaperComponent(
-                  image: imageModel,
-                );
-                //  _buildPage(state.imageList[index]);
-              },
+            child: Stack(
+              children: [
+                PageView.builder(
+                  scrollDirection: Axis.vertical,
+                  controller: _pageController,
+                  itemCount: state.imageList.length,
+                  itemBuilder: (context, index) {
+                    final imageModel = state.imageList[index];
+                    return SingleWallpaperComponent(
+                      image: imageModel,
+                    );
+                    //  _buildPage(state.imageList[index]);
+                  },
+                ),
+              ],
             ),
           ),
         );

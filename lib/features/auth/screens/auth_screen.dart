@@ -15,7 +15,7 @@ class AuthScreen extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      appBar: Utils.buildAppBarNoBackButton(),
+      appBar: Utils.buildAppBarNoBackButton(context),
       body: BlocConsumer<AuthBloc, AuthState>(listener: (context, state) {
         if (state is AuthErrorState) {
           Utils.showSnackBar(context: context, message: state.errorMessagge);

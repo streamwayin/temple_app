@@ -169,7 +169,7 @@ class MyHomePageState extends State<VideoScreen> {
         },
       ),
       builder: (context, player) => Scaffold(
-        appBar: Utils.buildAppBarWithBackButton(),
+        appBar: Utils.buildAppBarWithBackButton(context),
         body: ListView(
           children: [
             player,

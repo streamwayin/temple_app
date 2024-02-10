@@ -18,7 +18,7 @@ class SigntseenScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         return Scaffold(
-          appBar: Utils.buildAppBarWithBackButton(),
+          appBar: Utils.buildAppBarWithBackButton(context),
           body: state.sightseenList.isNotEmpty
               ? Column(
                   children: [

@@ -36,19 +36,23 @@ class NotificationService {
   }
 
   void progressNotification(
-      AndroidNotificationDetails androidNotificationDetails) async {
-    // AndroidNotificationDetails androidNotificationDetails =
-    //     const AndroidNotificationDetails('channelId', 'channelName',
-    //         importance: Importance.max,
-    //         priority: Priority.high,
-    //         showProgress: true,
-    //         progress: 0,
-    //         maxProgress: 100);
+      {required int downloadedPercentage,
+      required String title,
+      required String body}) async {
+    AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(
+      'channelId',
+      'channelName',
+      importance: Importance.max,
+      priority: Priority.high,
+      showProgress: true,
+      progress: downloadedPercentage,
+      maxProgress: 100,
+    );
     NotificationDetails notificationDetails =
         NotificationDetails(android: androidNotificationDetails);
-    await _flutterLocalNotificationsPlugin.show(
-        0, 'Uploading...', 'Uploading file', notificationDetails,
-        payload: 'item x');
+    await _flutterLocalNotificationsPlugin
+        .show(4444, title, body, notificationDetails, payload: 'item x');
     // _flutterLocalNotificationsPlugin.show(
     //   0,
     //   'Uploading',

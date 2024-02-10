@@ -82,7 +82,7 @@ class EbookScreen extends StatelessWidget {
       },
       builder: (context, state) {
         return Scaffold(
-          appBar: Utils.buildAppBarNoBackButton(),
+          appBar: Utils.buildAppBarNoBackButton(context),
           body: RefreshIndicator(
             onRefresh: () async {
               EpubRepository epubRepository = EpubRepository();

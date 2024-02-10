@@ -90,3 +90,13 @@ class ToggleNavigateFromNotificaionFromHomeEventVidoeScreen extends HomeEvent {
   ToggleNavigateFromNotificaionFromHomeEventVidoeScreen(
       {required this.toggleYoutubVideoScreenNavi});
 }
+
+class NavigateFromNotificationFromHomeEventEventsScreen extends HomeEvent {}
+
+class ToggleNavigateFromNotificationFromHomeEventEventsScreen
+    extends HomeEvent {
+  final bool toggleEventScreenNavi;
+
+  ToggleNavigateFromNotificationFromHomeEventEventsScreen(
+      {required this.toggleEventScreenNavi});
+}

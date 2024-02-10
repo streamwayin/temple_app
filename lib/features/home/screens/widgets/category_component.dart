@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gif_view/gif_view.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
@@ -69,7 +70,7 @@ class CatagoryComponent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: 180,
+                height: 80.h,
                 child: GridView.builder(
                   itemCount: categoryImages.length,
                   physics: const NeverScrollableScrollPhysics(),

@@ -44,7 +44,7 @@ class MyAppState extends State<PlayAudioScreen> {
       //   return true;
       // },
       child: Scaffold(
-        appBar: Utils.buildAppBarWithBackButton(),
+        appBar: Utils.buildAppBarWithBackButton(context),
         body: BlocListener<PlayAudioBloc, PlayAudioState>(
           listener: (context, state) {
             if (state is PlayAudioErrorState) {

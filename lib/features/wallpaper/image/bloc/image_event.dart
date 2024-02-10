@@ -30,3 +30,9 @@ class ImageInitialNotificationEvent extends ImageEvent {
 
   ImageInitialNotificationEvent({required this.imageModel});
 }
+
+class ShowPictureDownloadingNotificationEvent extends ImageEvent {
+  final double downloadedPercentage;
+
+  ShowPictureDownloadingNotificationEvent({required this.downloadedPercentage});
+}

@@ -36,7 +36,7 @@ class AudioScreen extends StatelessWidget {
 
     bool? isUserLoggedIn = context.read<AuthBloc>().state.isLoggedIn;
     return Scaffold(
-      appBar: Utils.buildAppBarWithBackButton(),
+      appBar: Utils.buildAppBarWithBackButton(context),
       body: SafeArea(
         child: BlocBuilder<PlayAudioBloc, PlayAudioState>(
           builder: (context, state) {
