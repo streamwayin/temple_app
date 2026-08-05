@@ -56,8 +56,10 @@ class MyHomePageState extends State<VideoScreen> {
   var yt = YoutubeExplode();
 
   List<String> _ids = [];
+  bool _isInitialized = false;
 
   initial() async {
+    if (widget.videoList.isEmpty) return;
     for (var a in widget.videoList) {
       _ids.add(a.id);
     }
@@ -77,6 +79,7 @@ class MyHomePageState extends State<VideoScreen> {
     _seekToController = TextEditingController();
     _videoMetaData = const YoutubeMetaData();
     _playerState = PlayerState.unknown;
+    _isInitialized = true;
   }
 
   @override
@@ -102,20 +105,28 @@ class MyHomePageState extends State<VideoScreen> {
   @override
   void deactivate() {
     // Pauses video while navigating to next page.
-    _controller.pause();
+    if (_isInitialized) _controller.pause();
     super.deactivate();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
-    _idController.dispose();
-    _seekToController.dispose();
+    if (_isInitialized) {
+      _controller.dispose();
+      _idController.dispose();
+      _seekToController.dispose();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (!_isInitialized) {
+      return Scaffold(
+        appBar: Utils.buildAppBarWithBackButton(context),
+        body: const Center(child: Text('No videos available')),
+      );
+    }
     Size size = MediaQuery.of(context).size;
     return YoutubePlayerBuilder(
       onEnterFullScreen: () {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
+import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:temple_app/features/audio/screens/album_screen.dart';
 import 'package:temple_app/features/bottom_bar/bloc/bottom_bar_bloc.dart';
 import 'package:temple_app/features/ebook/ebook_list/screens/ebook_screen.dart';
@@ -46,7 +46,7 @@ class BottomBar extends StatelessWidget {
                   items: navBarItems(),
                   controller: _controller,
                   navBarStyle: NavBarStyle.style1,
-                  popAllScreensOnTapOfSelectedTab: true,
+                  popBehaviorOnSelectedNavBarItemPress: PopBehavior.all,
                 ),
                 state1.updateMandatory ? UpdateOpacityComponent() : SizedBox(),
                 state1.updateMandatory ? UpdateAppDialog() : SizedBox(),
